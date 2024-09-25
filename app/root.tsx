@@ -230,8 +230,11 @@ function App() {
 					<Outlet />
 				</div>
 
-				<div className="container flex justify-between pb-5">
+				<div className="container flex justify-between items-center py-5">
 					<Logo />
+
+          <p className="text-gray-400 text-sm mx-10">© 2024 TankMate. All Rights Reserved.</p>
+
 					<ThemeSwitch userPreference={data.requestInfo.userPrefs.theme} />
 				</div>
 			</div>

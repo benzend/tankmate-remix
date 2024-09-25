@@ -1,6 +1,5 @@
 import { type LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { PretterPrintJson } from '#app/components/ui/pretty-print-json.js'
 import { prisma } from '#app/utils/db.server.js'
 
 export async function loader({ params }: LoaderFunctionArgs) {
@@ -12,14 +11,13 @@ export default function TanksResultsPage() {
 
 	if (data?.result) {
 		const result = JSON.parse(data.result) as Record<string, any>
-    console.log({ result });
 		return (
-			<div className="mx-auto max-w-xl">
+			<div className="mx-auto max-w-xl py-16">
 				{data?.imageUrl && (
 					<img src={data.imageUrl} alt="fish tank and everything in it" className="mb-10" />
 				)}
 
-				<div className="grid grid-cols-2 gap-10">
+				<div className="grid grid-cols-3 gap-10">
 					<Health
 						label="Fish Health"
 						score={result['fish_health']['score']}
@@ -89,10 +87,10 @@ const Health = ({
 	})()
 
 	return (
-		<div className={`border-b border-l ${borderColor} rounded p-10`}>
+		<div className={`border-b border-l ${borderColor} rounded p-4`}>
 			<div className={`text-7xl italic ${textColor}`}>{score}</div>
 			<div className="mb-3 text-sm text-gray-300">{label}</div>
-			<div className="text-sm">{note}</div>
+			<div className="text-xs">{note}</div>
 		</div>
 	)
 }
