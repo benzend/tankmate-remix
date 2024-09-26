@@ -172,5 +172,6 @@ model TankScore {
   id String @id @default(cuid())
 
   result String
+  context String?
   imageUrl String?
 }
