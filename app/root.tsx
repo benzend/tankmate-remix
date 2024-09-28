@@ -56,7 +56,7 @@ export const links: LinksFunction = () => {
 		{ rel: 'preload', href: iconsHref, as: 'image' },
 		{
 			rel: 'icon',
-			href: '/favicon.ico',
+			href: '/favicon.webp',
 			sizes: '48x48',
 		},
 		{ rel: 'icon', type: 'image/svg+xml', href: faviconAssetUrl },
@@ -72,8 +72,8 @@ export const links: LinksFunction = () => {
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	return [
-		{ title: data ? 'Epic Notes' : 'Error | Epic Notes' },
-		{ name: 'description', content: `Your own captain's log` },
+		{ title: data ? 'TankMate' : 'Error | TankMate' },
+		{ name: 'description', content: `Create and manage aquariums on the fly` },
 	]
 }
 
