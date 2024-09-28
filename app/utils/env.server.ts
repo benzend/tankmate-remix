@@ -7,6 +7,7 @@ const schema = z.object({
 	SESSION_SECRET: z.string(),
 	INTERNAL_COMMAND_TOKEN: z.string(),
 	HONEYPOT_SECRET: z.string(),
+  OPENAI_API_KEY: z.string().optional(),
 	CACHE_DATABASE_PATH: z.string(),
 	// If you plan on using Sentry, uncomment this line
 	// SENTRY_DSN: z.string(),
@@ -17,8 +18,6 @@ const schema = z.object({
 	GITHUB_CLIENT_SECRET: z.string().default('MOCK_GITHUB_CLIENT_SECRET'),
 	GITHUB_TOKEN: z.string().default('MOCK_GITHUB_TOKEN'),
 	ALLOW_INDEXING: z.enum(['true', 'false']).optional(),
-
-  OPENAI_API_KEY: z.string()
 })
 
 declare global {
