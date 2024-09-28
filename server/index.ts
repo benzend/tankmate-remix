@@ -1,4 +1,3 @@
-import './instrumentation.server.mjs';
 import crypto from 'node:crypto'
 import { createRequestHandler } from '@remix-run/express'
 import { type ServerBuild } from '@remix-run/node'
