@@ -12,7 +12,7 @@ export default function PrototypePage() {
         <div className="grid place-items-center px-4 py-16 xl:grid-cols-2 xl:gap-24">
           <Form action="/tanks/parse" method="POST">
             <label className="text-sm">Image Url <a data-tooltip-id="image-url-tooltip" data-tooltip-content="Upload a clear image of your tank">
-              <span className="text-slate-400 ml-1 text-xs">Tip</span>
+              <span className="text-slate-400 ml-1 text-xs"> Tip</span>
               </a>
             </label>
             <br/>
