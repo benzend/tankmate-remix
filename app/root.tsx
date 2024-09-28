@@ -24,7 +24,6 @@ import appleTouchIconAssetUrl from './assets/favicons/apple-touch-icon.png'
 import faviconAssetUrl from './assets/favicons/favicon.svg'
 import { GeneralErrorBoundary } from './components/error-boundary.tsx'
 import { EpicProgress } from './components/progress-bar.tsx'
-import { SearchBar } from './components/search-bar.tsx'
 import { useToast } from './components/toaster.tsx'
 import { Button } from './components/ui/button.tsx'
 import {
@@ -195,7 +194,6 @@ function App() {
 	const theme = useTheme()
 	const matches = useMatches()
 	const isOnSearchPage = matches.find((m) => m.id === 'routes/users+/index')
-	const searchBar = isOnSearchPage ? null : <SearchBar status="idle" />
 	const allowIndexing = data.ENV.ALLOW_INDEXING !== 'false'
 	useToast(data.toast)
 
@@ -210,9 +208,6 @@ function App() {
 				<header className="container py-6">
 					<nav className="flex flex-wrap items-center justify-between gap-4 sm:flex-nowrap md:gap-8">
 						<Logo />
-						<div className="ml-auto hidden max-w-sm flex-1 sm:block">
-							{searchBar}
-						</div>
 						<div className="flex items-center gap-10">
 							{user ? (
 								<UserDropdown />
@@ -222,7 +217,6 @@ function App() {
 								</Button>
 							)}
 						</div>
-						<div className="block w-full sm:hidden">{searchBar}</div>
 					</nav>
 				</header>
 
