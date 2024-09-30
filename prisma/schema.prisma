@@ -25,6 +25,7 @@ model User {
   roles       Role[]
   sessions    Session[]
   connections Connection[]
+  fishTanks   FishTank[]
 }
 
 model Note {
@@ -171,7 +172,101 @@ model Connection {
 model TankScore {
   id String @id @default(cuid())
 
-  result String
-  context String?
+  result   String
+  context  String?
   imageUrl String?
+}
+
+model FishTankScore {
+  id String @id @default(cuid())
+
+  result   String
+  context  String?
+  imageUrl String?
+
+  fishTank   FishTank @relation(fields: [fishTankId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  fishTankId String
+}
+
+model FishTank {
+  id   String @id @default(cuid())
+  name String
+
+  waterType String
+
+  dimensionsLength Int
+  dimensionsWidth  Int
+  dimensionsHeight Int
+
+  pumps FishTankPump[]
+
+  fish Fish[]
+
+  plants Plant[]
+
+  fishTankScores FishTankScore[]
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
+}
+
+model FishTankPump {
+  id String @id @default(cuid())
+
+  pumpType String
+
+  size String
+
+  fishTank   FishTank @relation(fields: [fishTankId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  fishTankId String
+}
+
+model Fish {
+  id String @id @default(cuid())
+
+  name String
+
+  size String
+
+  species   FishSpecies @relation(fields: [speciesId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  speciesId String
+
+  fishTank   FishTank @relation(fields: [fishTankId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  fishTankId String
+}
+
+model FishSpecies {
+  id String @id @default(cuid())
+
+  friendlyName   String
+  scientificName String
+
+  fish Fish[]
+
+  count Int
+}
+
+model Plant {
+  id String @id @default(cuid())
+
+  name String
+
+  size String
+
+  species   PlantSpecies @relation(fields: [speciesId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  speciesId String
+
+  fishTank   FishTank @relation(fields: [fishTankId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  fishTankId String
+}
+
+model PlantSpecies {
+  id String @id @default(cuid())
+
+  friendlyName   String
+  scientificName String
+
+  plants Plant[]
+
+  count Int
 }
