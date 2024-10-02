@@ -61,6 +61,7 @@
     "@remix-run/react": "2.10.3",
     "@sentry/profiling-node": "^8.18.0",
     "@sentry/remix": "^8.18.0",
+    "@uploadthing/react": "^7.0.2",
     "address": "^2.0.3",
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^11.1.2",
@@ -104,6 +105,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tailwindcss-radix": "^3.0.3",
     "true-myth": "^8.0.1",
+    "uploadthing": "^7.0.2",
     "vite-env-only": "^3.0.3",
     "zod": "^3.23.8"
   },

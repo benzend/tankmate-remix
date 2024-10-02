@@ -46,8 +46,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Dashboard() {
 	const { tanks } = useLoaderData<typeof loader>()
 
-	console.log({ tanks })
-
 	return (
 		<div>
 			{tanks.length ? (
@@ -61,6 +59,9 @@ export default function Dashboard() {
 							score={getLatestTankScoreAverage(tank.fishTankScores)}
 						/>
 					))}
+            <div className="self-center text-center">
+              <Link to="/tanks/new">+ Add Tank</Link>
+            </div>
 				</div>
 			) : (
 				<Link to="/tanks/new">+ Add your first tank</Link>

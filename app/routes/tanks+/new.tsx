@@ -1,36 +1,47 @@
 import {
-	type LoaderFunctionArgs,
-	type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+  type ActionFunctionArgs,
 } from '@remix-run/node'
 import { Form, json, redirect } from '@remix-run/react'
 import OpenAI from 'openai'
 import { type ChatCompletionContentPart } from 'openai/resources/index.mjs'
+import { useState } from 'react'
 import { Tooltip } from 'react-tooltip'
+import { UploadButton } from '#app/components/ui/uploadthing.js'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
 import { tryJsonParse } from '#app/utils/misc.js'
+import { getImgDataUrlFromUrl } from '#app/utils/image.server.js'
 
 const client = new OpenAI({
-	apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
+  apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
 })
 
 export async function action({ request }: ActionFunctionArgs) {
-	const userId = await requireUserId(request, { redirectTo: '/' })
+  const userId = await requireUserId(request, { redirectTo: '/' })
 
-	const body = await request.formData()
+  const body = await request.formData()
 
-	const imageUrl = body.get('image_url')
+  const imageUrl = body.get('image_url')
 
-	if (typeof imageUrl !== 'string') {
-		return json({
-			error: { messages: ['image_url is not a string'] },
-		})
-	}
+  if (typeof imageUrl !== 'string') {
+    return json({
+      error: { messages: ['image_url is not a string'] },
+    })
+  }
 
-	const watertypeContent: Array<ChatCompletionContentPart> = [
-		{
-			type: 'text',
-			text: `Can you tell me what kind of water you think that this tank uses? The options are either saltwater or freshwater.
+  const imageBase64 = (await getImgDataUrlFromUrl(imageUrl)).unwrapOr(null);
+
+  if (!imageBase64) {
+    return json({
+      error: { messages: ['couldnt parse the imageUrl into base64'] },
+    })
+  }
+
+  const watertypeContent: Array<ChatCompletionContentPart> = [
+    {
+      type: 'text',
+      text: `Can you tell me what kind of water you think that this tank uses? The options are either saltwater or freshwater.
 
 \`\`\`json
 {
@@ -38,46 +49,46 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 \`\`\`
 `,
-		},
-		{ type: 'image_url', image_url: { url: imageUrl } },
-	]
+    },
+    { type: 'image_url', image_url: { url: imageBase64 } },
+  ]
 
-	const watertypeChatCompletion = await client.chat.completions.create({
-		response_format: { type: 'json_object' },
-		messages: [{ role: 'user', content: watertypeContent }],
-		model: 'gpt-4o',
-	})
+  const watertypeChatCompletion = await client.chat.completions.create({
+    response_format: { type: 'json_object' },
+    messages: [{ role: 'user', content: watertypeContent }],
+    model: 'gpt-4o',
+  })
 
-	if (!watertypeChatCompletion?.choices[0]?.message?.content) {
-		console.error('!watertypeChatCompletion?.choices[0]?.message?.content')
-		return redirect('/tanks/new?error=chat')
-	}
+  if (!watertypeChatCompletion?.choices[0]?.message?.content) {
+    console.error('!watertypeChatCompletion?.choices[0]?.message?.content')
+    return redirect('/tanks/new?error=chat')
+  }
 
-	const watertype = tryJsonParse(
-		watertypeChatCompletion.choices[0].message.content,
-	)?.unwrapOr(null)
+  const watertype = tryJsonParse(
+    watertypeChatCompletion.choices[0].message.content,
+  )?.unwrapOr(null)
 
-	interface WatertypeResponse {
-		watertype: string
-	}
+  interface WatertypeResponse {
+    watertype: string
+  }
 
-	const isValidWatertypeResponse = (res: unknown): res is WatertypeResponse => {
-		return (
-			!!res &&
-			typeof res === 'object' &&
-			typeof (res as Record<string, any>)['watertype'] === 'string'
-		)
-	}
+  const isValidWatertypeResponse = (res: unknown): res is WatertypeResponse => {
+    return (
+      !!res &&
+      typeof res === 'object' &&
+      typeof (res as Record<string, any>)['watertype'] === 'string'
+    )
+  }
 
-	if (!isValidWatertypeResponse(watertype)) {
-		console.error('!isValidWatertypeResponse', { watertype })
-		return redirect('/tanks/new?error=chatresult')
-	}
+  if (!isValidWatertypeResponse(watertype)) {
+    console.error('!isValidWatertypeResponse', { watertype })
+    return redirect('/tanks/new?error=chatresult')
+  }
 
-	const dimensionsContent: Array<ChatCompletionContentPart> = [
-		{
-			type: 'text',
-			text: `Can you tell me what dimensions you think that this tank is? Give me your best guess. Format is length<int>, width<int>, height<int> in INCHES.
+  const dimensionsContent: Array<ChatCompletionContentPart> = [
+    {
+      type: 'text',
+      text: `Can you tell me what dimensions you think that this tank is? Give me your best guess. Format is length<int>, width<int>, height<int> in INCHES.
 
 \`\`\`json
 {
@@ -87,63 +98,65 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 \`\`\`
 `,
-		},
-		{ type: 'image_url', image_url: { url: imageUrl } },
-	]
+    },
+    { type: 'image_url', image_url: { url: imageBase64 } },
+  ]
 
-	const dimensionsChatCompletion = await client.chat.completions.create({
-		response_format: { type: 'json_object' },
-		messages: [{ role: 'user', content: dimensionsContent }],
-		model: 'gpt-4o',
-	})
+  const dimensionsChatCompletion = await client.chat.completions.create({
+    response_format: { type: 'json_object' },
+    messages: [{ role: 'user', content: dimensionsContent }],
+    model: 'gpt-4o',
+  })
 
-	if (!dimensionsChatCompletion?.choices[0]?.message?.content) {
-    console.error('!dimensionsChatCompletion?.choices[0]?.message?.content', { dimensionsChatCompletion });
-		return redirect('/tanks/new?error=dimensions')
-	}
+  if (!dimensionsChatCompletion?.choices[0]?.message?.content) {
+    console.error('!dimensionsChatCompletion?.choices[0]?.message?.content', {
+      dimensionsChatCompletion,
+    })
+    return redirect('/tanks/new?error=dimensions')
+  }
 
-	const dimensions = tryJsonParse(
-		dimensionsChatCompletion.choices[0].message.content,
-	)?.unwrapOr(null)
+  const dimensions = tryJsonParse(
+    dimensionsChatCompletion.choices[0].message.content,
+  )?.unwrapOr(null)
 
-	interface DimensionsResponse {
-		length: number
-		width: number
-		height: number
-	}
+  interface DimensionsResponse {
+    length: number
+    width: number
+    height: number
+  }
 
-	const isValidDimensionsResponse = (
-		res: unknown,
-	): res is DimensionsResponse => {
-		return (
-			!!res &&
-			typeof res === 'object' &&
-			typeof (res as Record<string, any>)['length'] === 'number' &&
-			typeof (res as Record<string, any>)['width'] === 'number' &&
-			typeof (res as Record<string, any>)['height'] === 'number'
-		)
-	}
+  const isValidDimensionsResponse = (
+    res: unknown,
+  ): res is DimensionsResponse => {
+    return (
+      !!res &&
+      typeof res === 'object' &&
+      typeof (res as Record<string, any>)['length'] === 'number' &&
+      typeof (res as Record<string, any>)['width'] === 'number' &&
+      typeof (res as Record<string, any>)['height'] === 'number'
+    )
+  }
 
-	if (!isValidDimensionsResponse(dimensions)) {
-		console.error('!isValidDimensionsResponse', { dimensions })
-		return redirect('/tanks/new?error=dimensions')
-	}
+  if (!isValidDimensionsResponse(dimensions)) {
+    console.error('!isValidDimensionsResponse', { dimensions })
+    return redirect('/tanks/new?error=dimensions')
+  }
 
-	const tank = await prisma.fishTank.create({
-		data: {
-			name: 'My first fishtank',
-			waterType: watertype['watertype'],
-			dimensionsLength: dimensions['length'],
-			dimensionsWidth: dimensions['width'],
-			dimensionsHeight: dimensions['height'],
-			userId: userId,
-		},
-	})
+  const tank = await prisma.fishTank.create({
+    data: {
+      name: 'My first fishtank',
+      waterType: watertype['watertype'],
+      dimensionsLength: dimensions['length'],
+      dimensionsWidth: dimensions['width'],
+      dimensionsHeight: dimensions['height'],
+      userId: userId,
+    },
+  })
 
-	const tankScoreContent: Array<ChatCompletionContentPart> = [
-		{
-			type: 'text',
-			text: `
+  const tankScoreContent: Array<ChatCompletionContentPart> = [
+    {
+      type: 'text',
+      text: `
 Summarize the following data into a JSON format by splitting it into clearly defined sections. Each section should follow the given structure.
 
 ### Format Example:
@@ -200,67 +213,94 @@ Also, summarize the fish count data into a JSON format. For each fish species or
 }
 \`\`\`
 `,
-		},
-		{ type: 'image_url', image_url: { url: imageUrl } },
-	]
+    },
+    { type: 'image_url', image_url: { url: imageBase64 } },
+  ]
 
-	const chatCompletion = await client.chat.completions.create({
-		response_format: { type: 'json_object' },
-		messages: [{ role: 'user', content: tankScoreContent }],
-		model: 'gpt-4o',
-	})
+  const chatCompletion = await client.chat.completions.create({
+    response_format: { type: 'json_object' },
+    messages: [{ role: 'user', content: tankScoreContent }],
+    model: 'gpt-4o',
+  })
 
-	if (!chatCompletion?.choices[0]?.message?.content) {
-		console.error('!chatCompletion?.choices[0]?.message?.content', { chatCompletion })
-		return redirect('/')
-	}
+  if (!chatCompletion?.choices[0]?.message?.content) {
+    console.error('!chatCompletion?.choices[0]?.message?.content', {
+      chatCompletion,
+    })
+    return redirect('/')
+  }
 
-	const score = await prisma.fishTankScore.create({
-		data: {
-			result: chatCompletion.choices[0].message.content,
-			imageUrl: imageUrl,
-			fishTankId: tank.id,
-		},
-		select: {
-			id: true,
-		},
-	})
+  const score = await prisma.fishTankScore.create({
+    data: {
+      result: chatCompletion.choices[0].message.content,
+      imageUrl: imageUrl,
+      fishTankId: tank.id,
+    },
+    select: {
+      id: true,
+    },
+  })
 
-	return redirect('/tanks/' + score.id)
+  return redirect('/dashboard/tanks/' + score.id)
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-	requireUserId(request, { redirectTo: '/' })
-	return json({ ok: true })
+  requireUserId(request, { redirectTo: '/' })
+  return json({ ok: true })
 }
 
 export default function NewTank() {
-	return (
-		<>
-			<main className="font-poppins grid h-full place-items-center">
-				<div className="grid place-items-center px-4 py-16 xl:grid-cols-2 xl:gap-24">
-					<Form action="/tanks/new" method="POST">
-						<label className="text-sm">
-							Image Url{' '}
-							<a
-								data-tooltip-id="image-url-tooltip"
-								data-tooltip-content="Upload a clear image of your tank"
-							>
-								<span className="ml-1 text-xs text-slate-400">Tip</span>
-							</a>
-						</label>
-						<br />
-						<input
-							type="text"
-							name="image_url"
-							id="image_url"
-							className="mr-2 rounded border border-white bg-transparent px-2 py-1 text-white"
-						/>
-						<button type="submit">Analyze</button>
-					</Form>
-				</div>
-			</main>
-			<Tooltip id="image-url-tooltip"></Tooltip>
-		</>
-	)
+  const [uploadedUrl, setUploadedUrl] = useState<null | string>(null)
+  return (
+    <>
+      <main className="font-poppins grid h-full place-items-center">
+        <div className="grid place-items-center px-4 py-16 xl:grid-cols-2 xl:gap-24">
+          <Form action="/tanks/new" method="POST">
+            <label className="text-sm">
+              Image{' '}
+              <a
+                data-tooltip-id="image-url-tooltip"
+                data-tooltip-content="Upload a clear image of your tank to get the best results"
+              >
+                <span className="ml-1 text-xs text-slate-400">Tip</span>
+              </a>
+              <Tooltip id="image-url-tooltip" className="absolute"></Tooltip>
+            </label>
+            <br />
+            {uploadedUrl ? (
+              <>
+                <img
+                  src={uploadedUrl}
+                  width="300px"
+                  height="auto"
+                  alt="uploaded fish tank"
+                />
+                <input
+                  type="text"
+                  value={uploadedUrl}
+                  hidden
+                  name="image_url"
+                />
+              </>
+            ) : (
+              <UploadButton
+                endpoint="imageUploader"
+                onClientUploadComplete={(res) => {
+                  if (!res[0])
+                    throw new Error('there shouldve been a file uploaded')
+                    console.log({ res });
+                  setUploadedUrl(res[0]?.url)
+                }}
+                onUploadError={(error: Error) => {
+                  // Do something with the error.
+                  alert(`ERROR! ${error.message}`)
+                }}
+              />
+            )}
+            <button type="submit">Analyze</button>
+          </Form>
+        </div>
+      </main>
+    </>
+  )
 }
