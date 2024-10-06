@@ -245,7 +245,7 @@ Also, summarize the fish count data into a JSON format. For each fish species or
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  requireUserId(request, { redirectTo: '/' })
+  await requireUserId(request, { redirectTo: '/' })
   return json({ ok: true })
 }
 
