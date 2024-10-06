@@ -56,7 +56,7 @@ export default function Dashboard() {
 							tankId={tank.id}
 							name={tank.name}
 							note={'MY tank'}
-							score={getLatestTankScoreAverage(tank.fishTankScores)}
+							score={getLatestTankScoreAverage(tank.fishTankScores as any)}
 						/>
 					))}
             <div className="self-center text-center">
