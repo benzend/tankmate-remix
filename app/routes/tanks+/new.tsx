@@ -1,3 +1,4 @@
+import { getImgDataUrlFromUrl } from '#app/utils/image.server.js'
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
@@ -11,7 +12,6 @@ import { UploadButton } from '#app/components/ui/uploadthing.js'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
 import { tryJsonParse } from '#app/utils/misc.js'
-import { getImgDataUrlFromUrl } from '#app/utils/image.server.js'
 
 const client = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
