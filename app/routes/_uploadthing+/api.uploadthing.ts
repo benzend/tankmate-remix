@@ -3,22 +3,16 @@ import {
   createRouteHandler,
   type FileRouter,
 } from 'uploadthing/remix'
-import { UploadThingError } from 'uploadthing/server'
-import { requireUserId } from '#app/utils/auth.server.js'
 
 const f = createUploadthing()
 
 const uploadRouter = {
   imageUploader: f({ image: { maxFileSize: '8MB' } })
-    .middleware(async ({ event }) => {
-      const userId = await requireUserId(event.request)
-
-      if (!userId) throw new UploadThingError('Unauthorized')
-
-      return { userId }
+    .middleware(async ({ event: _event }) => {
+      return {}
     })
-    .onUploadComplete(async ({ metadata, file: _file }) => {
-      return { uploadedBy: metadata.userId }
+    .onUploadComplete(async ({ metadata: _meta, file: _file }) => {
+      return {}
     }),
 } satisfies FileRouter
 
