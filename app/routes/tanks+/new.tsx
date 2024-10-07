@@ -1,4 +1,3 @@
-import { getImgDataUrlFromUrl } from '#app/utils/image.server.js'
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
@@ -8,9 +7,11 @@ import OpenAI from 'openai'
 import { type ChatCompletionContentPart } from 'openai/resources/index.mjs'
 import { useState } from 'react'
 import { Tooltip } from 'react-tooltip'
+import { toast } from 'sonner'
 import { UploadButton } from '#app/components/ui/uploadthing.js'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
+import { getImgDataUrlFromUrl } from '#app/utils/image.server.js'
 import { tryJsonParse } from '#app/utils/misc.js'
 
 const client = new OpenAI({
@@ -30,7 +31,7 @@ export async function action({ request }: ActionFunctionArgs) {
     })
   }
 
-  const imageBase64 = (await getImgDataUrlFromUrl(imageUrl)).unwrapOr(null);
+  const imageBase64 = (await getImgDataUrlFromUrl(imageUrl)).unwrapOr(null)
 
   if (!imageBase64) {
     return json({
@@ -286,14 +287,15 @@ export default function NewTank() {
               <UploadButton
                 endpoint="imageUploader"
                 onClientUploadComplete={(res) => {
-                  if (!res[0])
-                    throw new Error('there shouldve been a file uploaded')
-                    console.log({ res });
+                  if (!res[0]) {
+                    console.error('Weird, there doesnt seem to be a file that got uploaded')
+                    return
+                  }
                   setUploadedUrl(res[0]?.url)
                 }}
                 onUploadError={(error: Error) => {
-                  // Do something with the error.
-                  alert(`ERROR! ${error.message}`)
+                  toast('Failed to upload. Try again')
+                  console.error(error)
                 }}
               />
             )}
