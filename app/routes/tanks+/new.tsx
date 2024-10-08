@@ -2,13 +2,13 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
 } from '@remix-run/node'
-import { Form, json, redirect } from '@remix-run/react'
+import { Form, json, redirect, useFetcher } from '@remix-run/react'
 import OpenAI from 'openai'
 import { type ChatCompletionContentPart } from 'openai/resources/index.mjs'
-import { useState } from 'react'
+import { useRef } from 'react'
 import { Tooltip } from 'react-tooltip'
-import { toast } from 'sonner'
-import { UploadButton } from '#app/components/ui/uploadthing.js'
+import { Input } from '#app/components/ui/input.js'
+import { type action as cloudinaryAction } from '#app/routes/_image-upload+/cloudinary.tsx'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
 import { getImgDataUrlFromUrl } from '#app/utils/image.server.js'
@@ -251,54 +251,69 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function NewTank() {
-  const [uploadedUrl, setUploadedUrl] = useState<null | string>(null)
+  const imgFetcher = useFetcher<typeof cloudinaryAction>()
+  const imgUploadFormRef = useRef<HTMLFormElement | null>(null);
+
+  const handleImageChange = () => {
+    let formData = new FormData()
+
+    if (imgUploadFormRef.current) {
+      formData = new FormData(imgUploadFormRef.current)
+    }
+
+    imgFetcher.submit(formData, {
+      method: 'POST',
+      action: '/cloudinary',
+      encType: "multipart/form-data"
+    })
+  }
+
+  const imgData = imgFetcher.data as any;
+
   return (
     <>
       <main className="font-poppins grid h-full place-items-center">
         <div className="grid place-items-center px-4 py-16 xl:grid-cols-2 xl:gap-24">
-          <Form action="/tanks/new" method="POST">
-            <label className="text-sm">
-              Image{' '}
-              <a
-                data-tooltip-id="image-url-tooltip"
-                data-tooltip-content="Upload a clear image of your tank to get the best results"
-              >
-                <span className="ml-1 text-xs text-slate-400">Tip</span>
-              </a>
-              <Tooltip id="image-url-tooltip" className="absolute"></Tooltip>
-            </label>
-            <br />
-            {uploadedUrl ? (
-              <>
-                <img
-                  src={uploadedUrl}
-                  width="300px"
-                  height="auto"
-                  alt="uploaded fish tank"
-                />
-                <input
-                  type="text"
-                  value={uploadedUrl}
-                  hidden
-                  name="image_url"
-                />
-              </>
-            ) : (
-              <UploadButton
-                endpoint="imageUploader"
-                onClientUploadComplete={(res) => {
-                  if (!res[0]) {
-                    console.error('Weird, there doesnt seem to be a file that got uploaded')
-                    return
-                  }
-                  setUploadedUrl(res[0]?.url)
-                }}
-                onUploadError={(error: Error) => {
-                  toast('Failed to upload. Try again')
-                  console.error(error)
-                }}
+          <label className="text-sm">
+            Image{' '}
+            <a
+              data-tooltip-id="image-url-tooltip"
+              data-tooltip-content="Upload a clear image of your tank to get the best results"
+            >
+              <span className="ml-1 text-xs text-slate-400">Tip</span>
+            </a>
+            <Tooltip id="image-url-tooltip" className="absolute"></Tooltip>
+          </label>
+          <br />
+          {imgFetcher.data ? (
+            <>
+              <img
+                src={imgData.imgSource}
+                width="300px"
+                height="auto"
+                alt="uploaded fish tank"
               />
-            )}
+              <input type="text" value={imgData.imgSource} hidden name="image_url" />
+            </>
+          ) : (
+            <imgFetcher.Form action="/cloudinary" method="POST" encType="multipart/form-data" id="image-upload-form" ref={imgUploadFormRef}>
+              <Input
+                name="img"
+                type="file"
+                placeholder="Image"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+              <input
+                name="description"
+                type="text"
+                hidden
+                readOnly
+                value="Fishtank"
+              />
+            </imgFetcher.Form>
+          )}
+          <Form method="POST">
             <button type="submit">Analyze</button>
           </Form>
         </div>

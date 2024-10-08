@@ -156,3 +156,4 @@ export async function shouldRequestTwoFA(request: Request) {
 	const twoHours = 1000 * 60 * 2
 	return Date.now() - verifiedTime > twoHours
 }
+
