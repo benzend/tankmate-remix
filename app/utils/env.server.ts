@@ -16,7 +16,6 @@ const schema = z.object({
 	// SENTRY_DSN: z.string(),
 	// If you plan to use Resend, uncomment this line
 	RESEND_API_KEY: z.string().default('MOCK_RESEND_API_KEY'),
-	UPLOADTHING_TOKEN: z.string().default('MOCK_UPLOADTHING_TOKEN'),
 	// If you plan to use GitHub auth, remove the default:
 	GITHUB_CLIENT_ID: z.string().default('MOCK_GITHUB_CLIENT_ID'),
 	GITHUB_CLIENT_SECRET: z.string().default('MOCK_GITHUB_CLIENT_SECRET'),

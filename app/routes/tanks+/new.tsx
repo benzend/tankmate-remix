@@ -11,7 +11,6 @@ import { Input } from '#app/components/ui/input.js'
 import { type action as cloudinaryAction } from '#app/routes/_image-upload+/cloudinary.tsx'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
-import { getImgDataUrlFromUrl } from '#app/utils/image.server.js'
 import { tryJsonParse } from '#app/utils/misc.js'
 
 const client = new OpenAI({
@@ -31,14 +30,6 @@ export async function action({ request }: ActionFunctionArgs) {
     })
   }
 
-  const imageBase64 = (await getImgDataUrlFromUrl(imageUrl)).unwrapOr(null)
-
-  if (!imageBase64) {
-    return json({
-      error: { messages: ['couldnt parse the imageUrl into base64'] },
-    })
-  }
-
   const watertypeContent: Array<ChatCompletionContentPart> = [
     {
       type: 'text',
@@ -51,7 +42,7 @@ export async function action({ request }: ActionFunctionArgs) {
 \`\`\`
 `,
     },
-    { type: 'image_url', image_url: { url: imageBase64 } },
+    { type: 'image_url', image_url: { url: imageUrl } },
   ]
 
   const watertypeChatCompletion = await client.chat.completions.create({
@@ -100,7 +91,7 @@ export async function action({ request }: ActionFunctionArgs) {
 \`\`\`
 `,
     },
-    { type: 'image_url', image_url: { url: imageBase64 } },
+    { type: 'image_url', image_url: { url: imageUrl } },
   ]
 
   const dimensionsChatCompletion = await client.chat.completions.create({
@@ -215,7 +206,7 @@ Also, summarize the fish count data into a JSON format. For each fish species or
 \`\`\`
 `,
     },
-    { type: 'image_url', image_url: { url: imageBase64 } },
+    { type: 'image_url', image_url: { url: imageUrl } },
   ]
 
   const chatCompletion = await client.chat.completions.create({
@@ -252,7 +243,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function NewTank() {
   const imgFetcher = useFetcher<typeof cloudinaryAction>()
-  const imgUploadFormRef = useRef<HTMLFormElement | null>(null);
+  const imgUploadFormRef = useRef<HTMLFormElement | null>(null)
 
   const handleImageChange = () => {
     let formData = new FormData()
@@ -264,11 +255,11 @@ export default function NewTank() {
     imgFetcher.submit(formData, {
       method: 'POST',
       action: '/cloudinary',
-      encType: "multipart/form-data"
+      encType: 'multipart/form-data',
     })
   }
 
-  const imgData = imgFetcher.data as any;
+  const imgData = imgFetcher.data as any
 
   return (
     <>
@@ -286,17 +277,30 @@ export default function NewTank() {
           </label>
           <br />
           {imgFetcher.data ? (
-            <>
+            <Form method="POST">
               <img
                 src={imgData.imgSource}
                 width="300px"
                 height="auto"
                 alt="uploaded fish tank"
               />
-              <input type="text" value={imgData.imgSource} hidden name="image_url" />
-            </>
+              <input
+                type="text"
+                value={imgData.imgSource}
+                hidden
+                name="image_url"
+              />
+
+              <button type="submit">Analyze</button>
+            </Form>
           ) : (
-            <imgFetcher.Form action="/cloudinary" method="POST" encType="multipart/form-data" id="image-upload-form" ref={imgUploadFormRef}>
+            <imgFetcher.Form
+              action="/cloudinary"
+              method="POST"
+              encType="multipart/form-data"
+              id="image-upload-form"
+              ref={imgUploadFormRef}
+            >
               <Input
                 name="img"
                 type="file"
@@ -313,9 +317,6 @@ export default function NewTank() {
               />
             </imgFetcher.Form>
           )}
-          <Form method="POST">
-            <button type="submit">Analyze</button>
-          </Form>
         </div>
       </main>
     </>
