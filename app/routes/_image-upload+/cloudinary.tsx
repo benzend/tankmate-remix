@@ -64,7 +64,7 @@ export default function Index() {
     )
 }
 
-export function ErrorBoundary({ error }) {
+export function ErrorBoundary({ error }: { error: Error }) {
     return (
         <div className="error-container">
             <pre>{error.message}</pre>
