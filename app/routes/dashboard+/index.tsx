@@ -60,7 +60,7 @@ export default function Dashboard() {
 						/>
 					))}
             <div className="self-center text-center">
-              <Link to="/tanks/new">+ Add Tank</Link>
+              <Link to="/dashboard/tanks/new">+ Add Tank</Link>
             </div>
 				</div>
 			) : (

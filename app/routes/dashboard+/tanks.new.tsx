@@ -53,7 +53,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (!watertypeChatCompletion?.choices[0]?.message?.content) {
     console.error('!watertypeChatCompletion?.choices[0]?.message?.content')
-    return redirect('/tanks/new?error=chat')
+    return redirect('/dashboard/tanks/new?error=chat')
   }
 
   const watertype = tryJsonParse(
@@ -74,7 +74,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (!isValidWatertypeResponse(watertype)) {
     console.error('!isValidWatertypeResponse', { watertype })
-    return redirect('/tanks/new?error=chatresult')
+    return redirect('dashboard/tanks/new?error=chatresult')
   }
 
   const dimensionsContent: Array<ChatCompletionContentPart> = [
@@ -104,7 +104,7 @@ export async function action({ request }: ActionFunctionArgs) {
     console.error('!dimensionsChatCompletion?.choices[0]?.message?.content', {
       dimensionsChatCompletion,
     })
-    return redirect('/tanks/new?error=dimensions')
+    return redirect('/dashboard/tanks/new?error=dimensions')
   }
 
   const dimensions = tryJsonParse(
@@ -131,7 +131,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (!isValidDimensionsResponse(dimensions)) {
     console.error('!isValidDimensionsResponse', { dimensions })
-    return redirect('/tanks/new?error=dimensions')
+    return redirect('/dashboard/tanks/new?error=dimensions')
   }
 
   const tank = await prisma.fishTank.create({

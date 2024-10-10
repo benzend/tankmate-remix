@@ -1,31 +1,52 @@
 import { json, type LoaderFunctionArgs } from '@remix-run/node'
-import { Link, Outlet, useLocation } from '@remix-run/react'
+import { Form, Link, Outlet, useLocation } from '@remix-run/react'
 import { requireUserId } from '#app/utils/auth.server.js'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-	await requireUserId(request, { redirectTo: '/' })
+  await requireUserId(request, { redirectTo: '/' })
 
-	return json({ ok: true })
+  return json({ ok: true })
 }
 
 export default function DashboardLayout() {
-	const location = useLocation()
+  const location = useLocation()
 
-	return (
-		<main className="min-h-screen bg-background text-gray-100">
-			<div className="flex">
-				<nav className="h-screen w-60 rounded-r-xl bg-slate-800 p-5">
-					<button
-						className={`mb-2 w-full rounded-xl px-4 py-2 text-left ${location.pathname === '/dashboard' && 'bg-slate-700'}`}
-					>
-						<Link to="/dashboard">Dashboard</Link>
-					</button>
-				</nav>
+  return (
+    <main className="bg-background text-gray-100">
+      <div className="flex h-[calc(100vh-92px)]">
+        <nav className="hidden w-60 rounded-tr-xl bg-slate-800 p-5 md:flex flex-col justify-between">
+          <TopOfSidenav>
+            <button
+              className={`mb-2 w-full rounded-xl px-4 py-2 text-left ${location.pathname === '/dashboard' && 'bg-slate-700'}`}
+            >
+              <Link to="/dashboard">Dashboard</Link>
+            </button>
+          </TopOfSidenav>
 
-				<div className="px-10 py-4">
-					<Outlet />
-				</div>
-			</div>
-		</main>
-	)
+          <BottomOfSidenav>
+            <Form method="POST" action="/logout">
+              <button
+                type="submit"
+                className="w-full rounded-xl px-4 py-2 text-left"
+              >
+                Logout
+              </button>
+            </Form>
+          </BottomOfSidenav>
+        </nav>
+
+        <div className="px-10 py-4">
+          <Outlet />
+        </div>
+      </div>
+    </main>
+  )
+}
+
+const TopOfSidenav = ({ children }: { children: any }) => {
+  return <div>{children}</div>
+}
+
+const BottomOfSidenav = ({ children }: { children: any }) => {
+  return <div>{children}</div>
 }
