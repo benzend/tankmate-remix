@@ -35,7 +35,7 @@ export default function DashboardLayout() {
           </BottomOfSidenav>
         </nav>
 
-        <div className="px-10 py-4">
+        <div className="px-6 py-4 w-full">
           <Outlet />
         </div>
       </div>

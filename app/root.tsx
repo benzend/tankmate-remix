@@ -18,7 +18,7 @@ import {
   useMatches,
 } from '@remix-run/react'
 import { withSentry } from '@sentry/remix'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { HoneypotProvider } from 'remix-utils/honeypot/react'
 import appleTouchIconAssetUrl from './assets/favicons/apple-touch-icon.png'
 import faviconAssetUrl from './assets/favicons/favicon.svg'
@@ -190,6 +190,10 @@ function App() {
   const allowIndexing = data.ENV.ALLOW_INDEXING !== 'false'
   useToast(data.toast)
 
+  useEffect(() => {
+    if (navOpen) setNavOpen(false)
+  }, [location.pathname])
+
   return (
     <Document
       nonce={nonce}
@@ -204,7 +208,7 @@ function App() {
               <header className="flex h-20 justify-between"></header>
 
               <div className="justify-between flex h-[calc(100vh-100px)] flex-col">
-                <div>
+                <div className="text-center">
                   <Button variant="outline" size="wide">
                     <Link to="/dashboard">Dashboard</Link>
                   </Button>
