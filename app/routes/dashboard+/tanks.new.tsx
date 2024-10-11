@@ -2,11 +2,18 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
 } from '@remix-run/node'
-import { Form, json, redirect, useFetcher } from '@remix-run/react'
+import {
+  Form,
+  json,
+  redirect,
+  useActionData,
+  useFetcher,
+} from '@remix-run/react'
 import OpenAI from 'openai'
 import { type ChatCompletionContentPart } from 'openai/resources/index.mjs'
 import { useRef } from 'react'
 import { Tooltip } from 'react-tooltip'
+import { useToast } from '#app/components/toaster.js'
 import { Input } from '#app/components/ui/input.js'
 import { type action as cloudinaryAction } from '#app/routes/_image-upload+/cloudinary.tsx'
 import { requireUserId } from '#app/utils/auth.server.js'
@@ -25,8 +32,107 @@ export async function action({ request }: ActionFunctionArgs) {
   const imageUrl = body.get('image_url')
 
   if (typeof imageUrl !== 'string') {
+    console.error("typeof imageUrl !== 'string'", { imageUrl })
     return json({
-      error: { messages: ['image_url is not a string'] },
+      error: {
+        messages: [
+          {
+            title: 'Server error',
+            message: 'Failed to parse the image. Please try again.',
+          },
+        ],
+      },
+    })
+  }
+
+  const isFishTankContent: Array<ChatCompletionContentPart> = [
+    {
+      type: 'text',
+      text: `Can you tell me if this is a fish tank or not. Also, give the user a message to take another picture of their fish tank with helpful advice.
+
+\`\`\`json
+{
+  "is_fish_tank": true,
+  "message": "Please try again. The image either wasnt clear enough, or isnt a picuture of a fish tank",
+}
+\`\`\`
+`,
+    },
+    { type: 'image_url', image_url: { url: imageUrl } },
+  ]
+
+  const isFishTankChatCompletion = await client.chat.completions.create({
+    response_format: { type: 'json_object' },
+    messages: [{ role: 'user', content: isFishTankContent }],
+    model: 'gpt-4o',
+  })
+
+  if (!isFishTankChatCompletion?.choices[0]?.message?.content) {
+    console.error('!isFishTankChatCompletion?.choices[0]?.message?.content', {
+      isFishTankChatCompletion,
+    })
+    return json({
+      error: {
+        messages: [
+          {
+            title: 'Server error',
+            message: 'Failed to parse the image. Please try again.',
+          },
+        ],
+      },
+    })
+  }
+
+  const isFishTankJson = tryJsonParse(
+    isFishTankChatCompletion.choices[0].message.content,
+  )?.unwrapOr(null)
+
+  interface IsFishTankResponse {
+    is_fish_tank: string
+    message?: string
+  }
+
+  const isValidIsFishTankResponse = (
+    res: unknown,
+  ): res is IsFishTankResponse => {
+    return (
+      !!res &&
+      typeof res === 'object' &&
+      typeof (res as Record<string, any>)['is_fish_tank'] === 'boolean' &&
+      (typeof (res as Record<string, any>)['message'] === 'string' ||
+        typeof (res as Record<string, any>)['message'] === 'undefined')
+    )
+  }
+
+  if (!isValidIsFishTankResponse(isFishTankJson)) {
+    console.error('!isValidIsFishTankResponse', { isFishTankJson })
+    return json({
+      error: {
+        messages: [
+          {
+            title: 'Server error',
+            message: 'Failed to parse the image. Please try again.',
+          },
+        ],
+      },
+    })
+  }
+
+  if (!isFishTankJson.is_fish_tank) {
+    console.error('Dashboard::tanks::new the image isnt a valid fishtank', {
+      imageUrl,
+    })
+    return json({
+      error: {
+        messages: [
+          {
+            title: 'Image isnt valid',
+            message:
+              isFishTankJson.message ||
+              'The image that you took isnt a valid fish tank. Please try again.',
+          },
+        ],
+      },
     })
   }
 
@@ -52,8 +158,19 @@ export async function action({ request }: ActionFunctionArgs) {
   })
 
   if (!watertypeChatCompletion?.choices[0]?.message?.content) {
-    console.error('!watertypeChatCompletion?.choices[0]?.message?.content')
-    return redirect('/dashboard/tanks/new?error=chat')
+    console.error('!watertypeChatCompletion?.choices[0]?.message?.content', {
+      watertypeChatCompletion,
+    })
+    return json({
+      error: {
+        messages: [
+          {
+            title: 'Server error',
+            message: 'Failed to parse the image. Please try again.',
+          },
+        ],
+      },
+    })
   }
 
   const watertype = tryJsonParse(
@@ -74,7 +191,16 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (!isValidWatertypeResponse(watertype)) {
     console.error('!isValidWatertypeResponse', { watertype })
-    return redirect('dashboard/tanks/new?error=chatresult')
+    return json({
+      error: {
+        messages: [
+          {
+            title: 'Server error',
+            message: 'Failed to parse the image. Please try again.',
+          },
+        ],
+      },
+    })
   }
 
   const dimensionsContent: Array<ChatCompletionContentPart> = [
@@ -104,7 +230,16 @@ export async function action({ request }: ActionFunctionArgs) {
     console.error('!dimensionsChatCompletion?.choices[0]?.message?.content', {
       dimensionsChatCompletion,
     })
-    return redirect('/dashboard/tanks/new?error=dimensions')
+    return json({
+      error: {
+        messages: [
+          {
+            title: 'Server error',
+            message: 'Failed to parse the image. Please try again.',
+          },
+        ],
+      },
+    })
   }
 
   const dimensions = tryJsonParse(
@@ -131,7 +266,16 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (!isValidDimensionsResponse(dimensions)) {
     console.error('!isValidDimensionsResponse', { dimensions })
-    return redirect('/dashboard/tanks/new?error=dimensions')
+    return json({
+      error: {
+        messages: [
+          {
+            title: 'Server error',
+            message: 'Failed to parse the image. Please try again.',
+          },
+        ],
+      },
+    })
   }
 
   const tank = await prisma.fishTank.create({
@@ -219,7 +363,16 @@ Also, summarize the fish count data into a JSON format. For each fish species or
     console.error('!chatCompletion?.choices[0]?.message?.content', {
       chatCompletion,
     })
-    return redirect('/')
+    return json({
+      error: {
+        messages: [
+          {
+            title: 'Server error',
+            message: 'Failed to parse the image. Please try again.',
+          },
+        ],
+      },
+    })
   }
 
   const score = await prisma.fishTankScore.create({
@@ -244,6 +397,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function NewTank() {
   const imgFetcher = useFetcher<typeof cloudinaryAction>()
   const imgUploadFormRef = useRef<HTMLFormElement | null>(null)
+  const actionData = useActionData<typeof action>()
+
+  useToast(
+    actionData?.error?.messages[0]
+      ? {
+        id: 'error-toast',
+        title: actionData.error.messages[0].title,
+        type: 'error',
+        description: actionData.error.messages[0].message,
+      }
+      : null,
+  )
 
   const handleImageChange = () => {
     let formData = new FormData()
