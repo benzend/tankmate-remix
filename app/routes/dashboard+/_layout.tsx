@@ -9,37 +9,41 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function DashboardLayout() {
-  const location = useLocation()
-
   return (
     <main className="bg-background text-gray-100">
       <div className="flex h-[calc(100vh-92px)]">
-        <nav className="hidden w-60 rounded-tr-xl bg-slate-800 p-5 md:flex flex-col justify-between">
-          <TopOfSidenav>
-            <button
-              className={`mb-2 w-full rounded-xl px-4 py-2 text-left ${location.pathname === '/dashboard' && 'bg-slate-700'}`}
-            >
-              <Link to="/dashboard">Dashboard</Link>
-            </button>
-          </TopOfSidenav>
-
-          <BottomOfSidenav>
-            <Form method="POST" action="/logout">
-              <button
-                type="submit"
-                className="w-full rounded-xl px-4 py-2 text-left"
-              >
-                Logout
-              </button>
-            </Form>
-          </BottomOfSidenav>
-        </nav>
-
-        <div className="px-6 py-4 w-full">
+        <SideNav />
+        <div className="w-full px-6 py-4">
           <Outlet />
         </div>
       </div>
     </main>
+  )
+}
+
+const SideNav = () => {
+  const location = useLocation()
+  return (
+    <nav className="hidden w-60 flex-col justify-between rounded-tr-xl bg-slate-800 p-5 md:flex">
+      <TopOfSidenav>
+        <button
+          className={`mb-2 w-full rounded-xl px-4 py-2 text-left ${location.pathname === '/dashboard' && 'bg-slate-700'}`}
+        >
+          <Link to="/dashboard">Dashboard</Link>
+        </button>
+      </TopOfSidenav>
+
+      <BottomOfSidenav>
+        <Form method="POST" action="/logout">
+          <button
+            type="submit"
+            className="w-full rounded-xl px-4 py-2 text-left"
+          >
+            Logout
+          </button>
+        </Form>
+      </BottomOfSidenav>
+    </nav>
   )
 }
 
