@@ -5,6 +5,7 @@ import {
 import {
   Form,
   json,
+  Link,
   redirect,
   useActionData,
   useFetcher,
@@ -428,10 +429,18 @@ export default function NewTank() {
 
   return (
     <>
-      <main className="font-poppins grid h-full place-items-center">
-        <div className="grid place-items-center px-4 py-16 xl:grid-cols-2 xl:gap-24">
+      <main className="font-poppins h-full">
+        <header>
+          <div className="mb-2">
+            <Link to="/dashboard" className="text-slate-400">
+              Back to Dash
+            </Link>
+          </div>
+          <h1 className="text-2xl">Add a New Tank</h1>
+        </header>
+        <div className="mt-20">
           <label className="text-sm">
-            Image{' '}
+            Upload Image
             <a
               data-tooltip-id="image-url-tooltip"
               data-tooltip-content="Upload a clear image of your tank to get the best results"
@@ -455,6 +464,16 @@ export default function NewTank() {
                 hidden
                 name="image_url"
               />
+              <div className="w-60">
+              <Input
+                name="img"
+                type="file"
+                placeholder="Image"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+              </div>
+
 
               <button type="submit">Analyze</button>
             </Form>
@@ -464,6 +483,7 @@ export default function NewTank() {
               method="POST"
               encType="multipart/form-data"
               id="image-upload-form"
+              className="w-80 mt-10"
               ref={imgUploadFormRef}
             >
               <Input
