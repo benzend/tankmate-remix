@@ -8,7 +8,7 @@ export default function Index() {
       <section className="hero-section h-screen bg-[url('/img/marketing/hero.jpg')] bg-cover bg-center relative flex items-center justify-center text-white">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-gray-800 to-black opacity-70"></div>
         <div className="relative text-center px-4">
-          <h1 className="text-6xl font-extrabold mb-6 drop-shadow-lg">
+          <h1 className="text-4xl lg:text-6xl font-extrabold mb-6 drop-shadow-lg">
             Dive into the Future of Aquarium Care
           </h1>
           <p className="text-xl mb-10 max-w-xl mx-auto drop-shadow-lg">
