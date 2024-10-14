@@ -432,14 +432,14 @@ export default function NewTank() {
       <main className="font-poppins h-full">
         <header>
           <div className="mb-2">
-            <Link to="/dashboard" className="text-slate-400">
+            <Link to="/dashboard" className="text-accent-foreground">
               Back to Dash
             </Link>
           </div>
-          <h1 className="text-2xl">Add a New Tank</h1>
+          <h1 className="text-2xl text-foreground">Add a New Tank</h1>
         </header>
         <div className="mt-20">
-          <label className="text-sm">
+          <label className="text-sm text-foreground">
             Upload Image
             <a
               data-tooltip-id="image-url-tooltip"
@@ -475,7 +475,7 @@ export default function NewTank() {
               </div>
 
 
-              <button type="submit">Analyze</button>
+              <button type="submit" className="text-foreground">Analyze</button>
             </Form>
           ) : (
             <imgFetcher.Form

@@ -30,7 +30,7 @@ export default function Index() {
       </section>
 
       {/* Features Section */}
-      <section className="features-section py-20 bg-gray-800 text-gray-100" id="features">
+      <section className="features-section py-20 bg-accent-background text-foreground" id="features">
         <div className="container max-w-7xl mx-auto px-8 text-center">
           <h2 className="text-4xl font-bold mb-12">Why TankMate?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -59,8 +59,8 @@ export default function Index() {
       {/* Prototype Section */}
       <section className="prototype-section py-24 bg-background text-gray-100">
         <div className="container mx-auto text-center px-4">
-          <h2 className="text-4xl font-bold mb-6">Try the TankMate Prototype!</h2>
-          <p className="text-lg mb-12">
+          <h2 className="text-4xl font-bold mb-6 text-foreground">Try the TankMate Prototype!</h2>
+          <p className="text-lg mb-12 text-accent-foreground max-w-lg mx-auto">
             Experience the power of TankMate firsthand. Upload an image of your tank and get real-time stats, fish counts, and more.
           </p>
           <img
@@ -110,11 +110,11 @@ function FeatureCard({
   imageUrl: string;
 }) {
   return (
-    <div className="feature-card p-8 bg-gray-800 hover:bg-gray-700 shadow-lg rounded-lg">
+    <div className="feature-card p-8 bg-background shadow-md hover:shadow-lg transition-all duration-300 rounded-lg">
       <img src={imageUrl} alt={title} className="w-full h-48 object-cover mb-4 rounded-lg" />
       <div className="text-5xl mb-6">{icon}</div>
       <h3 className="text-2xl font-bold mb-4">{title}</h3>
-      <p className="text-gray-400">{description}</p>
+      <p className="text-accent-foreground">{description}</p>
     </div>
   );
 }
