@@ -118,13 +118,13 @@ export default function TankPage() {
     <div>
       <header>
         <div className="mb-5">
-          <Link to="/dashboard" className="text-slate-400">
+          <Link to="/dashboard" className="text-accent-foreground">
             Back to Dash
           </Link>
         </div>
         {editingName ? (
           <div>
-            <label className="text-xs text-slate-300">Tank Name</label>
+            <label className="text-xs text-foreground">Tank Name</label>
             <br />
             <input
               type="text"
@@ -144,13 +144,13 @@ export default function TankPage() {
           </div>
         ) : (
           <>
-            <label className="text-xs text-slate-300">Tank Name</label>
+            <label className="text-xs text-foreground">Tank Name</label>
             <div className="mb-10 flex gap-4 align-baseline">
-              <h1 className="cursor-pointer text-center text-base font-bold md:text-2xl lg:text-left lg:text-3xl">
+              <h1 className="text-foreground cursor-pointer text-center text-base font-bold md:text-2xl lg:text-left lg:text-3xl">
                 {tank.name}
               </h1>
               <button
-                className="text-slate-300"
+                className="text-accent-foreground"
                 onClick={handleEditTankNameClick}
               >
                 Edit
@@ -252,31 +252,31 @@ const Health = ({
 }) => {
   const textColor = (function() {
     if (!score) return ''
-    if (score > 9) return 'text-green-400'
-    if (score > 8) return 'text-green-200'
-    if (score > 7) return 'text-yellow-200'
-    if (score > 6) return 'text-yellow-400'
-    if (score > 5) return 'text-orange-400'
-    if (score > 4) return 'text-orange-500'
-    return 'text-red-500'
+    if (score > 9) return 'text-positive-green'
+    if (score > 8) return 'text-positive-green'
+    if (score > 7) return 'text-neutral-yellow'
+    if (score > 6) return 'text-neutral-yellow'
+    if (score > 5) return 'text-negative-orange'
+    if (score > 4) return 'text-negative-orange'
+    return 'text-negative-red'
   })()
 
   const borderColor = (function() {
     if (!score) return ''
-    if (score > 9) return 'border-green-400'
-    if (score > 8) return 'border-green-200'
-    if (score > 7) return 'border-yellow-200'
-    if (score > 6) return 'border-yellow-400'
-    if (score > 5) return 'border-orange-400'
-    if (score > 4) return 'border-orange-500'
-    return 'border-red-500'
+    if (score > 9) return 'border-positive-green'
+    if (score > 8) return 'border-positive-green'
+    if (score > 7) return 'border-neutral-yellow'
+    if (score > 6) return 'border-neutral-yellow'
+    if (score > 5) return 'border-negative-orange'
+    if (score > 4) return 'border-negative-orange'
+    return 'border-negative-red'
   })()
 
   return (
     <div className={`border-b border-l ${borderColor} rounded p-4`}>
-      <div className={`md:text-5xl lg:text-7xl italic ${textColor}`}>{score}</div>
-      <div className="mb-3 text-sm font-bold">{label}</div>
-      <div className="text-xs">{note}</div>
+      <div className={`text-foreground md:text-5xl lg:text-7xl italic ${textColor}`}>{score}</div>
+      <div className="text-foreground mb-3 text-sm font-bold">{label}</div>
+      <div className="text-xs text-accent-foreground">{note}</div>
     </div>
   )
 }
@@ -285,12 +285,12 @@ const Count = ({ count, label }: { count: number | null; label: string }) => {
   return (
     <div className={`rounded border-b border-l p-4`}>
       {typeof count === 'number' && (
-        <div className="md:text-5xl lg:text-7xl italic">{count}</div>
+        <div className="text-foreground md:text-5xl lg:text-7xl italic">{count}</div>
       )}
       {typeof count === 'string' && (
-        <div className="mb-4 text-xl italic">{count}</div>
+        <div className="text-foreground mb-4 text-xl italic font-bold">{count}</div>
       )}
-      <div className="mb-3 text-sm text-gray-300">{label}</div>
+      <div className="mb-3 text-sm text-accent-foreground">{label}</div>
     </div>
   )
 }

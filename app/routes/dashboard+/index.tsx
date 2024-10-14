@@ -50,7 +50,7 @@ export default function Dashboard() {
     <div className="w-full">
       {tanks.length ? (
         <div className="m-2 w-full sm:w-80">
-          <header className="rounded-t border p-4">Tanks</header>
+          <header className="rounded-t border p-4 text-foreground">Tanks</header>
           <div className="rounded-b border-b border-l border-r">
             {tanks.map((tank) => (
               <Tank name={tank.name} tankId={tank.id} score={getLatestTankScoreAverage(tank.fishTankScores as any)}/>
@@ -58,7 +58,7 @@ export default function Dashboard() {
           </div>
           <div>
             <Link to="/dashboard/tanks/new">
-              <div className="w-40 text-xs rounded-b border border-t-0 p-2">+ Add Tank</div>
+              <div className="text-foreground w-40 text-xs rounded-b border border-t-0 p-2">+ Add Tank</div>
             </Link>
           </div>
         </div>
@@ -80,19 +80,19 @@ const Tank = ({
 }) => {
   const borderColor = (function() {
     if (!score) return ''
-    if (score > 9) return 'border-l-green-400'
-    if (score > 8) return 'border-l-green-200'
-    if (score > 7) return 'border-l-yellow-200'
-    if (score > 6) return 'border-l-yellow-400'
-    if (score > 5) return 'border-l-orange-400'
-    if (score > 4) return 'border-l-orange-500'
+    if (score > 9) return 'border-l-positive-green'
+    if (score > 8) return 'border-l-positive-green'
+    if (score > 7) return 'border-l-neutral-yellow'
+    if (score > 6) return 'border-l-neutral-yellow'
+    if (score > 5) return 'border-l-negative-red'
+    if (score > 4) return 'border-l-negative-red'
     return 'border-l-red-500'
   })()
 
   return (
     <div>
       <Link to={`/dashboard/tanks/${tankId}`}>
-        <div className={`border-b border-l p-2 text-sm text-gray-300 ${borderColor}`}>
+        <div className={`border-b border-l p-2 text-sm text-accent-foreground ${borderColor}`}>
           {name}
         </div>
       </Link>

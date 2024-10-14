@@ -35,7 +35,21 @@ export const extendedTheme = {
 		accent: {
 			DEFAULT: 'hsl(var(--accent))',
 			foreground: 'hsl(var(--accent-foreground))',
+      background: 'hsl(var(--accent-background))',
 		},
+    positive: {
+			DEFAULT: 'hsl(var(--positive-green))',
+			green: 'hsl(var(--positive-green))',
+    },
+    neutral: {
+			DEFAULT: 'hsl(var(--neutral-yellow))',
+			yellow: 'hsl(var(--neutral-yellow))',
+    },
+    negative: {
+			DEFAULT: 'hsl(var(--negative-red))',
+			orange: 'hsl(var(--negaitve-orange))',
+			red: 'hsl(var(--negaitve-red))',
+    },
 		popover: {
 			DEFAULT: 'hsl(var(--popover))',
 			foreground: 'hsl(var(--popover-foreground))',

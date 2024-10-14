@@ -9,6 +9,7 @@ import { Icon } from '#app/components/ui/icon.tsx'
 import { useHints } from '#app/utils/client-hints.tsx'
 import { useRequestInfo } from '#app/utils/request-info.ts'
 import { type Theme, setTheme } from '#app/utils/theme.server.ts'
+import { ReactNode } from 'react'
 
 const ThemeFormSchema = z.object({
 	theme: z.enum(['system', 'light', 'dark']),
@@ -38,8 +39,12 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export function ThemeSwitch({
 	userPreference,
+  after,
+  buttonClasses,
 }: {
-	userPreference?: Theme | null
+	userPreference?: Theme | null,
+  after?: ({ mode }: { mode: 'system' | 'dark' | 'light' }) => ReactNode,
+  buttonClasses?: string,
 }) {
 	const fetcher = useFetcher<typeof action>()
 	const requestInfo = useRequestInfo()
@@ -71,6 +76,16 @@ export function ThemeSwitch({
 		),
 	}
 
+  const afterAsElement = () => {
+    if (typeof after === 'function') {
+      return after({ mode })
+    } else if (typeof after !== 'undefined') {
+      return after
+    } else {
+      return null
+    }
+  }
+
 	return (
 		<fetcher.Form
 			method="POST"
@@ -86,9 +101,9 @@ export function ThemeSwitch({
 			<div className="flex gap-2">
 				<button
 					type="submit"
-					className="flex h-8 w-8 cursor-pointer items-center justify-center"
+					className={`flex h-8 w-8 cursor-pointer items-center justify-center ${buttonClasses}`}
 				>
-					{modeLabel[mode]}
+					{modeLabel[mode]} {afterAsElement()}
 				</button>
 			</div>
 		</fetcher.Form>
