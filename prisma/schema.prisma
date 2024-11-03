@@ -270,3 +270,14 @@ model PlantSpecies {
 
   count Int
 }
+
+model FishTankMaintenance {
+  id String @id @default(cuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  maintenanceType String
+
+  extraDetails String
+}
