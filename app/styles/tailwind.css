@@ -91,3 +91,22 @@
 		--ring: 217.2 32.6% 60%;
 	}
 }
+
+@layer base {
+  @font-face {
+    font-family: 'Jost';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(/fonts/Jost/Jost-VariableFont_wght.ttf) format('woff2');
+  }
+
+  @font-face {
+    font-family: 'Jost';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(/fonts/Gowun_Batang/GowunBatang-Regular.ttf) format('woff2');
+  }
+
+}

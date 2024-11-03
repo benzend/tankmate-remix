@@ -201,8 +201,8 @@ function App() {
 			allowIndexing={allowIndexing}
 			env={data.ENV}
 		>
-			<div className="flex h-screen flex-col justify-between">
-				<header className="container py-6">
+			<div className="flex h-screen flex-col justify-between bg-gradient-to-r bg-slate-950 from-blue-800">
+				<header className="px-10 py-6">
 					{navOpen && (
 						<nav className="z-2 fixed left-0 top-0 h-screen w-screen bg-accent-background px-10">
 							<header className="flex h-20 justify-between"></header>
@@ -271,11 +271,11 @@ function App() {
 							) : (
 								<>
 									{user ? (
-										<Button asChild variant="default" size="lg">
+										<button className="font-bold text-white">
 											<Link to="/dashboard">Go to Dashboard</Link>
-										</Button>
+										</button>
 									) : (
-										<Button asChild variant="default" size="lg">
+										<Button asChild variant="default" size="lg" className="font-bold">
 											<Link to="/login">Log In</Link>
 										</Button>
 									)}
@@ -290,14 +290,12 @@ function App() {
 				</div>
 
 				{!location.pathname.includes('dashboard') ? (
-					<div className="container flex items-center justify-between py-5">
+					<div className="px-10 flex items-center justify-between py-5 bg-slate-950 bg-gradient-to-l from-blue-800">
 						<Logo />
 
 						<p className="mx-10 text-sm text-gray-400">
 							© 2024 TankMate. All Rights Reserved.
 						</p>
-
-						<ThemeSwitch userPreference={data.requestInfo.userPrefs.theme} />
 					</div>
 				) : null}
 			</div>
@@ -310,11 +308,8 @@ function App() {
 function Logo() {
 	return (
 		<Link to="/" className="group grid leading-snug">
-			<span className="font-light transition group-hover:-translate-x-1">
-				Tank
-			</span>
-			<span className="font-bold transition group-hover:translate-x-1">
-				Mate
+			<span className="text-2xl font-extrabold text-white">
+				TankMate
 			</span>
 		</Link>
 	)
