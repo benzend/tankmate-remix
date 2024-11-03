@@ -215,6 +215,8 @@ model FishTank {
 
   fishTankScores FishTankScore[]
 
+  fishTankMaintenances FishTankMaintenance[]
+
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
 }
@@ -304,4 +306,7 @@ model FishTankMaintenance {
   maintenanceType String
 
   extraDetails String
+
+  fishTank   FishTank? @relation(fields: [fishTankId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  fishTankId String?
 }
