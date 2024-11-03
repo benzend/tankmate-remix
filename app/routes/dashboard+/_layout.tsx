@@ -12,6 +12,7 @@ import { getHints } from '#app/utils/client-hints.js'
 import { getDomainUrl } from '#app/utils/misc.js'
 import { getTheme } from '#app/utils/theme.server.js'
 import { ThemeSwitch } from '../resources+/theme-switch'
+import { Logo } from '#app/components/ui/logo.js'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireUserId(request, { redirectTo: '/' })
@@ -31,6 +32,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function DashboardLayout() {
   return (
     <main className="bg-background text-gray-100">
+      <header className="px-10 py-6">
+        <Logo mode="follow-theme" />
+      </header>
       <div className="flex h-[calc(100vh-92px)]">
         <SideNav />
         <div className="w-full px-6 py-4">
