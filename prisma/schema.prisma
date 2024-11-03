@@ -172,6 +172,9 @@ model Connection {
 model TankScore {
   id String @id @default(cuid())
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
+
   result   String
   context  String?
   imageUrl String?
@@ -179,6 +182,9 @@ model TankScore {
 
 model FishTankScore {
   id String @id @default(cuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   result   String
   context  String?
@@ -191,6 +197,9 @@ model FishTankScore {
 model FishTank {
   id   String @id @default(cuid())
   name String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   waterType String
 
@@ -213,6 +222,9 @@ model FishTank {
 model FishTankPump {
   id String @id @default(cuid())
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   pumpType String
 
   size String
@@ -223,6 +235,9 @@ model FishTankPump {
 
 model Fish {
   id String @id @default(cuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   name String
 
@@ -238,6 +253,9 @@ model Fish {
 model FishSpecies {
   id String @id @default(cuid())
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   friendlyName   String
   scientificName String
 
@@ -248,6 +266,9 @@ model FishSpecies {
 
 model Plant {
   id String @id @default(cuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   name String
 
@@ -262,6 +283,9 @@ model Plant {
 
 model PlantSpecies {
   id String @id @default(cuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   friendlyName   String
   scientificName String
