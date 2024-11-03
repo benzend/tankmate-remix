@@ -15,7 +15,6 @@ import {
 	useLocation,
 } from '@remix-run/react'
 import { withSentry } from '@sentry/remix'
-import { useEffect, useState } from 'react'
 import { HoneypotProvider } from 'remix-utils/honeypot/react'
 import appleTouchIconAssetUrl from './assets/favicons/apple-touch-icon.png'
 import faviconAssetUrl from './assets/favicons/favicon.svg'
@@ -38,7 +37,6 @@ import { useNonce } from './utils/nonce-provider.ts'
 import { type Theme, getTheme } from './utils/theme.server.ts'
 import { makeTimings, time } from './utils/timing.server.ts'
 import { getToast } from './utils/toast.server.ts'
-import { useOptionalUser } from './utils/user.ts'
 
 export const links: LinksFunction = () => {
 	return [
