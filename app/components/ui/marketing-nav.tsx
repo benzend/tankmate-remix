@@ -1,11 +1,12 @@
-import { type User } from '@prisma/client'
 import { Form, Link, useLocation } from '@remix-run/react'
 import { Button } from './button'
 import { Logo } from './logo'
 import { useEffect, useState } from 'react'
+import { useOptionalUser } from '#app/utils/user.js'
 
-export const MarketingNav = ({ user }: { user?: User }) => {
+export const MarketingNav = () => {
   const location = useLocation();
+  const user = useOptionalUser();
 	const [navOpen, setNavOpen] = useState(false)
 
 	useEffect(() => {
