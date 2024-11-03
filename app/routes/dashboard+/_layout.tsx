@@ -50,8 +50,16 @@ const SideNav = () => {
         <Button
           variant={location.pathname === '/dashboard' ? 'sidenav-active' : 'sidenav'}
           size="full"
+          className="mb-4"
         >
           <Link to="/dashboard">Dashboard</Link>
+        </Button>
+        <Button
+          variant={location.pathname === '/dashboard/maintenance' ? 'sidenav-active' : 'sidenav'}
+          size="full"
+          className="mb-4"
+        >
+          <Link to="/dashboard/maintenance">Maintenance</Link>
         </Button>
       </TopOfSidenav>
 

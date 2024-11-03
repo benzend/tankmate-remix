@@ -3,8 +3,8 @@ import { clsx, type ClassValue } from 'clsx'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useSpinDelay } from 'spin-delay'
 import { extendTailwindMerge } from 'tailwind-merge'
+import { ok, err, type Result } from 'true-myth/result'
 import { extendedTheme } from './extended-theme.ts'
-import { ok, err, Result } from 'true-myth/result'
 
 export function getUserImgSrc(imageId?: string | null) {
 	return imageId ? `/resources/user-images/${imageId}` : '/img/user.png'
@@ -291,9 +291,28 @@ export async function downloadFile(url: string, retries: number = 0) {
 }
 
 export function tryJsonParse(data: any): Result<unknown, Error> {
-  try {
-    return ok(JSON.parse(data))
-  } catch (e) {
-    return err(e as Error)
-  }
+	try {
+		return ok(JSON.parse(data))
+	} catch (e) {
+		return err(e as Error)
+	}
+}
+
+export function humanize(s: string): string {
+	return capitalizeFirstLetter(s.replaceAll('_', ' ').replaceAll('-', ' '))
+}
+
+export function capitalizeFirstLetter(val: string) {
+	return String(val).charAt(0).toUpperCase() + String(val).slice(1)
+}
+
+export function toTitleCase(str: string) {
+  return str.replace(
+    /\w\S*/g,
+    text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+  );
+}
+
+export function DateFrom(str: string): Date {
+  return new Date(str);
 }
