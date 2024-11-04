@@ -5,7 +5,7 @@ export default function Index() {
 	return (
 		<div className="min-h-screen bg-background text-gray-100">
 			{/* Hero Section */}
-			<section className="hero-section relative flex h-screen items-center justify-center bg-[url('/img/marketing/hero.jpg')] bg-cover bg-center text-white">
+			<section className="hero-section relative flex h-[650px] items-center justify-center bg-[url('/img/marketing/hero.jpg')] bg-cover bg-center text-white">
 				<div className="absolute inset-0 opacity-70"></div>
 				<div className="flex justify-between">
 					<div></div>
