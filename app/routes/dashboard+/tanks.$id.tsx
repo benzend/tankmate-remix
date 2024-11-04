@@ -117,20 +117,13 @@ export default function TankPage() {
   return (
     <div>
       <header>
-        <div className="mb-5">
-          <Link to="/dashboard" className="text-accent-foreground">
-            Back to Dash
-          </Link>
-        </div>
         {editingName ? (
           <div>
-            <label className="text-xs text-foreground">Tank Name</label>
-            <br />
             <input
               type="text"
               value={editName}
               onChange={handleInputNameChange}
-              className="mb-10 mr-4 rounded border-white bg-slate-800 px-2 py-2 text-center text-base font-bold outline-white md:text-lg lg:text-left lg:text-2xl"
+              className="mb-10 mr-4 rounded bg-slate-100 dark:bg-slate-800 px-2 py-2 text-center text-foreground text-base font-bold outline-white md:text-lg lg:text-left lg:text-2xl"
             />
             <button className="mr-4" onClick={handleSaveTankNameClick}>
               Save
@@ -144,9 +137,8 @@ export default function TankPage() {
           </div>
         ) : (
           <>
-            <label className="text-xs text-foreground">Tank Name</label>
             <div className="mb-10 flex gap-4 align-baseline">
-              <h1 className="text-foreground cursor-pointer text-center text-base font-bold md:text-2xl lg:text-left lg:text-3xl">
+              <h1 className="text-foreground cursor-pointer text-center font-bold text-2xl lg:text-left lg:text-3xl">
                 {tank.name}
               </h1>
               <button
@@ -181,7 +173,7 @@ const TankScore = ({ data }: { data: any }) => {
             />
           )}
 
-          <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3">
+          <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             {Object.keys(typedResult).map((key) => {
               const value = typedResult[key]
               if (
@@ -274,8 +266,8 @@ const Health = ({
 
   return (
     <div className={`border-b border-l ${borderColor} rounded p-4`}>
-      <div className={`text-foreground md:text-5xl lg:text-7xl italic ${textColor}`}>{score}</div>
-      <div className="text-foreground mb-3 text-sm font-bold">{label}</div>
+      <div className={`text-foreground md:text-5xl lg:text-7xl ${textColor}`}>{score}</div>
+      <div className="text-foreground mb-3 text-lg font-bold">{label}</div>
       <div className="text-xs text-accent-foreground">{note}</div>
     </div>
   )
@@ -285,12 +277,12 @@ const Count = ({ count, label }: { count: number | null; label: string }) => {
   return (
     <div className={`rounded border-b border-l p-4`}>
       {typeof count === 'number' && (
-        <div className="text-foreground md:text-5xl lg:text-7xl italic">{count}</div>
+        <div className="text-foreground md:text-5xl lg:text-7xl">{count}</div>
       )}
       {typeof count === 'string' && (
-        <div className="text-foreground mb-4 text-xl italic font-bold">{count}</div>
+        <div className="text-foreground mb-4 text-xl font-bold italic">{count}</div>
       )}
-      <div className="mb-3 text-sm text-accent-foreground">{label}</div>
+      <div className="mb-3 text-lg font-bold text-accent-foreground">{label}</div>
     </div>
   )
 }
