@@ -67,7 +67,7 @@ export default function Index() {
 						Get an In-depth Analysis
 					</h2>
 					<img
-						src="/img/marketing/prototype-screenshot.png"
+						src="/img/marketing/prototype-example.png"
 						alt="TankMate Prototype"
 						className="mx-auto mb-8 w-full max-w-lg rounded-lg shadow-lg"
 					/>
