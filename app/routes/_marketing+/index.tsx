@@ -10,7 +10,7 @@ export default function Index() {
 				<div className="flex justify-between">
 					<div></div>
 					<div className="relative px-4 md:w-1/2">
-						<h1 className="mb-6 text-4xl font-extrabold drop-shadow-lg lg:text-6xl">
+						<h1 className="font-serif leading-normal lg:leading-snug mb-6 text-4xl font-extrabold drop-shadow-lg lg:text-6xl">
 							Dive into the Future of Aquarium Care
 						</h1>
 						<p className="mx-auto mb-10 max-w-xl text-xl drop-shadow-lg">
@@ -34,7 +34,7 @@ export default function Index() {
 				id="features"
 			>
 				<div className="container mx-auto max-w-7xl px-8 text-center">
-					<h2 className="mb-20 text-4xl font-bold text-white md:text-5xl">
+					<h2 className="font-serif mb-20 text-4xl font-bold text-white md:text-5xl">
 						Why TankMate?
 					</h2>
 					<div className="grid grid-cols-1 gap-12 md:grid-cols-3">
@@ -63,7 +63,7 @@ export default function Index() {
 			{/* Prototype Section */}
 			<section className="prototype-section bg-slate-950 bg-gradient-to-l from-blue-900 py-24 text-gray-100">
 				<div className="container mx-auto px-4 text-center">
-					<h2 className="mb-20 text-4xl font-bold text-white md:text-5xl">
+					<h2 className="font-serif mb-20 text-4xl font-bold text-white md:text-5xl">
 						Get an In-depth Analysis
 					</h2>
 					<img
@@ -83,7 +83,7 @@ export default function Index() {
 			{/* Call to Action Section */}
 			<section className="cta-section from-bg-indigo-200 bg-indigo-600 bg-gradient-to-br py-20 text-white">
 				<div className="container mx-auto text-center">
-					<h2 className="mx-auto mb-3 max-w-lg text-4xl font-bold text-white md:text-5xl md:leading-relaxed">
+					<h2 className="font-serif mx-auto mb-3 max-w-lg text-4xl font-bold text-white md:text-5xl leading-relaxed md:leading-relaxed">
 						Keep your tank healthy with TankMate!
 					</h2>
 					<p className="mx-auto mb-10 max-w-lg text-2xl">

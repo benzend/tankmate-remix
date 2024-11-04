@@ -1,4 +1,5 @@
 import { type Config } from 'tailwindcss'
+import defaultTheme from 'tailwindcss/defaultTheme'
 
 export const extendedTheme = {
 	colors: {
@@ -114,6 +115,7 @@ export const extendedTheme = {
 		'caret-blink': 'caret-blink 1.25s ease-out infinite',
 	},
   fontFamily: {
-    'sans': ['"Jost"'],
+    'sans': ['"Jost"', ...defaultTheme.fontFamily.sans],
+    'serif': ['"Gowun Batang"', ...defaultTheme.fontFamily.serif],
   }
 } satisfies Config['theme']
