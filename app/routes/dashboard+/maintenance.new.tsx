@@ -127,6 +127,7 @@ export default function NewMaintenanceLog() {
               </select>
               <br/>
               <label className="text-sm text-foreground">Maintenance Type</label>
+              <br/>
               <select name="maintenanceType" className="text-black px-2 py-1 rounded mb-5">
                 <option value="water_change">Water Change</option>
                 <option value="filter_change">Filter Change</option>
