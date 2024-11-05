@@ -109,14 +109,6 @@ export default function NewMaintenanceLog() {
   return (
     <>
       <main className="font-poppins h-full">
-        <header>
-          <div className="mb-2">
-            <Link to="/dashboard" className="text-accent-foreground">
-              Back to Dash
-            </Link>
-          </div>
-          <h1 className="text-2xl text-foreground">Log Maintenance</h1>
-        </header>
         <div className="mt-10">
           <Form method="POST">
             <div className="w-60 mb-5">

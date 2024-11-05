@@ -47,11 +47,6 @@ export default function TankPage() {
 	return (
 		<div>
 			<header>
-				<div className="mb-5">
-					<Link to="/dashboard" className="text-accent-foreground">
-						Back to Dash
-					</Link>
-				</div>
 				<label className="text-xs text-foreground">Maintenance Log</label>
 				<div className="mb-10">
 					<h1 className="font-bold text-foreground md:text-2xl lg:text-left lg:text-3xl inline mr-4">
