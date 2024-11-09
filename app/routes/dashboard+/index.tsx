@@ -93,6 +93,7 @@ export default function Dashboard() {
 						<div className="rounded-b border-b border-l border-r">
 							{tanks.map((tank) => (
 								<Tank
+                  key={tank.id}
 									name={tank.name}
 									tankId={tank.id}
 									score={getLatestTankScoreAverage(tank.fishTankScores as any)}
@@ -115,6 +116,7 @@ export default function Dashboard() {
 							{tankMaintenanceLog.length ? (
 								tankMaintenanceLog.map((log) => (
 									<MaintenanceLog
+                    key={log.id}
 										logId={log.id}
 										maintenanceType={log.maintenanceType}
 										tankId={log.fishTank?.id}
@@ -144,6 +146,7 @@ export default function Dashboard() {
 							{tankParameterLog.length ? (
 								tankParameterLog.map((log) => (
 									<ParameterLog
+                    key={log.id}
 										logId={log.id}
 										createdAt={log.createdAt}
 										tankId={log.fishTank?.id}
