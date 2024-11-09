@@ -1,12 +1,12 @@
 import { invariantResponse } from '@epic-web/invariant'
 import { type ActionFunctionArgs, type LoaderFunctionArgs } from '@remix-run/node'
-import { Form, json, Link, redirect, useLoaderData } from '@remix-run/react'
-import { TextareaField } from '#app/components/forms.js'
-import { Input } from '#app/components/ui/input.js'
+import { Form, json, redirect, useLoaderData, useLocation, useSearchParams } from '@remix-run/react'
 import { Textarea } from '#app/components/ui/textarea.js'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
 import { Button } from '#app/components/ui/button.js'
+import { redirectWithToast } from '#app/utils/toast.server.js'
+import { safeRedirect } from 'remix-utils/safe-redirect'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await requireUserId(request, { redirectTo: '/' })
@@ -99,12 +99,26 @@ export async function action({ request }: ActionFunctionArgs) {
     },
   })
 
-  return redirect('/dashboard/maintenance/' + maintenance.id)
+  const redirectTo = body.get('redirectTo') || '/dashboard/maintenance/' + maintenance.id
 
+	return redirectWithToast(
+		safeRedirect(redirectTo),
+		{
+			type: 'success',
+			title: 'Log added',
+			description: 'Great job on keeping up on your tank maintenance',
+		},
+		{ status: 302 },
+	)
 }
 
 export default function NewMaintenanceLog() {
   const { tanks } = useLoaderData<typeof loader>()
+
+  const [searchParams] = useSearchParams()
+
+  const redirectTo = searchParams.get('redirectTo')
+  const tankId = searchParams.get('tankId')
 
   return (
     <>
@@ -112,11 +126,17 @@ export default function NewMaintenanceLog() {
         <div className="mt-10">
           <Form method="POST">
             <div className="w-60 mb-5">
-              <label className="text-sm text-foreground">Select Tank</label>
-              <br/>
-              <select name="tankId" className="text-black px-2 py-1 rounded mb-5">
-                {tanks.map(tank => <option value={tank.id}>{tank.name}</option>)}
-              </select>
+              {tankId ? (
+                <input type="hidden" name="tankId" value={tankId} />
+              ) : (
+                <>
+                  <label className="text-sm text-foreground">Select Tank</label>
+                  <br/>
+                  <select name="tankId" className="text-black px-2 py-1 rounded mb-5">
+                    {tanks.map(tank => <option value={tank.id}>{tank.name}</option>)}
+                  </select>
+                </>
+              )}
               <br/>
               <label className="text-sm text-foreground">Maintenance Type</label>
               <br/>
@@ -132,6 +152,8 @@ export default function NewMaintenanceLog() {
                 placeholder="Leave some extra details about you had to do"
               />
             </div>
+
+            {redirectTo && <input type="hidden" name="redirectTo" value={redirectTo} />}
 
             <Button type="submit">
               Create

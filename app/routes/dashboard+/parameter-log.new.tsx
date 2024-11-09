@@ -1,11 +1,13 @@
 import { invariantResponse } from '@epic-web/invariant'
 import { type ActionFunctionArgs, type LoaderFunctionArgs } from '@remix-run/node'
-import { Form, json, redirect, useLoaderData } from '@remix-run/react'
+import { Form, json, redirect, useLoaderData, useSearchParams } from '@remix-run/react'
 import { Input } from '#app/components/ui/input.js'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
 import { Button } from '#app/components/ui/button.js'
 import { numberOrNull } from '#app/utils/misc.js'
+import { redirectWithToast } from '#app/utils/toast.server.js'
+import { safeRedirect } from 'remix-utils/safe-redirect'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await requireUserId(request, { redirectTo: '/' })
@@ -80,12 +82,25 @@ export async function action({ request }: ActionFunctionArgs) {
     },
   })
 
-  return redirect('/dashboard/parameter-log/' + log.id)
+ const redirectTo = body.get('redirectTo') || '/dashboard/parameter-log/' + log.id
 
+	return redirectWithToast(
+		safeRedirect(redirectTo),
+		{
+			type: 'success',
+			title: 'Log added',
+			description: 'Great job on keeping up on your tank maintenance',
+		},
+		{ status: 302 },
+	)
 }
 
 export default function NewParameterLog() {
   const { tanks } = useLoaderData<typeof loader>()
+  const [searchParams] = useSearchParams()
+
+  const redirectTo = searchParams.get('redirectTo')
+  const tankId = searchParams.get('tankId')
 
   return (
     <>
@@ -93,11 +108,17 @@ export default function NewParameterLog() {
         <div className="mt-10">
           <Form method="POST">
             <div className="w-60 mb-5">
-              <label className="text-sm text-foreground">Select Tank</label>
-              <br/>
-              <select name="tankId" className="text-black px-2 py-1 rounded mb-5">
-                {tanks.map(tank => <option value={tank.id}>{tank.name}</option>)}
-              </select>
+              {tankId ? (
+                <input type="hidden" name="tankId" value={tankId} />
+              ) : (
+                <>
+                  <label className="text-sm text-foreground">Select Tank</label>
+                  <br/>
+                  <select name="tankId" className="text-black px-2 py-1 rounded mb-5">
+                    {tanks.map(tank => <option value={tank.id}>{tank.name}</option>)}
+                  </select>
+                </>
+              )}
               <br/>
               <label htmlFor="calcium">Calcium <span>(ppm)</span></label>
               <Input id="calcium" name="calcium" type="number" placeholder="450" />
@@ -112,7 +133,7 @@ export default function NewParameterLog() {
               <Input id="pH" name="pH" type="number" step="0.1" placeholder="8.4" />
               <br/>
               <label htmlFor="temp">Temp (°F)</label>
-              <Input id="temp" name="temp" type="number" placeholder="80.0" />
+              <Input id="temp" name="temp" type="number" placeholder="80.0" step="0.1" />
               <br/>
               <label htmlFor="nitrate">Nitrate (ppm)</label>
               <Input id="nitrate" name="nitrate" type="number" step="0.1" placeholder="7.0" />
@@ -121,6 +142,8 @@ export default function NewParameterLog() {
               <Input id="phosphate" name="phosphate" type="number" step="0.01" placeholder="0.12" />
               <br/>
             </div>
+
+            {redirectTo && <input type="hidden" name="redirectTo" value={redirectTo} />}
 
             <Button type="submit">
               Create

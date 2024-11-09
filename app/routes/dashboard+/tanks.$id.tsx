@@ -9,10 +9,12 @@ import {
   Link,
   useSubmit,
   useActionData,
+  useLocation,
 } from '@remix-run/react'
 import { useEffect, useState } from 'react'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
+import { DateFrom, humanize, toTitleCase } from '#app/utils/misc.js'
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const userId = await requireUserId(request, { redirectTo: '/' })
@@ -70,6 +72,20 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
           result: true,
         },
       },
+      fishTankMaintenances: {
+        select: {
+          id: true,
+          createdAt: true,
+          maintenanceType: true,
+          extraDetails: true,
+        },
+      },
+      parameterLogs: {
+        select: {
+          id: true,
+          createdAt: true,
+        },
+      },
     },
   })
 
@@ -87,6 +103,8 @@ export default function TankPage() {
 
   const [editName, setEditName] = useState(tank.name)
   const [editingName, setEditingName] = useState(false)
+
+  const location = useLocation()
 
   const submit = useSubmit()
 
@@ -123,7 +141,7 @@ export default function TankPage() {
               type="text"
               value={editName}
               onChange={handleInputNameChange}
-              className="mb-10 mr-4 rounded bg-slate-100 dark:bg-slate-800 px-2 py-2 text-center text-foreground text-base font-bold outline-white md:text-lg lg:text-left lg:text-2xl"
+              className="mb-10 mr-4 rounded bg-slate-100 px-2 py-2 text-center text-base font-bold text-foreground outline-white dark:bg-slate-800 md:text-lg lg:text-left lg:text-2xl"
             />
             <button className="mr-4" onClick={handleSaveTankNameClick}>
               Save
@@ -138,7 +156,7 @@ export default function TankPage() {
         ) : (
           <>
             <div className="mb-10 flex gap-4 align-baseline">
-              <h1 className="text-foreground cursor-pointer text-center font-bold text-2xl lg:text-left lg:text-3xl">
+              <h1 className="cursor-pointer text-center text-2xl font-bold text-foreground lg:text-left lg:text-3xl">
                 {tank.name}
               </h1>
               <button
@@ -154,6 +172,68 @@ export default function TankPage() {
       {tank.fishTankScores.map((score) => (
         <TankScore key={score.id} data={score} />
       ))}
+
+      <div className="flex gap-5 my-10">
+        <div className="w-full sm:w-80">
+          <header className="rounded-t border p-4 text-foreground">
+            Maintenance Log
+          </header>
+          <div className="rounded-b border-b border-l border-r">
+            {tank.fishTankMaintenances.length ? (
+              tank.fishTankMaintenances.map((log) => (
+                <MaintenanceLog
+                  key={log.id}
+                  logId={log.id}
+                  maintenanceType={log.maintenanceType}
+                  tankId={tank.id}
+                  tankName={tank.name}
+                ></MaintenanceLog>
+              ))
+            ) : (
+              <div className="border-b border-l p-2 text-sm text-accent-foreground">
+                No Logs
+              </div>
+            )}
+          </div>
+          <div>
+            <Link to={`/dashboard/maintenance/new?redirectTo=${location.pathname}&tankId=${tank.id}`}>
+              <div className="w-40 rounded-b border border-t-0 p-2 text-xs text-foreground">
+                + Add Log
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        <div className="w-full sm:w-80">
+          <header className="rounded-t border p-4 text-foreground">
+            Parameter Log
+          </header>
+          <div className="rounded-b border-b border-l border-r">
+            {tank.parameterLogs.length ? (
+              tank.parameterLogs.map((log) => (
+                <ParameterLog
+                  key={log.id}
+                  logId={log.id}
+                  createdAt={log.createdAt}
+                  tankId={tank.id}
+                  tankName={tank.name}
+                ></ParameterLog>
+              ))
+            ) : (
+              <div className="border-b border-l p-2 text-sm text-accent-foreground">
+                No Logs
+              </div>
+            )}
+          </div>
+          <div>
+            <Link to={`/dashboard/parameter-log/new?redirectTo=${location.pathname}&tankId=${tank.id}`}>
+              <div className="w-40 rounded-b border border-t-0 p-2 text-xs text-foreground">
+                + Add Log
+              </div>
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
@@ -173,7 +253,7 @@ const TankScore = ({ data }: { data: any }) => {
             />
           )}
 
-          <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+          <div className="flex flex-wrap">
             {Object.keys(typedResult).map((key) => {
               const value = typedResult[key]
               if (
@@ -265,9 +345,11 @@ const Health = ({
   })()
 
   return (
-    <div className={`border-b border-l ${borderColor} rounded p-4`}>
-      <div className={`text-foreground md:text-5xl lg:text-7xl ${textColor}`}>{score}</div>
-      <div className="text-foreground mb-3 text-lg font-bold">{label}</div>
+    <div className={`border-b border-l w-40 ${borderColor} rounded p-4`}>
+      <div className={`text-foreground md:text-2xl lg:text-4xl ${textColor}`}>
+        {score}
+      </div>
+      <div className="mb-3 text-lg font-bold text-foreground">{label}</div>
       <div className="text-xs text-accent-foreground">{note}</div>
     </div>
   )
@@ -275,14 +357,64 @@ const Health = ({
 
 const Count = ({ count, label }: { count: number | null; label: string }) => {
   return (
-    <div className={`rounded border-b border-l p-4`}>
+    <div className={`rounded border-b border-l w-40 p-4`}>
       {typeof count === 'number' && (
-        <div className="text-foreground md:text-5xl lg:text-7xl">{count}</div>
+        <div className="text-foreground md:text-2xl lg:text-4xl">{count}</div>
       )}
       {typeof count === 'string' && (
-        <div className="text-foreground mb-4 text-xl font-bold italic">{count}</div>
+        <div className="mb-4 text-xl font-bold italic text-foreground">
+          {count}
+        </div>
       )}
-      <div className="mb-3 text-lg font-bold text-accent-foreground">{label}</div>
+      <div className="mb-3 text-lg font-bold text-accent-foreground">
+        {label}
+      </div>
+    </div>
+  )
+}
+
+const MaintenanceLog = ({
+  logId,
+  maintenanceType,
+  tankId,
+  tankName,
+}: {
+  logId: string
+  maintenanceType: string
+  tankId?: string
+  tankName?: string
+}) => {
+  return (
+    <div>
+      <div className="flex justify-between border-b border-l p-2 text-sm text-accent-foreground">
+        <Link to={`/dashboard/maintenance/${logId}`}>
+          {toTitleCase(humanize(maintenanceType))}
+        </Link>
+        <Link to={`/dashboard/tanks/${tankId}`}>{tankName}</Link>
+      </div>
+    </div>
+  )
+}
+
+const ParameterLog = ({
+  logId,
+  createdAt,
+  tankId,
+  tankName,
+}: {
+  logId: string
+  createdAt: string
+  tankId?: string
+  tankName?: string
+}) => {
+  return (
+    <div>
+      <div className="flex justify-between border-b border-l p-2 text-sm text-accent-foreground">
+        <Link to={`/dashboard/parameter-log/${logId}`}>
+          {DateFrom(createdAt).toLocaleDateString()}
+        </Link>
+        <Link to={`/dashboard/tanks/${tankId}`}>{tankName}</Link>
+      </div>
     </div>
   )
 }
