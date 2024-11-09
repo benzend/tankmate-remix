@@ -70,6 +70,18 @@ const SideNav = () => {
         >
           <Link to="/dashboard/maintenance">Maintenance</Link>
         </Button>
+        <Button
+          variant={
+            location.pathname === '/dashboard/parameter-log'
+              ? 'sidenav-active'
+              : 'sidenav'
+          }
+          size="full"
+          className="mb-4"
+        >
+          <Link to="/dashboard/parameter-log">Parameter Log</Link>
+        </Button>
+
       </TopOfSidenav>
 
       <BottomOfSidenav>
@@ -114,6 +126,9 @@ const Nav = () => {
               </Button>
               <Button variant="outline" size="full">
                 <Link to="/dashboard/maintenance">Maintenance</Link>
+              </Button>
+              <Button variant="outline" size="full">
+                <Link to="/dashboard/parameter-log">Parameter Log</Link>
               </Button>
             </div>
 
@@ -186,7 +201,7 @@ const Nav = () => {
 
 function Breadcrumbs() {
   const location = useLocation()
-  const validCrumbs = ['dashboard', 'tanks', 'maintenance']
+  const validCrumbs = ['dashboard', 'tanks', 'maintenance', 'parameter-log', 'new']
   const to = (pathPart: string) => {
     const index = location.pathname.indexOf(pathPart)
     return location.pathname.slice(0, index + pathPart.length)
@@ -203,9 +218,13 @@ function Breadcrumbs() {
     }
   })
 
-  const pathsWithSingles = ['/maintenance/', '/tanks/'];
+  const pathsWithSingles = ['/maintenance/', '/tanks/', '/parameter-log/'];
+  const excludedLastPaths = ['/new']
 
   const endElement = (() => {
+    if (excludedLastPaths.some(_p => location.pathname.includes(_p))) {
+      return
+    }
     if (pathsWithSingles.some(_p => location.pathname.includes(_p))) {
       const _split = location.pathname.split('/')
       return _split[_split.length - 1]

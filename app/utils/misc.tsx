@@ -367,3 +367,9 @@ export function getLatestTankScoreAverage(tankScores: Array<FishTankScore>) {
 		return 80
 	}
 }
+
+export function numberOrNull(v: unknown): null | number {
+  if (typeof v === 'number') return v
+  if (Number.isNaN(Number(v))) return null
+  return Number(v)
+}

@@ -1,0 +1,133 @@
+import { invariantResponse } from '@epic-web/invariant'
+import { type ActionFunctionArgs, type LoaderFunctionArgs } from '@remix-run/node'
+import { Form, json, redirect, useLoaderData } from '@remix-run/react'
+import { Input } from '#app/components/ui/input.js'
+import { requireUserId } from '#app/utils/auth.server.js'
+import { prisma } from '#app/utils/db.server.js'
+import { Button } from '#app/components/ui/button.js'
+import { numberOrNull } from '#app/utils/misc.js'
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const userId = await requireUserId(request, { redirectTo: '/' })
+
+  const user = await prisma.user.findFirst({
+    select: {
+      id: true,
+      username: true,
+      name: true,
+    },
+    where: {
+      id: userId,
+    },
+  })
+
+  invariantResponse(user, 'No user', { status: 404 })
+
+  const tanks = await prisma.fishTank.findMany({
+    select: {
+      id: true,
+      name: true,
+    },
+    where: {
+      userId,
+    },
+  })
+
+  return json({ user, tanks })
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const userId = await requireUserId(request, { redirectTo: '/' })
+
+  const body = await request.formData()
+
+  const tankId = body.get('tankId')
+  const calcium = numberOrNull(body.get('calcium'))
+  const alk = numberOrNull(body.get('alk'))
+  const magnesium = numberOrNull(body.get('magnesium'))
+  const pH = numberOrNull(body.get('pH'))
+  const temp = numberOrNull(body.get('temp'))
+  const nitrate = numberOrNull(body.get('nitrate'))
+  const phosphate = numberOrNull(body.get('phosphate'))
+
+  if (typeof tankId !== 'string') {
+    console.error("typeof tankId !== 'string'", { tankId })
+    return json({
+      error: {
+        messages: [
+          {
+            title: 'Server error',
+            message: 'Failed to have a tankId. Please try again.',
+          },
+        ],
+      },
+    })
+  }
+
+  const log = await prisma.fishTankParameterLog.create({
+    data: {
+      calcium,
+      alk,
+      magnesium,
+      pH,
+      temp,
+      nitrate,
+      phosphate,
+      fishTankId: tankId
+    },
+    select: {
+      id: true,
+    },
+  })
+
+  return redirect('/dashboard/parameter-log/' + log.id)
+
+}
+
+export default function NewParameterLog() {
+  const { tanks } = useLoaderData<typeof loader>()
+
+  return (
+    <>
+      <main className="font-poppins h-full">
+        <div className="mt-10">
+          <Form method="POST">
+            <div className="w-60 mb-5">
+              <label className="text-sm text-foreground">Select Tank</label>
+              <br/>
+              <select name="tankId" className="text-black px-2 py-1 rounded mb-5">
+                {tanks.map(tank => <option value={tank.id}>{tank.name}</option>)}
+              </select>
+              <br/>
+              <label htmlFor="calcium">Calcium <span>(ppm)</span></label>
+              <Input id="calcium" name="calcium" type="number" placeholder="450" />
+              <br/>
+              <label htmlFor="alk">Alk <span>(dKH)</span></label>
+              <Input id="alk" name="alk" type="number" step="0.1" placeholder="9.2" />
+              <br/>
+              <label htmlFor="magnesium">Magnesium <span>(ppm)</span></label>
+              <Input id="magnesium" name="magnesium" type="number" placeholder="1500" />
+              <br/>
+              <label htmlFor="pH">pH</label>
+              <Input id="pH" name="pH" type="number" step="0.1" placeholder="8.4" />
+              <br/>
+              <label htmlFor="temp">Temp (°F)</label>
+              <Input id="temp" name="temp" type="number" placeholder="80.0" />
+              <br/>
+              <label htmlFor="nitrate">Nitrate (ppm)</label>
+              <Input id="nitrate" name="nitrate" type="number" step="0.1" placeholder="7.0" />
+              <br/>
+              <label htmlFor="phosphate">Phosphate (ppm)</label>
+              <Input id="phosphate" name="phosphate" type="number" step="0.01" placeholder="0.12" />
+              <br/>
+            </div>
+
+            <Button type="submit">
+              Create
+            </Button>
+          </Form>
+        </div>
+      </main>
+    </>
+  )
+}

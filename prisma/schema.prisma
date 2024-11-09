@@ -217,6 +217,8 @@ model FishTank {
 
   fishTankMaintenances FishTankMaintenance[]
 
+  parameterLogs FishTankParameterLog[]
+
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
 }
@@ -310,3 +312,22 @@ model FishTankMaintenance {
   fishTank   FishTank? @relation(fields: [fishTankId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   fishTankId String?
 }
+
+model FishTankParameterLog {
+  id String @id @default(cuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  calcium Int?
+  alk Float?
+  magnesium Int?
+  pH Float?
+  temp Float?
+  nitrate Float?
+  phosphate Float?
+
+  fishTank   FishTank? @relation(fields: [fishTankId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  fishTankId String?
+}
+
