@@ -4,7 +4,7 @@ import { json, type LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
-import { humanize, toTitleCase, tryJsonParse } from '#app/utils/misc.js'
+import { getLatestTankScoreAverage, humanize, toTitleCase, tryJsonParse } from '#app/utils/misc.js'
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	const userId = await requireUserId(request, { redirectTo: '/' })
@@ -182,52 +182,4 @@ const MaintenanceLog = ({
 	)
 }
 
-function getLatestTankScoreAverage(tankScores: Array<FishTankScore>) {
-	if (!tankScores) return 80
 
-	const last = tankScores[tankScores.length - 1]
-
-	interface AquariumHealth {
-		type: string
-		label: string
-		score?: number // Score can be optional
-		note?: string
-	}
-
-	interface FishCount {
-		type: string
-		label: string
-		total: number | string
-		range?: string
-		note?: string
-	}
-
-	interface AquariumData {
-		aquarium_health?: {
-			water_quality?: AquariumHealth
-			plant_health?: AquariumHealth
-			aquarium_cleanliness?: AquariumHealth
-		}
-		fish_count?: {
-			tetra_fish?: FishCount
-			rasbora?: FishCount
-			other_species?: FishCount
-		}
-	}
-
-	const aquariumData = tryJsonParse(last?.result).unwrapOr({}) as AquariumData
-
-	// Check if aquariumData.aquarium_health exists and has scores
-	const healthScores = Object.values(aquariumData.aquarium_health ?? {})
-		.map((item) => (typeof item?.score === 'number' ? item.score : null)) // Optional chaining with ?. and type checking
-		.filter((score): score is number => score !== null) // Ensure filtering removes nulls
-
-	// Calculate average score only if there are valid scores
-	if (healthScores.length > 0) {
-		const averageScore =
-			healthScores.reduce((acc, score) => acc + score, 0) / healthScores.length
-		return averageScore
-	} else {
-		return 80
-	}
-}
