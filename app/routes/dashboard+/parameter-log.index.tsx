@@ -86,7 +86,7 @@ export default function DashboardParameterPage() {
 				)}
 			</div>
 			<div>
-				<Link to="/dashboard/maintenance/new">
+				<Link to="/dashboard/parameter-log/new">
 					<div className="w-40 rounded-b border border-t-0 p-2 text-xs text-foreground">
 						+ Add Log
 					</div>
