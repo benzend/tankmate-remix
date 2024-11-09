@@ -72,6 +72,7 @@ export default function DashboardParameterPage() {
 				{tankParameterLog.length ? (
 					tankParameterLog.map((log) => (
 						<ParameterLog
+              key={log.id}
 							logId={log.id}
 							createdAt={log.createdAt}
 							tankId={log.fishTank?.id}

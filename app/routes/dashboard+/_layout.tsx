@@ -90,7 +90,7 @@ const SideNav = () => {
             Logout
           </Button>
         </Form>
-        <Button size="full" variant="outline" className="mt-2">
+        <Button size="full" variant="outline" className="mt-2" asChild>
           <ThemeSwitch
             userPreference={data.requestInfo.userPrefs.theme}
             buttonClasses="w-full text-foreground"
@@ -133,7 +133,7 @@ const Nav = () => {
             </div>
 
             <div>
-              <Button size="full" variant="outline" className="mt-2">
+              <Button size="full" variant="outline" className="mt-2" asChild>
                 <ThemeSwitch
                   userPreference={data.requestInfo.userPrefs.theme}
                   buttonClasses="w-full text-foreground"
@@ -234,7 +234,7 @@ function Breadcrumbs() {
   return (
     <div className="hidden md:flex gap-2">
       {crumbs.map((crumb) => (
-        <div>
+        <div key={crumb.label}>
           <Link to={crumb.link}><span>{crumb.label}</span></Link>
           {!crumb.last && <span className="ml-2">{'>'}</span>}
         </div>

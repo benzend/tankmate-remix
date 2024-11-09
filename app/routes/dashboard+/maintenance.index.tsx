@@ -73,6 +73,7 @@ export default function DashboardMaintenancePage() {
 				{tankMaintenanceLog.length ? (
 					tankMaintenanceLog.map((log) => (
 						<MaintenanceLog
+              key={log.id}
 							logId={log.id}
 							maintenanceType={log.maintenanceType}
 							tankId={log.fishTank?.id}
