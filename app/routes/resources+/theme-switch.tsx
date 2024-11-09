@@ -101,7 +101,7 @@ export function ThemeSwitch({
 			<div className="flex gap-2">
 				<button
 					type="submit"
-					className={`flex h-8 w-8 cursor-pointer items-center justify-center ${buttonClasses}`}
+					className={buttonClasses || "flex h-8 w-8 cursor-pointer items-center justify-center"}
 				>
 					{modeLabel[mode]} {afterAsElement()}
 				</button>

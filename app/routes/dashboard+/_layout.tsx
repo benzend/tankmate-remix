@@ -81,7 +81,6 @@ const SideNav = () => {
         >
           <Link to="/dashboard/parameter-log">Parameter Log</Link>
         </Button>
-
       </TopOfSidenav>
 
       <BottomOfSidenav>
@@ -90,15 +89,13 @@ const SideNav = () => {
             Logout
           </Button>
         </Form>
-        <Button size="full" variant="outline" className="mt-2" asChild>
-          <ThemeSwitch
-            userPreference={data.requestInfo.userPrefs.theme}
-            buttonClasses="w-full text-foreground"
-            after={({ mode }) => (
-              <span className="ml-2 capitalize">{mode} Mode</span>
-            )}
-          />
-        </Button>
+        <ThemeSwitch
+          userPreference={data.requestInfo.userPrefs.theme}
+          buttonClasses="w-full text-foreground py-2 mt-2 border rounded"
+          after={({ mode }) => (
+            <span className="ml-2 capitalize">{mode} Mode</span>
+          )}
+        />
       </BottomOfSidenav>
     </nav>
   )
@@ -133,15 +130,13 @@ const Nav = () => {
             </div>
 
             <div>
-              <Button size="full" variant="outline" className="mt-2" asChild>
-                <ThemeSwitch
-                  userPreference={data.requestInfo.userPrefs.theme}
-                  buttonClasses="w-full text-foreground"
-                  after={({ mode }) => (
-                    <span className="ml-2 capitalize">{mode} Mode</span>
-                  )}
-                />
-              </Button>
+              <ThemeSwitch
+                userPreference={data.requestInfo.userPrefs.theme}
+                buttonClasses="w-full text-foreground py-2 mb-2 border rounded"
+                after={({ mode }) => (
+                  <span className="ml-2 capitalize">{mode} Mode</span>
+                )}
+              />
 
               <Form method="POST" action="/logout" className="text-center">
                 <Button variant="default" size="full" type="submit">
@@ -201,7 +196,13 @@ const Nav = () => {
 
 function Breadcrumbs() {
   const location = useLocation()
-  const validCrumbs = ['dashboard', 'tanks', 'maintenance', 'parameter-log', 'new']
+  const validCrumbs = [
+    'dashboard',
+    'tanks',
+    'maintenance',
+    'parameter-log',
+    'new',
+  ]
   const to = (pathPart: string) => {
     const index = location.pathname.indexOf(pathPart)
     return location.pathname.slice(0, index + pathPart.length)
@@ -218,24 +219,26 @@ function Breadcrumbs() {
     }
   })
 
-  const pathsWithSingles = ['/maintenance/', '/tanks/', '/parameter-log/'];
+  const pathsWithSingles = ['/maintenance/', '/tanks/', '/parameter-log/']
   const excludedLastPaths = ['/new']
 
   const endElement = (() => {
-    if (excludedLastPaths.some(_p => location.pathname.includes(_p))) {
+    if (excludedLastPaths.some((_p) => location.pathname.includes(_p))) {
       return
     }
-    if (pathsWithSingles.some(_p => location.pathname.includes(_p))) {
+    if (pathsWithSingles.some((_p) => location.pathname.includes(_p))) {
       const _split = location.pathname.split('/')
       return _split[_split.length - 1]
     }
   })()
 
   return (
-    <div className="hidden md:flex gap-2">
+    <div className="hidden gap-2 md:flex">
       {crumbs.map((crumb) => (
         <div key={crumb.label}>
-          <Link to={crumb.link}><span>{crumb.label}</span></Link>
+          <Link to={crumb.link}>
+            <span>{crumb.label}</span>
+          </Link>
           {!crumb.last && <span className="ml-2">{'>'}</span>}
         </div>
       ))}
