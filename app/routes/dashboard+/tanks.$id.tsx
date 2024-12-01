@@ -15,6 +15,12 @@ import { useEffect, useState } from 'react'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
 import { DateFrom, humanize, toTitleCase } from '#app/utils/misc.js'
+import { Line as LineChart } from 'react-chartjs-2'
+import {Chart, CategoryScale, LinearScale, PointElement, LineElement} from 'chart.js'
+Chart.register(CategoryScale)
+Chart.register(LinearScale)
+Chart.register(PointElement)
+Chart.register(LineElement)
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const userId = await requireUserId(request, { redirectTo: '/' })
@@ -83,6 +89,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       parameterLogs: {
         select: {
           id: true,
+          temp: true,
+          alk: true,
+          calcium: true,
+          magnesium: true,
+          pH: true,
+          nitrate: true,
+          phosphate: true,
           createdAt: true,
         },
       },
@@ -173,7 +186,7 @@ export default function TankPage() {
         <TankScore key={score.id} data={score} />
       ))}
 
-      <div className="flex gap-5 my-10">
+      <div className="flex flex-wrap gap-5 my-10">
         <div className="w-full sm:w-80">
           <header className="rounded-t border p-4 text-foreground">
             Maintenance Log
@@ -204,21 +217,104 @@ export default function TankPage() {
           </div>
         </div>
 
-        <div className="w-full sm:w-80">
+        <div className="w-full sm:w-120">
           <header className="rounded-t border p-4 text-foreground">
             Parameter Log
           </header>
           <div className="rounded-b border-b border-l border-r">
             {tank.parameterLogs.length ? (
-              tank.parameterLogs.map((log) => (
-                <ParameterLog
-                  key={log.id}
-                  logId={log.id}
-                  createdAt={log.createdAt}
-                  tankId={tank.id}
-                  tankName={tank.name}
-                ></ParameterLog>
-              ))
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 border rounded">
+                  <h3 className="text-lg font-bold mb-2">pH Levels</h3>
+                  <LineChart data={{
+                    labels: tank.parameterLogs.map(l => DateFrom(l.createdAt).toLocaleDateString()),
+                    datasets: [{
+                      label: 'pH',
+                      data: tank.parameterLogs.map(l => l.pH || 0),
+                      backgroundColor: '#60A5FA',
+                      borderColor: '#60A5FA',
+                    }]
+                  }} />
+                </div>
+
+                <div className="p-4 border rounded">
+                  <h3 className="text-lg font-bold mb-2">Temperature</h3>
+                  <LineChart data={{
+                    labels: tank.parameterLogs.map(l => DateFrom(l.createdAt).toLocaleDateString()),
+                    datasets: [{
+                      label: 'Temperature',
+                      data: tank.parameterLogs.map(l => l.temp || 0),
+                      backgroundColor: '#F87171',
+                      borderColor: '#F87171',
+                    }]
+                  }} />
+                </div>
+
+                <div className="p-4 border rounded">
+                  <h3 className="text-lg font-bold mb-2">Alkalinity</h3>
+                  <LineChart data={{
+                    labels: tank.parameterLogs.map(l => DateFrom(l.createdAt).toLocaleDateString()),
+                    datasets: [{
+                      label: 'Alkalinity',
+                      data: tank.parameterLogs.map(l => l.alk || 0),
+                      backgroundColor: '#34D399',
+                      borderColor: '#34D399',
+                    }]
+                  }} />
+                </div>
+
+                <div className="p-4 border rounded">
+                  <h3 className="text-lg font-bold mb-2">Calcium</h3>
+                  <LineChart data={{
+                    labels: tank.parameterLogs.map(l => DateFrom(l.createdAt).toLocaleDateString()),
+                    datasets: [{
+                      label: 'Calcium',
+                      data: tank.parameterLogs.map(l => l.calcium || 0),
+                      backgroundColor: '#A78BFA',
+                      borderColor: '#A78BFA',
+                    }]
+                  }} />
+                </div>
+
+                <div className="p-4 border rounded">
+                  <h3 className="text-lg font-bold mb-2">Magnesium</h3>
+                  <LineChart data={{
+                    labels: tank.parameterLogs.map(l => DateFrom(l.createdAt).toLocaleDateString()),
+                    datasets: [{
+                      label: 'Magnesium',
+                      data: tank.parameterLogs.map(l => l.magnesium || 0),
+                      backgroundColor: '#FBBF24',
+                      borderColor: '#FBBF24',
+                    }]
+                  }} />
+                </div>
+
+                <div className="p-4 border rounded">
+                  <h3 className="text-lg font-bold mb-2">Nitrate</h3>
+                  <LineChart data={{
+                    labels: tank.parameterLogs.map(l => DateFrom(l.createdAt).toLocaleDateString()),
+                    datasets: [{
+                      label: 'Nitrate',
+                      data: tank.parameterLogs.map(l => l.nitrate || 0),
+                      backgroundColor: '#EC4899',
+                      borderColor: '#EC4899',
+                    }]
+                  }} />
+                </div>
+
+                <div className="p-4 border rounded">
+                  <h3 className="text-lg font-bold mb-2">Phosphate</h3>
+                  <LineChart data={{
+                    labels: tank.parameterLogs.map(l => DateFrom(l.createdAt).toLocaleDateString()),
+                    datasets: [{
+                      label: 'Phosphate',
+                      data: tank.parameterLogs.map(l => l.phosphate || 0),
+                      backgroundColor: '#6366F1',
+                      borderColor: '#6366F1',
+                    }]
+                  }} />
+                </div>
+              </div>
             ) : (
               <div className="border-b border-l p-2 text-sm text-accent-foreground">
                 No Logs
@@ -393,6 +489,12 @@ const MaintenanceLog = ({
         <Link to={`/dashboard/tanks/${tankId}`}>{tankName}</Link>
       </div>
     </div>
+  )
+}
+
+const ParameterChart = () => {
+  return (
+    <div></div>
   )
 }
 
