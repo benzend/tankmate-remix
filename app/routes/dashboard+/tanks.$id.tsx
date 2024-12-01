@@ -76,6 +76,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         select: {
           id: true,
           result: true,
+          imageUrl: true,
         },
       },
       fishTankMaintenances: {
@@ -145,6 +146,9 @@ export default function TankPage() {
     }
   }, [actionData])
 
+  const tankImageUrls = tank.fishTankScores.map(s => s.imageUrl).filter(Boolean)
+  const latestImage = tankImageUrls[tankImageUrls.length - 1]
+
   return (
     <div>
       <header>
@@ -181,6 +185,7 @@ export default function TankPage() {
             </div>
           </>
         )}
+        {latestImage && (<div className="mb-10"><img src={latestImage} width="500" height="auto" /></div>)}
       </header>
       {tank.fishTankScores.map((score) => (
         <TankScore key={score.id} data={score} />
@@ -341,14 +346,6 @@ const TankScore = ({ data }: { data: any }) => {
       const typedResult = result as Record<string, any>
       return (
         <div>
-          {data?.imageUrl && (
-            <img
-              src={data.imageUrl}
-              alt="fish tank and everything in it"
-              className="mb-10"
-            />
-          )}
-
           <div className="flex flex-wrap">
             {Object.keys(typedResult).map((key) => {
               const value = typedResult[key]
