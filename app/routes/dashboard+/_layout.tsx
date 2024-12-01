@@ -150,7 +150,7 @@ const Nav = () => {
 
       <header className="flex justify-between px-10 py-6">
         <div className="flex items-center gap-20">
-          <Logo mode="follow-theme" />
+          <Logo to="/dashboard" mode="follow-theme" />
           <div className="ml-2">
             <Breadcrumbs />
           </div>

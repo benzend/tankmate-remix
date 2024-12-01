@@ -1,8 +1,8 @@
 import { Link } from "@remix-run/react"
 
-export const Logo = ({ mode = 'stuck' } : { mode?: 'stuck' | 'follow-theme' }) => {
+export const Logo = ({ mode = 'stuck', to = '/' } : { mode?: 'stuck' | 'follow-theme', to?: string }) => {
   return (
-		<Link to="/" className="group grid leading-snug">
+		<Link to={to} className="group grid leading-snug">
 			<span className={`text-2xl font-extrabold ${mode === 'stuck' ? 'text-white' : 'text-foreground' }`}>
 				TankMate
 			</span>
