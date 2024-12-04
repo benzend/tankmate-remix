@@ -30,6 +30,21 @@ export async function action({ request }: ActionFunctionArgs) {
 
 	const body = await request.formData()
 
+  if (body.get('skip')) {
+    const tank = await prisma.fishTank.create({
+      data: {
+        name: 'My first fishtank',
+        waterType: 'saltwater',
+        dimensionsLength: 10,
+        dimensionsWidth: 10,
+        dimensionsHeight: 10,
+        userId: userId,
+      },
+    })
+
+    return redirect('/dashboard/tanks/' + tank.id)
+  }
+
 	const imageUrl = body.get('image_url')
 
 	if (typeof imageUrl !== 'string') {
@@ -376,7 +391,7 @@ Also, summarize the fish count data into a JSON format. For each fish species or
 		})
 	}
 
-	const score = await prisma.fishTankScore.create({
+	await prisma.fishTankScore.create({
 		data: {
 			result: chatCompletion.choices[0].message.content,
 			imageUrl: imageUrl,
@@ -387,7 +402,7 @@ Also, summarize the fish count data into a JSON format. For each fish species or
 		},
 	})
 
-	return redirect('/dashboard/tanks/' + score.id)
+	return redirect('/dashboard/tanks/' + tank.id)
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -502,6 +517,11 @@ export default function NewTank() {
 						</imgFetcher.Form>
 					)}
 				</div>
+
+        <Form method="POST">
+          <input type="hidden" name="skip" value="true" />
+          <button type="submit" className="mt-10">Skip?</button>
+        </Form>
 			</main>
 		</>
 	)
