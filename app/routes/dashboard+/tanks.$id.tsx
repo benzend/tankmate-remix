@@ -474,7 +474,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 				{tank.parameterLogs.length ? (
 					<div className={cn("grid grid-cols-2 gap-4", !isOpen && 'invisible h-0')}>
 						<div className="rounded border p-4">
-							<h3 className="mb-2 text-lg font-bold">pH Levels</h3>
+							<h3 className="mb-2 text-lg font-bold text-foreground">pH Levels</h3>
 							<LineChart
 								data={{
 									labels: tank.parameterLogs.map((l) =>
@@ -493,7 +493,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 						</div>
 
 						<div className="rounded border p-4">
-							<h3 className="mb-2 text-lg font-bold">Temperature</h3>
+							<h3 className="mb-2 text-lg font-bold text-foreground">Temperature</h3>
 							<LineChart
 								data={{
 									labels: tank.parameterLogs.map((l) =>
@@ -511,7 +511,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 							/>
 						</div>
 
-						<div className="rounded border p-4">
+						<div className="rounded border p-4 text-foreground">
 							<h3 className="mb-2 text-lg font-bold">Alkalinity</h3>
 							<LineChart
 								data={{
@@ -530,7 +530,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 							/>
 						</div>
 
-						<div className="rounded border p-4">
+						<div className="rounded border p-4 text-foreground">
 							<h3 className="mb-2 text-lg font-bold">Calcium</h3>
 							<LineChart
 								data={{
@@ -549,7 +549,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 							/>
 						</div>
 
-						<div className="rounded border p-4">
+						<div className="rounded border p-4 text-foreground">
 							<h3 className="mb-2 text-lg font-bold">Magnesium</h3>
 							<LineChart
 								data={{
@@ -568,7 +568,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 							/>
 						</div>
 
-						<div className="rounded border p-4">
+						<div className="rounded border p-4 text-foreground">
 							<h3 className="mb-2 text-lg font-bold">Nitrate</h3>
 							<LineChart
 								data={{
@@ -587,7 +587,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 							/>
 						</div>
 
-						<div className="rounded border p-4">
+						<div className="rounded border p-4 text-foreground">
 							<h3 className="mb-2 text-lg font-bold">Phosphate</h3>
 							<LineChart
 								data={{
