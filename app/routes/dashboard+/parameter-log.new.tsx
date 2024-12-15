@@ -119,7 +119,7 @@ export default function NewParameterLog() {
         {tankId && (
           <Link to={`/dashboard/tanks/${tankId}`} className="text-foreground">{'<'} Back to Tank</Link>
         )}
-        <div className="mb-20 mt-10">
+        <div className="mt-10">
           <Form method="POST">
             <div className="mb-5 w-60">
               {tankId ? (
@@ -141,7 +141,7 @@ export default function NewParameterLog() {
                 </>
               )}
               <br />
-              <label htmlFor="calcium">
+              <label htmlFor="calcium" className="text-foreground">
                 Calcium <span>(ppm)</span>
               </label>
               <Input
@@ -151,7 +151,7 @@ export default function NewParameterLog() {
                 placeholder="450"
               />
               <br />
-              <label htmlFor="alk">
+              <label htmlFor="alk" className="text-foreground">
                 Alk <span>(dKH)</span>
               </label>
               <Input
@@ -162,7 +162,7 @@ export default function NewParameterLog() {
                 placeholder="9.2"
               />
               <br />
-              <label htmlFor="magnesium">
+              <label htmlFor="magnesium" className="text-foreground">
                 Magnesium <span>(ppm)</span>
               </label>
               <Input
@@ -172,7 +172,7 @@ export default function NewParameterLog() {
                 placeholder="1500"
               />
               <br />
-              <label htmlFor="pH">pH</label>
+              <label htmlFor="pH" className="text-foreground">pH</label>
               <Input
                 id="pH"
                 name="pH"
@@ -181,7 +181,7 @@ export default function NewParameterLog() {
                 placeholder="8.4"
               />
               <br />
-              <label htmlFor="temp">Temp (°F)</label>
+              <label htmlFor="temp" className="text-foreground">Temp (°F)</label>
               <Input
                 id="temp"
                 name="temp"
@@ -190,7 +190,7 @@ export default function NewParameterLog() {
                 step="0.1"
               />
               <br />
-              <label htmlFor="nitrate">Nitrate (ppm)</label>
+              <label htmlFor="nitrate" className="text-foreground">Nitrate (ppm)</label>
               <Input
                 id="nitrate"
                 name="nitrate"
@@ -199,7 +199,7 @@ export default function NewParameterLog() {
                 placeholder="7.0"
               />
               <br />
-              <label htmlFor="phosphate">Phosphate (ppm)</label>
+              <label htmlFor="phosphate" className="text-foreground">Phosphate (ppm)</label>
               <Input
                 id="phosphate"
                 name="phosphate"

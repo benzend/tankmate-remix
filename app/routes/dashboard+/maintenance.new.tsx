@@ -147,6 +147,8 @@ export default function NewMaintenanceLog() {
                 <option value="water_change">Water Change</option>
                 <option value="filter_change">Filter Change</option>
                 <option value="sand_change">Sand Change</option>
+                <option value="sand_change">General Maintenance</option>
+                <option value="custom">Other</option>
               </select>
               <br/>
               <label className="text-sm text-foreground">Extra Details</label>

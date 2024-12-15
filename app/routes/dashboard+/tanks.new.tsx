@@ -11,6 +11,7 @@ import { Input } from '#app/components/ui/input.js'
 import { type action as cloudinaryAction } from '#app/routes/_image-upload+/cloudinary.tsx'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
+import { Button } from '#app/components/ui/button.js'
 
 const WaterEnum = z.enum(['saltwater', 'freshwater'])
 
@@ -90,7 +91,7 @@ export default function NewTank() {
           </h1>
         </header>
         <div className="mt-10">
-          <label className="text-sm text-foreground">
+          <label className="text-foreground">
             Upload Image
             <Tooltip id="image-url-tooltip" className="absolute"></Tooltip>
           </label>
@@ -138,7 +139,7 @@ export default function NewTank() {
               />
             )}
             <br />
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name" className="text-foreground">Name</label>
             <Input
               id="name"
               name="name"
@@ -147,7 +148,7 @@ export default function NewTank() {
               className="w-40"
             />
             <br />
-            <label htmlFor="volume">Volume (Gallons)</label>
+            <label htmlFor="volume" className="text-foreground">Volume (Gallons)</label>
             <Input
               id="volume"
               name="volume"
@@ -156,7 +157,7 @@ export default function NewTank() {
               className="w-40"
             />
             <br />
-            <label htmlFor="waterType">Watertype</label>
+            <label htmlFor="waterType" className="text-foreground">Watertype</label>
             <br />
             <select
               id="waterType"
@@ -168,9 +169,11 @@ export default function NewTank() {
             </select>
             <br />
 
-            <button type="submit" className="text-foreground">
-              Create
-            </button>
+            <div className="fixed md:static bottom-5 inset-x-5">
+              <Button type="submit" className="w-full md:w-20">
+                Create
+              </Button>
+            </div>
           </Form>
         </div>
       </main>

@@ -36,8 +36,10 @@ export default function DashboardLayout() {
       <Nav />
       <div className="flex h-[calc(100vh-92px)]">
         <SideNav />
-        <div className="w-full px-6 py-4">
-          <Outlet />
+        <div className="w-full px-6 pt-4 overflow-y-auto">
+          <div className="pb-10">
+            <Outlet />
+          </div>
         </div>
       </div>
     </main>
@@ -237,15 +239,15 @@ function Breadcrumbs() {
       {crumbs.map((crumb) => (
         <div key={crumb.label}>
           <Link to={crumb.link}>
-            <span>{crumb.label}</span>
+            <span className="text-foreground">{crumb.label}</span>
           </Link>
-          {!crumb.last && <span className="ml-2">{'>'}</span>}
+          {!crumb.last && <span className="ml-2 text-foreground">{'>'}</span>}
         </div>
       ))}
       {endElement && (
         <div>
-          <span className="mr-2">{'>'}</span>
-          <Link to={to(endElement)}>{endElement}</Link>
+          <span className="mr-2 text-foreground">{'>'}</span>
+          <Link to={to(endElement)}><span className="text-foreground">{endElement}</span></Link>
         </div>
       )}
     </div>
