@@ -78,14 +78,25 @@ export const MarketingNav = () => {
 									<Link to="/dashboard">Go to Dashboard</Link>
 								</button>
 							) : (
-								<Button
-									asChild
-									variant="default"
-									size="lg"
-									className="font-bold"
-								>
-									<Link to="/signup">Create an Account</Link>
-								</Button>
+                <span>
+                  <Button
+                    asChild
+                    variant="link"
+                    size="lg"
+                    className="font-bold"
+                  >
+                    <Link to="/login">Sign in</Link>
+                  </Button>
+
+                  <Button
+                    asChild
+                    variant="default"
+                    size="lg"
+                    className="font-bold"
+                  >
+                    <Link to="/signup">Create an Account</Link>
+                  </Button>
+                </span>
 							)}
 						</>
 					)}
