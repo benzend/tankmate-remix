@@ -1,6 +1,6 @@
 import { invariantResponse } from '@epic-web/invariant'
 import { type ActionFunctionArgs, type LoaderFunctionArgs } from '@remix-run/node'
-import { Form, json, redirect, useLoaderData, useLocation, useSearchParams } from '@remix-run/react'
+import { Form, json, redirect, useLoaderData, useLocation, useSearchParams, Link } from '@remix-run/react'
 import { Textarea } from '#app/components/ui/textarea.js'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
@@ -123,6 +123,9 @@ export default function NewMaintenanceLog() {
   return (
     <>
       <main className="font-poppins h-full">
+        {tankId && (
+          <Link to={`/dashboard/tanks/${tankId}`}>{'<'} Back to Tank</Link>
+        )}
         <div className="mt-10">
           <Form method="POST">
             <div className="w-60 mb-5">
@@ -155,9 +158,11 @@ export default function NewMaintenanceLog() {
 
             {redirectTo && <input type="hidden" name="redirectTo" value={redirectTo} />}
 
-            <Button type="submit">
-              Create
-            </Button>
+            <div className="fixed md:static bottom-5 inset-x-5">
+              <Button type="submit" className="w-full md:w-20">
+                Log
+              </Button>
+            </div>
           </Form>
         </div>
       </main>
