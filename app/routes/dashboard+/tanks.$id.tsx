@@ -11,12 +11,18 @@ import {
   useActionData,
   useLocation,
 } from '@remix-run/react'
+import {
+  Chart,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+} from 'chart.js'
 import { useEffect, useState } from 'react'
+import { Line as LineChart } from 'react-chartjs-2'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
 import { DateFrom, humanize, toTitleCase } from '#app/utils/misc.js'
-import { Line as LineChart } from 'react-chartjs-2'
-import {Chart, CategoryScale, LinearScale, PointElement, LineElement} from 'chart.js'
 Chart.register(CategoryScale)
 Chart.register(LinearScale)
 Chart.register(PointElement)
@@ -149,15 +155,22 @@ export default function TankPage() {
     }
   }, [actionData])
 
-  const tankImageUrls = tank.fishTankScores.map(s => s.imageUrl).filter(Boolean)
+  const tankImageUrls = tank.fishTankScores
+    .map((s) => s.imageUrl)
+    .filter(Boolean)
   const latestImage = tankImageUrls[tankImageUrls.length - 1]
 
   return (
     <div>
       <header>
-        <span className="text-muted-foreground capitalize">{tank.waterType}</span>
+        <span className="capitalize text-muted-foreground">
+          {tank.waterType}
+        </span>
         {typeof tank.volume !== 'undefined' && (
-          <span className="ml-1 text-muted-foreground capitalize">- {tank.volume} Gal</span>)}
+          <span className="ml-1 capitalize text-muted-foreground">
+            - {tank.volume} Gal
+          </span>
+        )}
         {editingName ? (
           <div>
             <input
@@ -191,13 +204,17 @@ export default function TankPage() {
             </div>
           </>
         )}
-        {latestImage && (<div className="mb-10"><img src={latestImage} width="500" height="auto" /></div>)}
+        {latestImage && (
+          <div className="mb-10">
+            <img src={latestImage} width="500" height="auto" />
+          </div>
+        )}
       </header>
       {tank.fishTankScores.map((score) => (
         <TankScore key={score.id} data={score} />
       ))}
 
-      <div className="flex flex-wrap gap-5 my-10">
+      <div className="my-10 flex flex-wrap gap-5">
         <div className="w-full sm:w-80">
           <header className="rounded-t border p-4 text-foreground">
             Maintenance Log
@@ -220,7 +237,9 @@ export default function TankPage() {
             )}
           </div>
           <div>
-            <Link to={`/dashboard/maintenance/new?redirectTo=${location.pathname}&tankId=${tank.id}`}>
+            <Link
+              to={`/dashboard/maintenance/new?redirectTo=${location.pathname}&tankId=${tank.id}`}
+            >
               <div className="w-40 rounded-b border border-t-0 p-2 text-xs text-foreground">
                 + Add Log
               </div>
@@ -228,102 +247,144 @@ export default function TankPage() {
           </div>
         </div>
 
-        <div className="w-full sm:w-120">
+        <div className="sm:w-120 w-full">
           <header className="rounded-t border p-4 text-foreground">
             Parameter Log
           </header>
           <div className="rounded-b border-b border-l border-r">
             {tank.parameterLogs.length ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 border rounded">
-                  <h3 className="text-lg font-bold mb-2">pH Levels</h3>
-                  <LineChart data={{
-                    labels: tank.parameterLogs.map(l => DateFrom(l.createdAt).toLocaleDateString()),
-                    datasets: [{
-                      label: 'pH',
-                      data: tank.parameterLogs.map(l => l.pH || 0),
-                      backgroundColor: '#60A5FA',
-                      borderColor: '#60A5FA',
-                    }]
-                  }} />
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="rounded border p-4">
+                  <h3 className="mb-2 text-lg font-bold">pH Levels</h3>
+                  <LineChart
+                    data={{
+                      labels: tank.parameterLogs.map((l) =>
+                        DateFrom(l.createdAt).toLocaleDateString(),
+                      ),
+                      datasets: [
+                        {
+                          label: 'pH',
+                          data: tank.parameterLogs.map((l) => l.pH || 0),
+                          backgroundColor: '#60A5FA',
+                          borderColor: '#60A5FA',
+                        },
+                      ],
+                    }}
+                  />
                 </div>
 
-                <div className="p-4 border rounded">
-                  <h3 className="text-lg font-bold mb-2">Temperature</h3>
-                  <LineChart data={{
-                    labels: tank.parameterLogs.map(l => DateFrom(l.createdAt).toLocaleDateString()),
-                    datasets: [{
-                      label: 'Temperature',
-                      data: tank.parameterLogs.map(l => l.temp || 0),
-                      backgroundColor: '#F87171',
-                      borderColor: '#F87171',
-                    }]
-                  }} />
+                <div className="rounded border p-4">
+                  <h3 className="mb-2 text-lg font-bold">Temperature</h3>
+                  <LineChart
+                    data={{
+                      labels: tank.parameterLogs.map((l) =>
+                        DateFrom(l.createdAt).toLocaleDateString(),
+                      ),
+                      datasets: [
+                        {
+                          label: 'Temperature',
+                          data: tank.parameterLogs.map((l) => l.temp || 0),
+                          backgroundColor: '#F87171',
+                          borderColor: '#F87171',
+                        },
+                      ],
+                    }}
+                  />
                 </div>
 
-                <div className="p-4 border rounded">
-                  <h3 className="text-lg font-bold mb-2">Alkalinity</h3>
-                  <LineChart data={{
-                    labels: tank.parameterLogs.map(l => DateFrom(l.createdAt).toLocaleDateString()),
-                    datasets: [{
-                      label: 'Alkalinity',
-                      data: tank.parameterLogs.map(l => l.alk || 0),
-                      backgroundColor: '#34D399',
-                      borderColor: '#34D399',
-                    }]
-                  }} />
+                <div className="rounded border p-4">
+                  <h3 className="mb-2 text-lg font-bold">Alkalinity</h3>
+                  <LineChart
+                    data={{
+                      labels: tank.parameterLogs.map((l) =>
+                        DateFrom(l.createdAt).toLocaleDateString(),
+                      ),
+                      datasets: [
+                        {
+                          label: 'Alkalinity',
+                          data: tank.parameterLogs.map((l) => l.alk || 0),
+                          backgroundColor: '#34D399',
+                          borderColor: '#34D399',
+                        },
+                      ],
+                    }}
+                  />
                 </div>
 
-                <div className="p-4 border rounded">
-                  <h3 className="text-lg font-bold mb-2">Calcium</h3>
-                  <LineChart data={{
-                    labels: tank.parameterLogs.map(l => DateFrom(l.createdAt).toLocaleDateString()),
-                    datasets: [{
-                      label: 'Calcium',
-                      data: tank.parameterLogs.map(l => l.calcium || 0),
-                      backgroundColor: '#A78BFA',
-                      borderColor: '#A78BFA',
-                    }]
-                  }} />
+                <div className="rounded border p-4">
+                  <h3 className="mb-2 text-lg font-bold">Calcium</h3>
+                  <LineChart
+                    data={{
+                      labels: tank.parameterLogs.map((l) =>
+                        DateFrom(l.createdAt).toLocaleDateString(),
+                      ),
+                      datasets: [
+                        {
+                          label: 'Calcium',
+                          data: tank.parameterLogs.map((l) => l.calcium || 0),
+                          backgroundColor: '#A78BFA',
+                          borderColor: '#A78BFA',
+                        },
+                      ],
+                    }}
+                  />
                 </div>
 
-                <div className="p-4 border rounded">
-                  <h3 className="text-lg font-bold mb-2">Magnesium</h3>
-                  <LineChart data={{
-                    labels: tank.parameterLogs.map(l => DateFrom(l.createdAt).toLocaleDateString()),
-                    datasets: [{
-                      label: 'Magnesium',
-                      data: tank.parameterLogs.map(l => l.magnesium || 0),
-                      backgroundColor: '#FBBF24',
-                      borderColor: '#FBBF24',
-                    }]
-                  }} />
+                <div className="rounded border p-4">
+                  <h3 className="mb-2 text-lg font-bold">Magnesium</h3>
+                  <LineChart
+                    data={{
+                      labels: tank.parameterLogs.map((l) =>
+                        DateFrom(l.createdAt).toLocaleDateString(),
+                      ),
+                      datasets: [
+                        {
+                          label: 'Magnesium',
+                          data: tank.parameterLogs.map((l) => l.magnesium || 0),
+                          backgroundColor: '#FBBF24',
+                          borderColor: '#FBBF24',
+                        },
+                      ],
+                    }}
+                  />
                 </div>
 
-                <div className="p-4 border rounded">
-                  <h3 className="text-lg font-bold mb-2">Nitrate</h3>
-                  <LineChart data={{
-                    labels: tank.parameterLogs.map(l => DateFrom(l.createdAt).toLocaleDateString()),
-                    datasets: [{
-                      label: 'Nitrate',
-                      data: tank.parameterLogs.map(l => l.nitrate || 0),
-                      backgroundColor: '#EC4899',
-                      borderColor: '#EC4899',
-                    }]
-                  }} />
+                <div className="rounded border p-4">
+                  <h3 className="mb-2 text-lg font-bold">Nitrate</h3>
+                  <LineChart
+                    data={{
+                      labels: tank.parameterLogs.map((l) =>
+                        DateFrom(l.createdAt).toLocaleDateString(),
+                      ),
+                      datasets: [
+                        {
+                          label: 'Nitrate',
+                          data: tank.parameterLogs.map((l) => l.nitrate || 0),
+                          backgroundColor: '#EC4899',
+                          borderColor: '#EC4899',
+                        },
+                      ],
+                    }}
+                  />
                 </div>
 
-                <div className="p-4 border rounded">
-                  <h3 className="text-lg font-bold mb-2">Phosphate</h3>
-                  <LineChart data={{
-                    labels: tank.parameterLogs.map(l => DateFrom(l.createdAt).toLocaleDateString()),
-                    datasets: [{
-                      label: 'Phosphate',
-                      data: tank.parameterLogs.map(l => l.phosphate || 0),
-                      backgroundColor: '#6366F1',
-                      borderColor: '#6366F1',
-                    }]
-                  }} />
+                <div className="rounded border p-4">
+                  <h3 className="mb-2 text-lg font-bold">Phosphate</h3>
+                  <LineChart
+                    data={{
+                      labels: tank.parameterLogs.map((l) =>
+                        DateFrom(l.createdAt).toLocaleDateString(),
+                      ),
+                      datasets: [
+                        {
+                          label: 'Phosphate',
+                          data: tank.parameterLogs.map((l) => l.phosphate || 0),
+                          backgroundColor: '#6366F1',
+                          borderColor: '#6366F1',
+                        },
+                      ],
+                    }}
+                  />
                 </div>
               </div>
             ) : (
@@ -333,7 +394,9 @@ export default function TankPage() {
             )}
           </div>
           <div>
-            <Link to={`/dashboard/parameter-log/new?redirectTo=${location.pathname}&tankId=${tank.id}`}>
+            <Link
+              to={`/dashboard/parameter-log/new?redirectTo=${location.pathname}&tankId=${tank.id}`}
+            >
               <div className="w-40 rounded-b border border-t-0 p-2 text-xs text-foreground">
                 + Add Log
               </div>
@@ -444,7 +507,7 @@ const Health = ({
   })()
 
   return (
-    <div className={`border-b border-l w-40 ${borderColor} rounded p-4`}>
+    <div className={`w-40 border-b border-l ${borderColor} rounded p-4`}>
       <div className={`text-foreground md:text-2xl lg:text-4xl ${textColor}`}>
         {score}
       </div>
@@ -456,7 +519,7 @@ const Health = ({
 
 const Count = ({ count, label }: { count: number | null; label: string }) => {
   return (
-    <div className={`rounded border-b border-l w-40 p-4`}>
+    <div className={`w-40 rounded border-b border-l p-4`}>
       {typeof count === 'number' && (
         <div className="text-foreground md:text-2xl lg:text-4xl">{count}</div>
       )}
@@ -496,9 +559,7 @@ const MaintenanceLog = ({
 }
 
 const ParameterChart = () => {
-  return (
-    <div></div>
-  )
+  return <div></div>
 }
 
 const ParameterLog = ({
