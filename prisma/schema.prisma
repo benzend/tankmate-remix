@@ -203,9 +203,9 @@ model FishTank {
 
   waterType String
 
-  dimensionsLength Int
-  dimensionsWidth  Int
-  dimensionsHeight Int
+  dimensionsLength Int?
+  dimensionsWidth  Int?
+  dimensionsHeight Int?
 
   pumps FishTankPump[]
 
@@ -217,7 +217,11 @@ model FishTank {
 
   fishTankMaintenances FishTankMaintenance[]
 
+  imageUrl String?
+
   parameterLogs FishTankParameterLog[]
+
+  volume Int?
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String

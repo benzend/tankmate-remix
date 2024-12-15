@@ -100,6 +100,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
           createdAt: true,
         },
       },
+      imageUrl: true,
+      volume: true,
+      waterType: true,
     },
   })
 
@@ -152,6 +155,9 @@ export default function TankPage() {
   return (
     <div>
       <header>
+        <span className="text-muted-foreground capitalize">{tank.waterType}</span>
+        {typeof tank.volume !== 'undefined' && (
+          <span className="ml-1 text-muted-foreground capitalize">- {tank.volume} Gal</span>)}
         {editingName ? (
           <div>
             <input
