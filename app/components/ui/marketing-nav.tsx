@@ -84,7 +84,7 @@ export const MarketingNav = () => {
 									size="lg"
 									className="font-bold"
 								>
-									<Link to="/login">Log In</Link>
+									<Link to="/signup">Create an Account</Link>
 								</Button>
 							)}
 						</>

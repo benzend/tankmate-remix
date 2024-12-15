@@ -63,20 +63,15 @@ export default function Index() {
 			{/* Prototype Section */}
 			<section className="prototype-section bg-slate-950 bg-gradient-to-l from-blue-900 py-24 text-gray-100">
 				<div className="container mx-auto px-4 text-center">
-					<h2 className="font-serif mb-20 text-4xl font-bold text-white md:text-5xl">
+					<h2 className="font-serif mb-4 text-4xl font-bold text-white md:text-5xl">
 						Get an In-depth Analysis
 					</h2>
+          <p className="mx-auto max-w-2xl text-xl mb-20">Simply snap a photo of your aquarium and let our AI generate detailed insights about your fish, plants, and water conditions</p>
 					<img
 						src="/img/marketing/prototype-example.png"
 						alt="TankMate Prototype"
 						className="mx-auto mb-8 w-full max-w-lg rounded-lg shadow-lg"
 					/>
-					<Link
-						to="/prototype"
-						className="inline-block transform rounded bg-indigo-500 px-10 py-2 font-bold text-white transition duration-300 hover:scale-105 hover:bg-indigo-400"
-					>
-						Try the Prototype
-					</Link>
 				</div>
 			</section>
 
