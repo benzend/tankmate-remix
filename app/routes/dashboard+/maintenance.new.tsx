@@ -124,7 +124,7 @@ export default function NewMaintenanceLog() {
     <>
       <main className="font-poppins h-full">
         {tankId && (
-          <Link to={`/dashboard/tanks/${tankId}`}>{'<'} Back to Tank</Link>
+          <Link to={`/dashboard/tanks/${tankId}`} className="text-foreground">{'<'} Back to Tank</Link>
         )}
         <div className="mt-10">
           <Form method="POST">

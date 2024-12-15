@@ -117,7 +117,7 @@ export default function NewParameterLog() {
     <>
       <main className="font-poppins h-full">
         {tankId && (
-          <Link to={`/dashboard/tanks/${tankId}`}>{'<'} Back to Tank</Link>
+          <Link to={`/dashboard/tanks/${tankId}`} className="text-foreground">{'<'} Back to Tank</Link>
         )}
         <div className="mb-20 mt-10">
           <Form method="POST">
