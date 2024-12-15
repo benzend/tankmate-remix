@@ -22,7 +22,7 @@ export default function Index() {
 							to="/signup"
 							className="inline-block transform rounded bg-indigo-500 px-10 py-2 font-bold text-white transition duration-300 hover:scale-105 hover:bg-indigo-400"
 						>
-							Get Started
+							Get Started for Free
 						</Link>
 					</div>
 				</div>
