@@ -8,16 +8,12 @@ import {
 	type ActionFunctionArgs,
 	type MetaFunction,
 } from '@remix-run/node'
-import { Form, useActionData, useSearchParams } from '@remix-run/react'
+import { Form, Link, useActionData, useSearchParams } from '@remix-run/react'
 import { HoneypotInputs } from 'remix-utils/honeypot/react'
 import { z } from 'zod'
 import { GeneralErrorBoundary } from '#app/components/error-boundary.tsx'
 import { ErrorList, Field } from '#app/components/forms.tsx'
 import { StatusButton } from '#app/components/ui/status-button.tsx'
-import {
-	ProviderConnectionForm,
-	providerNames,
-} from '#app/utils/connections.tsx'
 import { prisma } from '#app/utils/db.server.ts'
 import { sendEmail } from '#app/utils/email.server.ts'
 import { checkHoneypot } from '#app/utils/honeypot.server.ts'
@@ -123,8 +119,6 @@ export const meta: MetaFunction = () => {
 export default function SignupRoute() {
 	const actionData = useActionData<typeof action>()
 	const isPending = useIsPending()
-	const [searchParams] = useSearchParams()
-	const redirectTo = searchParams.get('redirectTo')
 
 	const [form, fields] = useForm({
 		id: 'signup-form',
@@ -138,49 +132,49 @@ export default function SignupRoute() {
 	})
 
 	return (
-		<div className="container flex flex-col justify-center pb-32 pt-20">
-			<div className="text-center">
-				<h1 className="text-h1">Let's start your journey!</h1>
-				<p className="mt-3 text-body-md text-muted-foreground">
-					Please enter your email.
-				</p>
-			</div>
-			<div className="mx-auto mt-16 min-w-full max-w-sm sm:min-w-[368px]">
-				<Form method="POST" {...getFormProps(form)}>
-					<HoneypotInputs />
-					<Field
-						labelProps={{
-							htmlFor: fields.email.id,
-							children: 'Email',
-						}}
-						inputProps={{
-							...getInputProps(fields.email, { type: 'email' }),
-							autoFocus: true,
-							autoComplete: 'email',
-						}}
-						errors={fields.email.errors}
-					/>
-					<ErrorList errors={form.errors} id={form.errorId} />
-					<StatusButton
-						className="w-full"
-						status={isPending ? 'pending' : (form.status ?? 'idle')}
-						type="submit"
-						disabled={isPending}
-					>
-						Submit
-					</StatusButton>
-				</Form>
-				<ul className="mt-5 flex flex-col gap-5 border-b-2 border-t-2 border-border py-3">
-					{providerNames.map((providerName) => (
-						<li key={providerName}>
-							<ProviderConnectionForm
-								type="Signup"
-								providerName={providerName}
-								redirectTo={redirectTo}
-							/>
-						</li>
-					))}
-				</ul>
+		<div className="flex flex-col justify-center bg-slate-950 bg-gradient-to-br from-blue-800 pb-32 pt-20">
+			<div className="container">
+				<div className="text-center">
+					<h1 className="text-h1">Create an account</h1>
+					<p className="mt-3 text-body-md text-muted-foreground">
+						Please enter your email.
+					</p>
+				</div>
+				<div className="mx-auto mt-16 min-w-full max-w-sm sm:min-w-[368px]">
+					<Form method="POST" {...getFormProps(form)}>
+						<HoneypotInputs />
+						<Field
+							labelProps={{
+								htmlFor: fields.email.id,
+								children: 'Email',
+							}}
+							inputProps={{
+								...getInputProps(fields.email, { type: 'email' }),
+								autoFocus: true,
+								autoComplete: 'email',
+							}}
+							errors={fields.email.errors}
+						/>
+						<ErrorList errors={form.errors} id={form.errorId} />
+						<StatusButton
+							className="w-full"
+							status={isPending ? 'pending' : (form.status ?? 'idle')}
+							type="submit"
+							disabled={isPending}
+						>
+							Submit
+						</StatusButton>
+					</Form>
+
+					<div className="flex items-center justify-center gap-2 pt-6">
+						<span className="text-muted-foreground">
+							Already have an account?
+						</span>
+						<Link to="/login">
+							Sign in
+						</Link>
+					</div>
+				</div>
 			</div>
 		</div>
 	)

@@ -86,56 +86,58 @@ export default function VerifyRoute() {
 	})
 
 	return (
-		<main className="container flex flex-col justify-center pb-32 pt-20">
-			<div className="text-center">
-				{type ? headings[type] : 'Invalid Verification Type'}
-			</div>
+		<main className="bg-slate-950 bg-gradient-to-br from-blue-800 flex flex-col justify-center pb-32 pt-20">
+      <div className="container">
+        <div className="text-center">
+          {type ? headings[type] : 'Invalid Verification Type'}
+        </div>
 
-			<Spacer size="xs" />
+        <Spacer size="xs" />
 
-			<div className="mx-auto flex w-72 max-w-full flex-col justify-center gap-1">
-				<div>
-					<ErrorList errors={form.errors} id={form.errorId} />
-				</div>
-				<div className="flex w-full gap-2">
-					<Form method="POST" {...getFormProps(form)} className="flex-1">
-						<HoneypotInputs />
-						<div className="flex items-center justify-center">
-							<OTPField
-								labelProps={{
-									htmlFor: fields[codeQueryParam].id,
-									children: 'Code',
-								}}
-								inputProps={{
-									...getInputProps(fields[codeQueryParam], { type: 'text' }),
-									autoComplete: 'one-time-code',
-									autoFocus: true,
-								}}
-								errors={fields[codeQueryParam].errors}
-							/>
-						</div>
-						<input
-							{...getInputProps(fields[typeQueryParam], { type: 'hidden' })}
-						/>
-						<input
-							{...getInputProps(fields[targetQueryParam], { type: 'hidden' })}
-						/>
-						<input
-							{...getInputProps(fields[redirectToQueryParam], {
-								type: 'hidden',
-							})}
-						/>
-						<StatusButton
-							className="w-full"
-							status={isPending ? 'pending' : (form.status ?? 'idle')}
-							type="submit"
-							disabled={isPending}
-						>
-							Submit
-						</StatusButton>
-					</Form>
-				</div>
-			</div>
+        <div className="mx-auto flex w-72 max-w-full flex-col justify-center gap-1">
+          <div>
+            <ErrorList errors={form.errors} id={form.errorId} />
+          </div>
+          <div className="flex w-full gap-2">
+            <Form method="POST" {...getFormProps(form)} className="flex-1">
+              <HoneypotInputs />
+              <div className="flex items-center justify-center">
+                <OTPField
+                  labelProps={{
+                    htmlFor: fields[codeQueryParam].id,
+                    children: 'Code',
+                  }}
+                  inputProps={{
+                    ...getInputProps(fields[codeQueryParam], { type: 'text' }),
+                    autoComplete: 'one-time-code',
+                    autoFocus: true,
+                  }}
+                  errors={fields[codeQueryParam].errors}
+                />
+              </div>
+              <input
+                {...getInputProps(fields[typeQueryParam], { type: 'hidden' })}
+              />
+              <input
+                {...getInputProps(fields[targetQueryParam], { type: 'hidden' })}
+              />
+              <input
+                {...getInputProps(fields[redirectToQueryParam], {
+                  type: 'hidden',
+                })}
+              />
+              <StatusButton
+                className="w-full"
+                status={isPending ? 'pending' : (form.status ?? 'idle')}
+                type="submit"
+                disabled={isPending}
+              >
+                Submit
+              </StatusButton>
+            </Form>
+          </div>
+        </div>
+      </div>
 		</main>
 	)
 }
