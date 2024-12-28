@@ -449,7 +449,7 @@ export function formatDateBasedOnRecency(dateInput: string | Date): string {
     // If within the past week
     if (date >= oneWeekAgo && date < today) {
         const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        return weekdays[date.getDay()];
+        return weekdays[date.getDay()] as string;
     }
 
     // If older than a week, return formatted date
