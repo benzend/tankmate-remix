@@ -22,8 +22,8 @@ import { useEffect, useState } from 'react'
 import { Line as LineChart } from 'react-chartjs-2'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
-import { cn, formatDateBasedOnRecency } from '#app/utils/misc.tsx'
 import { DateFrom, humanize, toTitleCase } from '#app/utils/misc.js'
+import { cn, formatDateBasedOnRecency } from '#app/utils/misc.tsx'
 Chart.register(CategoryScale)
 Chart.register(LinearScale)
 Chart.register(PointElement)
@@ -404,8 +404,84 @@ const MaintenanceLog = ({
 	)
 }
 
-const ParameterChart = () => {
-	return <div></div>
+type Parameter =
+	| 'alk'
+	| 'calcium'
+	| 'magnesium'
+	| 'pH'
+	| 'nitrate'
+	| 'phosphate'
+	| 'temp'
+
+const humanizeParameter = (parameter: Parameter) => {
+	switch (parameter) {
+		case 'alk':
+			return 'Alkaline'
+		case 'calcium':
+			return 'Calcium'
+		case 'magnesium':
+			return 'Magnesium'
+		case 'pH':
+			return 'pH'
+		case 'nitrate':
+			return 'Nitrate'
+		case 'phosphate':
+			return 'Phosphate'
+	case 'temp':
+		return 'Temperature'
+	}
+}
+
+const getChartColorFromParameter = (parameter: Parameter) => {
+switch (parameter) {
+	case 'pH':
+		return '#60A5FA' // blue
+	case 'alk':
+		return '#34D399' // green
+	case 'calcium':
+		return '#A78BFA' // purple
+	case 'magnesium':
+		return '#FBBF24' // yellow/amber
+	case 'nitrate':
+		return '#EC4899' // pink
+	case 'phosphate':
+		return '#6366F1' // indigo
+	case 'temp':
+		return '#F87171' // red
+	default:
+		return '#60A5FA' // default blue
+}
+}
+
+const ParameterChart = ({
+	tank,
+	parameter,
+}: {
+	tank: TankWithLogs
+	parameter: Parameter
+}) => {
+	return (
+		<div className="rounded border p-4 text-foreground">
+			<h3 className="mb-2 text-lg font-bold">{humanizeParameter(parameter)}</h3>
+			<LineChart
+				data={{
+					labels: tank.parameterLogs.map((l) =>
+						formatDateBasedOnRecency(
+							DateFrom(l.createdAt).toLocaleDateString(),
+						),
+					),
+					datasets: [
+						{
+							label: humanizeParameter(parameter),
+							data: tank.parameterLogs.map((l) => l[parameter] || 0),
+							backgroundColor: getChartColorFromParameter(parameter),
+							borderColor: getChartColorFromParameter(parameter),
+						},
+					],
+				}}
+			/>
+		</div>
+	)
 }
 
 const ParameterLog = ({
@@ -462,149 +538,32 @@ type TankWithLogs = {
 }
 
 const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
-  const location = useLocation();
-  const [isOpen, setIsOpen] = useState(tank.parameterLogs.length > 0 ? false : true)
+	const location = useLocation()
+	const [isOpen, setIsOpen] = useState(
+		tank.parameterLogs.length > 0 ? false : true,
+	)
 	return (
 		<div className="sm:w-120 w-full">
 			<header className="flex justify-between rounded-t border p-4 text-foreground">
 				Parameter Log
-        {tank.parameterLogs.length && <button onClick={() => setIsOpen(prev => !prev)}>{isOpen ? 'Collapse' : 'Expand'}</button>}
+				{tank.parameterLogs.length && (
+					<button onClick={() => setIsOpen((prev) => !prev)}>
+						{isOpen ? 'Collapse' : 'Expand'}
+					</button>
+				)}
 			</header>
 			<div className="rounded-b border-b border-l border-r">
 				{tank.parameterLogs.length ? (
-					<div className={cn("grid grid-cols-2 gap-4", !isOpen && 'invisible h-0')}>
-						<div className="rounded border p-4">
-							<h3 className="mb-2 text-lg font-bold text-foreground">pH Levels</h3>
-							<LineChart
-								data={{
-									labels: tank.parameterLogs.map((l) =>
-										formatDateBasedOnRecency(DateFrom(l.createdAt).toLocaleDateString()),
-									),
-									datasets: [
-										{
-											label: 'pH',
-											data: tank.parameterLogs.map((l) => l.pH || 0),
-											backgroundColor: '#60A5FA',
-											borderColor: '#60A5FA',
-										},
-									],
-								}}
-							/>
-						</div>
-
-						<div className="rounded border p-4">
-							<h3 className="mb-2 text-lg font-bold text-foreground">Temperature</h3>
-							<LineChart
-								data={{
-									labels: tank.parameterLogs.map((l) =>
-										formatDateBasedOnRecency(DateFrom(l.createdAt).toLocaleDateString()),
-									),
-									datasets: [
-										{
-											label: 'Temperature',
-											data: tank.parameterLogs.map((l) => l.temp || 0),
-											backgroundColor: '#F87171',
-											borderColor: '#F87171',
-										},
-									],
-								}}
-							/>
-						</div>
-
-						<div className="rounded border p-4 text-foreground">
-							<h3 className="mb-2 text-lg font-bold">Alkalinity</h3>
-							<LineChart
-								data={{
-									labels: tank.parameterLogs.map((l) =>
-										formatDateBasedOnRecency(DateFrom(l.createdAt).toLocaleDateString()),
-									),
-									datasets: [
-										{
-											label: 'Alkalinity',
-											data: tank.parameterLogs.map((l) => l.alk || 0),
-											backgroundColor: '#34D399',
-											borderColor: '#34D399',
-										},
-									],
-								}}
-							/>
-						</div>
-
-						<div className="rounded border p-4 text-foreground">
-							<h3 className="mb-2 text-lg font-bold">Calcium</h3>
-							<LineChart
-								data={{
-									labels: tank.parameterLogs.map((l) =>
-										formatDateBasedOnRecency(DateFrom(l.createdAt).toLocaleDateString()),
-									),
-									datasets: [
-										{
-											label: 'Calcium',
-											data: tank.parameterLogs.map((l) => l.calcium || 0),
-											backgroundColor: '#A78BFA',
-											borderColor: '#A78BFA',
-										},
-									],
-								}}
-							/>
-						</div>
-
-						<div className="rounded border p-4 text-foreground">
-							<h3 className="mb-2 text-lg font-bold">Magnesium</h3>
-							<LineChart
-								data={{
-									labels: tank.parameterLogs.map((l) =>
-										formatDateBasedOnRecency(DateFrom(l.createdAt).toLocaleDateString()),
-									),
-									datasets: [
-										{
-											label: 'Magnesium',
-											data: tank.parameterLogs.map((l) => l.magnesium || 0),
-											backgroundColor: '#FBBF24',
-											borderColor: '#FBBF24',
-										},
-									],
-								}}
-							/>
-						</div>
-
-						<div className="rounded border p-4 text-foreground">
-							<h3 className="mb-2 text-lg font-bold">Nitrate</h3>
-							<LineChart
-								data={{
-									labels: tank.parameterLogs.map((l) =>
-										formatDateBasedOnRecency(DateFrom(l.createdAt).toLocaleDateString()),
-									),
-									datasets: [
-										{
-											label: 'Nitrate',
-											data: tank.parameterLogs.map((l) => l.nitrate || 0),
-											backgroundColor: '#EC4899',
-											borderColor: '#EC4899',
-										},
-									],
-								}}
-							/>
-						</div>
-
-						<div className="rounded border p-4 text-foreground">
-							<h3 className="mb-2 text-lg font-bold">Phosphate</h3>
-							<LineChart
-								data={{
-									labels: tank.parameterLogs.map((l) =>
-										formatDateBasedOnRecency(DateFrom(l.createdAt).toLocaleDateString()),
-									),
-									datasets: [
-										{
-											label: 'Phosphate',
-											data: tank.parameterLogs.map((l) => l.phosphate || 0),
-											backgroundColor: '#6366F1',
-											borderColor: '#6366F1',
-										},
-									],
-								}}
-							/>
-						</div>
+					<div
+						className={cn('grid grid-cols-2 gap-4', !isOpen && 'invisible h-0')}
+					>
+						<ParameterChart tank={tank} parameter="temp" />
+						<ParameterChart tank={tank} parameter="pH" />
+						<ParameterChart tank={tank} parameter="alk" />
+						<ParameterChart tank={tank} parameter="calcium" />
+						<ParameterChart tank={tank} parameter="magnesium" />
+						<ParameterChart tank={tank} parameter="nitrate" />
+						<ParameterChart tank={tank} parameter="phosphate" />
 					</div>
 				) : (
 					<div className="border-b border-l p-2 text-sm text-accent-foreground">
