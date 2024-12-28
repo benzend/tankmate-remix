@@ -354,28 +354,52 @@ function Search() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (debouncedSearchQuery.length > 2) {
-      setIsSearching(true)
-      fetch(
-        `/resources/search?query=${encodeURIComponent(debouncedSearchQuery)}`,
-      )
-        .then((res) => res.json())
-        .then((data: unknown) => {
-          if (isSearchResponse(data)) {
-            setSearchResults(data.results)
-          } else {
-            console.error('Invalid search response format')
-            setSearchResults([])
+    const abortController = new AbortController()
+
+    const performSearch = async () => {
+      if (debouncedSearchQuery.length > 2) {
+        setIsSearching(true)
+        try {
+          const response = await fetch(
+            `/resources/search?query=${encodeURIComponent(debouncedSearchQuery)}`,
+            {
+              signal: abortController.signal,
+            }
+          )
+          const data: unknown = await response.json()
+
+          // Only update if the request wasn't aborted
+          if (!abortController.signal.aborted) {
+            if (isSearchResponse(data)) {
+              setSearchResults(data.results)
+            } else {
+              console.error('Invalid search response format')
+              setSearchResults([])
+            }
           }
-          setIsSearching(false)
-        })
-        .catch((error) => {
+        } catch (error) {
+          // Only log and update state if the request wasn't aborted
+          if (error instanceof Error && error.name === 'AbortError') {
+            return
+          }
           console.error('Search error:', error)
-          setIsSearching(false)
           setSearchResults([])
-        })
-    } else {
-      setSearchResults([])
+        } finally {
+          if (!abortController.signal.aborted) {
+            setIsSearching(false)
+          }
+        }
+      } else {
+        setSearchResults([])
+        setIsSearching(false)
+      }
+    }
+
+    performSearch()
+
+    // Cleanup: abort any pending requests when the query changes or component unmounts
+    return () => {
+      abortController.abort()
     }
   }, [debouncedSearchQuery])
 
@@ -471,7 +495,7 @@ function Search() {
                         }}
                       >
                         <div className="flex items-center justify-between">
-                          <div className="text-sm font-medium">
+                          <div className="text-lg font-medium">
                             {result.title}
                           </div>
                           {index === 0 && result.title === 'Expert Answer' && (
@@ -482,7 +506,7 @@ function Search() {
                         </div>
                         {result.content && (
                           <div
-                            className={`mt-1 text-xs text-muted-foreground ${index === 0 && result.title === 'Expert Answer'
+                            className={`mt-1 text-sm text-muted-foreground ${index === 0 && result.title === 'Expert Answer'
                                 ? expandedAnswer
                                   ? ''
                                   : 'line-clamp-2'
@@ -588,7 +612,7 @@ function Search() {
                       }}
                     >
                       <div className="flex items-center justify-between">
-                        <div className="text-sm font-medium">
+                        <div className="text-lg font-medium">
                           {result.title}
                         </div>
                         {isExpertAnswer && (
@@ -599,7 +623,7 @@ function Search() {
                       </div>
                       {result.content && (
                         <div
-                          className={`mt-1 text-xs text-muted-foreground ${isExpertAnswer
+                          className={`mt-1 text-sm text-muted-foreground ${isExpertAnswer
                               ? expandedAnswer
                                 ? ''
                                 : 'line-clamp-2'
