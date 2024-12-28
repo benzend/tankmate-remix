@@ -87,7 +87,7 @@ export default function ResetPasswordPage() {
   })
 
   return (
-    <div className="bg-slate-950 bg-gradient-to-br from-blue-800  flex flex-col justify-center pb-32 pt-20">
+    <div className="bg-slate-950 bg-gradient-to-br from-blue-800  flex flex-col justify-center pb-32 pt-40">
       <div className="container">
         <div className="text-center">
           <h1 className="text-h1">Password Reset</h1>

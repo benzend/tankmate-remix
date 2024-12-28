@@ -148,7 +148,7 @@ export default function OnboardingRoute() {
 	})
 
 	return (
-		<div className="flex min-h-full flex-col justify-center bg-slate-950 bg-gradient-to-br from-blue-800 pb-32 pt-20">
+		<div className="flex min-h-full flex-col justify-center bg-slate-950 bg-gradient-to-br from-blue-800 pb-32 pt-40">
 			<div className="container">
 				<div className="mx-auto w-full max-w-lg">
 					<div className="flex flex-col gap-3 text-center">
