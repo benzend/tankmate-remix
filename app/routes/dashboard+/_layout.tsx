@@ -5,9 +5,11 @@ import {
   Outlet,
   useLoaderData,
   useLocation,
+  useNavigate,
 } from '@remix-run/react'
 import { useEffect, useState } from 'react'
 import { Button } from '#app/components/ui/button.js'
+import { Input } from '#app/components/ui/input.js'
 import { Logo } from '#app/components/ui/logo.js'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { getHints } from '#app/utils/client-hints.js'
@@ -36,7 +38,7 @@ export default function DashboardLayout() {
       <Nav />
       <div className="flex h-[calc(100vh-92px)]">
         <SideNav />
-        <div className="w-full px-6 pt-4 overflow-y-auto">
+        <div className="w-full overflow-y-auto px-6 pt-4">
           <div className="pb-10">
             <Outlet />
           </div>
@@ -159,6 +161,7 @@ const Nav = () => {
         </div>
 
         <div className="flex items-center gap-10">
+          <Search />
           <button
             className="group relative block md:hidden"
             onClick={() => setNavOpen((prev) => !prev)}
@@ -247,7 +250,9 @@ function Breadcrumbs() {
       {endElement && (
         <div>
           <span className="mr-2 text-foreground">{'>'}</span>
-          <Link to={to(endElement)}><span className="text-foreground">{endElement}</span></Link>
+          <Link to={to(endElement)}>
+            <span className="text-foreground">{endElement}</span>
+          </Link>
         </div>
       )}
     </div>
@@ -260,4 +265,162 @@ function TopOfSidenav({ children }: { children: any }) {
 
 function BottomOfSidenav({ children }: { children: any }) {
   return <div>{children}</div>
+}
+
+interface SearchResult {
+  title: string
+  url: string
+  content?: string
+}
+
+interface SearchResponse {
+  results: SearchResult[]
+}
+
+function isSearchResponse(data: unknown): data is SearchResponse {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'results' in data &&
+    Array.isArray((data as SearchResponse).results) &&
+    (data as SearchResponse).results.every(
+      (item): item is SearchResult =>
+        typeof item === 'object' &&
+        item !== null &&
+        'title' in item &&
+        'url' in item &&
+        typeof item.title === 'string' &&
+        typeof item.url === 'string',
+    )
+  )
+}
+
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value, delay])
+
+  return debouncedValue
+}
+
+function Search() {
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([])
+  const [isSearching, setIsSearching] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [expandedAnswer, setExpandedAnswer] = useState(false)
+  const debouncedSearchQuery = useDebounce(searchQuery, 300) // 300ms delay
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (debouncedSearchQuery.length > 2) {
+      setIsSearching(true)
+      fetch(
+        `/resources/search?query=${encodeURIComponent(debouncedSearchQuery)}`,
+      )
+        .then((res) => res.json())
+        .then((data: unknown) => {
+          if (isSearchResponse(data)) {
+            setSearchResults(data.results)
+          } else {
+            console.error('Invalid search response format')
+            setSearchResults([])
+          }
+          setIsSearching(false)
+        })
+        .catch((error) => {
+          console.error('Search error:', error)
+          setIsSearching(false)
+          setSearchResults([])
+        })
+    } else {
+      setSearchResults([])
+    }
+  }, [debouncedSearchQuery])
+
+  return (
+    <div className="relative hidden md:block">
+      <Form
+        method="GET"
+        action="/resources/search"
+        onChange={(e) => {
+          const form = e.currentTarget
+          const formData = new FormData(form)
+          const query = formData.get('search')
+          setSearchQuery(query?.toString() || '')
+        }}
+      >
+        <Input
+          placeholder="Search or ask a question"
+          id="search"
+          name="search"
+          className="w-[300px]"
+        />
+        <button hidden type="submit" />
+      </Form>
+
+      {/* Search Results Dropdown */}
+      {(searchResults.length > 0 || isSearching) && (
+        <div
+          className={`absolute top-full mt-1 w-[300px] rounded-md border bg-background p-2 shadow-lg ${expandedAnswer ? 'max-h-[80vh] overflow-y-auto' : ''
+            }`}
+        >
+          {isSearching ? (
+            <div className="p-2 text-sm text-muted-foreground">
+              Searching...
+            </div>
+          ) : (
+            searchResults.map((result, index) => {
+              const isExpertAnswer =
+                index === 0 && result.title === 'Expert Answer'
+
+              return (
+                <div key={index} className="mb-2 last:mb-0">
+                  <button
+                    className="w-full rounded-md p-2 text-left hover:bg-accent"
+                    onClick={() => {
+                      if (isExpertAnswer) {
+                        setExpandedAnswer(!expandedAnswer)
+                      } else {
+                        navigate(result.url)
+                        setSearchResults([])
+                      }
+                    }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm font-medium">{result.title}</div>
+                      {isExpertAnswer && (
+                        <div className="text-xs text-muted-foreground">
+                          {expandedAnswer ? '↑ Collapse' : '↓ Expand'}
+                        </div>
+                      )}
+                    </div>
+                    {result.content && (
+                      <div
+                        className={`mt-1 text-xs text-muted-foreground ${isExpertAnswer
+                            ? expandedAnswer
+                              ? ''
+                              : 'line-clamp-2'
+                            : 'line-clamp-2'
+                          }`}
+                      >
+                        {result.content}
+                      </div>
+                    )}
+                  </button>
+                </div>
+              )
+            })
+          )}
+        </div>
+      )}
+    </div>
+  )
 }
