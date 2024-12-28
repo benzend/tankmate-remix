@@ -373,3 +373,85 @@ export function numberOrNull(v: unknown): null | number {
   if (Number.isNaN(Number(v))) return null
   return Number(v)
 }
+
+export function getWeekdayFromDate(dateInput: string | Date): string {
+    // Convert the input to a Date object
+    const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
+
+    // Check if the date is within the past week
+    const now = new Date();
+    const oneWeekAgo = new Date(now);
+    oneWeekAgo.setDate(now.getDate() - 7);
+
+    if (date < oneWeekAgo || date > now) {
+        throw new Error("Date must be within the past week");
+    }
+
+    // Array of weekdays
+    const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    // Get the weekday for the given date
+    return weekdays[date.getDay()] as string;
+}
+
+export function formatRecentDate(dateInput: string | Date): string {
+    // Convert the input to a Date object
+    const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
+
+    // Check if the date is valid
+    if (isNaN(date.getTime())) {
+        throw new Error("Invalid date provided");
+    }
+
+    // Calculate the date one week ago
+    const now = new Date();
+    const oneWeekAgo = new Date(now);
+    oneWeekAgo.setDate(now.getDate() - 7);
+
+    // If the date is within the past week, return the weekday
+    if (date >= oneWeekAgo && date <= now) {
+        const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        return weekdays[date.getDay()] as string;
+    }
+
+    // Otherwise, return a formatted date
+    return date.toLocaleDateString();
+}
+
+export function formatDateBasedOnRecency(dateInput: string | Date): string {
+    const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
+
+    if (isNaN(date.getTime())) {
+        throw new Error("Invalid date provided");
+    }
+
+    const now = new Date();
+    const oneWeekAgo = new Date(now);
+    oneWeekAgo.setDate(now.getDate() - 7);
+
+    // Normalize dates (strip time for accurate comparison)
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+    const inputDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+    // Check for "Today"
+    if (inputDate.getTime() === today.getTime()) {
+        return "Today";
+    }
+
+    // Check for "Yesterday"
+    if (inputDate.getTime() === yesterday.getTime()) {
+        return "Yesterday";
+    }
+
+    // If within the past week
+    if (date >= oneWeekAgo && date < today) {
+        const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        return weekdays[date.getDay()];
+    }
+
+    // If older than a week, return formatted date
+    return date.toLocaleDateString();
+}

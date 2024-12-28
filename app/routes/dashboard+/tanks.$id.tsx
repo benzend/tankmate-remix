@@ -22,7 +22,7 @@ import { useEffect, useState } from 'react'
 import { Line as LineChart } from 'react-chartjs-2'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
-import { cn } from '#app/utils/misc.tsx'
+import { cn, formatDateBasedOnRecency } from '#app/utils/misc.tsx'
 import { DateFrom, humanize, toTitleCase } from '#app/utils/misc.js'
 Chart.register(CategoryScale)
 Chart.register(LinearScale)
@@ -478,7 +478,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 							<LineChart
 								data={{
 									labels: tank.parameterLogs.map((l) =>
-										DateFrom(l.createdAt).toLocaleDateString(),
+										formatDateBasedOnRecency(DateFrom(l.createdAt).toLocaleDateString()),
 									),
 									datasets: [
 										{
@@ -497,7 +497,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 							<LineChart
 								data={{
 									labels: tank.parameterLogs.map((l) =>
-										DateFrom(l.createdAt).toLocaleDateString(),
+										formatDateBasedOnRecency(DateFrom(l.createdAt).toLocaleDateString()),
 									),
 									datasets: [
 										{
@@ -516,7 +516,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 							<LineChart
 								data={{
 									labels: tank.parameterLogs.map((l) =>
-										DateFrom(l.createdAt).toLocaleDateString(),
+										formatDateBasedOnRecency(DateFrom(l.createdAt).toLocaleDateString()),
 									),
 									datasets: [
 										{
@@ -535,7 +535,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 							<LineChart
 								data={{
 									labels: tank.parameterLogs.map((l) =>
-										DateFrom(l.createdAt).toLocaleDateString(),
+										formatDateBasedOnRecency(DateFrom(l.createdAt).toLocaleDateString()),
 									),
 									datasets: [
 										{
@@ -554,7 +554,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 							<LineChart
 								data={{
 									labels: tank.parameterLogs.map((l) =>
-										DateFrom(l.createdAt).toLocaleDateString(),
+										formatDateBasedOnRecency(DateFrom(l.createdAt).toLocaleDateString()),
 									),
 									datasets: [
 										{
@@ -573,7 +573,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 							<LineChart
 								data={{
 									labels: tank.parameterLogs.map((l) =>
-										DateFrom(l.createdAt).toLocaleDateString(),
+										formatDateBasedOnRecency(DateFrom(l.createdAt).toLocaleDateString()),
 									),
 									datasets: [
 										{
@@ -592,7 +592,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 							<LineChart
 								data={{
 									labels: tank.parameterLogs.map((l) =>
-										DateFrom(l.createdAt).toLocaleDateString(),
+										formatDateBasedOnRecency(DateFrom(l.createdAt).toLocaleDateString()),
 									),
 									datasets: [
 										{
