@@ -395,7 +395,7 @@ function Search() {
       }
     }
 
-    performSearch()
+    performSearch().catch(err => console.error('failed to search', err))
 
     // Cleanup: abort any pending requests when the query changes or component unmounts
     return () => {
