@@ -7,6 +7,7 @@ import {
   useLocation,
   useNavigate,
 } from '@remix-run/react'
+
 import { useEffect, useState } from 'react'
 import { Button } from '#app/components/ui/button.js'
 import { Input } from '#app/components/ui/input.js'
@@ -160,7 +161,7 @@ const Nav = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-10">
+        <div className="flex items-center gap-3">
           <Search />
           <button
             className="group relative block md:hidden"
@@ -316,6 +317,7 @@ function Search() {
   const [isSearching, setIsSearching] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [expandedAnswer, setExpandedAnswer] = useState(false)
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false)
   const debouncedSearchQuery = useDebounce(searchQuery, 300) // 300ms delay
   const navigate = useNavigate()
 
@@ -346,81 +348,243 @@ function Search() {
   }, [debouncedSearchQuery])
 
   return (
-    <div className="relative hidden md:block">
-      <Form
-        method="GET"
-        action="/resources/search"
-        onChange={(e) => {
-          const form = e.currentTarget
-          const formData = new FormData(form)
-          const query = formData.get('search')
-          setSearchQuery(query?.toString() || '')
-        }}
-      >
-        <Input
-          placeholder="Search or ask a question"
-          id="search"
-          name="search"
-          className="w-[300px]"
-        />
-        <button hidden type="submit" />
-      </Form>
-
-      {/* Search Results Dropdown */}
-      {(searchResults.length > 0 || isSearching) && (
-        <div
-          className={`absolute top-full mt-1 w-[300px] rounded-md border bg-background p-2 shadow-lg ${expandedAnswer ? 'max-h-[80vh] overflow-y-auto' : ''
-            }`}
-        >
-          {isSearching ? (
-            <div className="p-2 text-sm text-muted-foreground">
-              Searching...
-            </div>
-          ) : (
-            searchResults.map((result, index) => {
-              const isExpertAnswer =
-                index === 0 && result.title === 'Expert Answer'
-
-              return (
-                <div key={index} className="mb-2 last:mb-0">
-                  <button
-                    className="w-full rounded-md p-2 text-left hover:bg-accent"
-                    onClick={() => {
-                      if (isExpertAnswer) {
-                        setExpandedAnswer(!expandedAnswer)
-                      } else {
-                        navigate(result.url)
-                        setSearchResults([])
-                      }
-                    }}
+    <>
+      {/* Mobile Search */}
+      <div className="relative md:hidden">
+        {isMobileSearchOpen ? (
+          <div className="fixed inset-x-0 top-0 z-50 bg-background p-4">
+            <div className="relative flex items-center">
+              <Form
+                method="GET"
+                action="/resources/search"
+                className="w-full"
+                onChange={(e) => {
+                  const form = e.currentTarget
+                  const formData = new FormData(form)
+                  const query = formData.get('search')
+                  setSearchQuery(query?.toString() || '')
+                }}
+              >
+                <div className="relative">
+                  <svg
+                    className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm font-medium">{result.title}</div>
-                      {isExpertAnswer && (
-                        <div className="text-xs text-muted-foreground">
-                          {expandedAnswer ? '↑ Collapse' : '↓ Expand'}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                  <Input
+                    placeholder="Search or ask a question"
+                    id="search-mobile"
+                    name="search"
+                    className="w-full pl-8 pr-8"
+                    autoFocus
+                  />
+                </div>
+                <button hidden type="submit" />
+              </Form>
+              <button
+                onClick={() => {
+                  setIsMobileSearchOpen(false)
+                  setSearchQuery('')
+                  setSearchResults([])
+                }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="h-4 w-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Mobile Search Results */}
+            {(searchResults.length > 0 || isSearching) && (
+              <div className="absolute left-0 right-0 mt-2 max-h-[60vh] overflow-y-auto bg-background p-4 shadow-lg">
+                {isSearching ? (
+                  <div className="p-2 text-sm text-muted-foreground">
+                    Searching...
+                  </div>
+                ) : (
+                  searchResults.map((result, index) => (
+                    // ... same result rendering as desktop ...
+                    <div key={index} className="mb-2 last:mb-0">
+                      <button
+                        className="w-full rounded-md p-2 text-left hover:bg-accent"
+                        onClick={() => {
+                          if (index === 0 && result.title === 'Expert Answer') {
+                            setExpandedAnswer(!expandedAnswer)
+                          } else {
+                            navigate(result.url)
+                            setSearchResults([])
+                            setIsMobileSearchOpen(false)
+                          }
+                        }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="text-sm font-medium">
+                            {result.title}
+                          </div>
+                          {index === 0 && result.title === 'Expert Answer' && (
+                            <div className="text-xs text-muted-foreground">
+                              {expandedAnswer ? '↑ Collapse' : '↓ Expand'}
+                            </div>
+                          )}
+                        </div>
+                        {result.content && (
+                          <div
+                            className={`mt-1 text-xs text-muted-foreground ${index === 0 && result.title === 'Expert Answer'
+                                ? expandedAnswer
+                                  ? ''
+                                  : 'line-clamp-2'
+                                : 'line-clamp-2'
+                              }`}
+                          >
+                            {result.content}
+                          </div>
+                        )}
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+        ) : (
+          <button
+            onClick={() => setIsMobileSearchOpen(true)}
+            className="flex h-10 w-10 items-center justify-center rounded-full"
+          >
+            <svg
+              className="h-6 w-6 text-foreground"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </button>
+        )}
+      </div>
+
+      {/* Desktop Search */}
+      <div className="relative hidden md:block">
+        <Form
+          method="GET"
+          action="/resources/search"
+          onChange={(e) => {
+            const form = e.currentTarget
+            const formData = new FormData(form)
+            const query = formData.get('search')
+            setSearchQuery(query?.toString() || '')
+          }}
+        >
+          <div className="relative">
+            <svg
+              className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+            <Input
+              placeholder="Search or ask a question"
+              id="search"
+              name="search"
+              className="w-[300px] pl-8"
+            />
+          </div>
+          <button hidden type="submit" />
+        </Form>
+
+        {/* Search Results Dropdown */}
+        {(searchResults.length > 0 || isSearching) && (
+          <div
+            className={`absolute top-full mt-1 w-[300px] rounded-md border bg-background p-2 shadow-lg ${expandedAnswer ? 'max-h-[80vh] overflow-y-auto' : ''
+              }`}
+          >
+            {isSearching ? (
+              <div className="p-2 text-sm text-muted-foreground">
+                Searching...
+              </div>
+            ) : (
+              searchResults.map((result, index) => {
+                const isExpertAnswer =
+                  index === 0 && result.title === 'Expert Answer'
+
+                return (
+                  <div key={index} className="mb-2 last:mb-0">
+                    <button
+                      className="w-full rounded-md p-2 text-left hover:bg-accent"
+                      onClick={() => {
+                        if (isExpertAnswer) {
+                          setExpandedAnswer(!expandedAnswer)
+                        } else {
+                          navigate(result.url)
+                          setSearchResults([])
+                        }
+                      }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm font-medium">
+                          {result.title}
+                        </div>
+                        {isExpertAnswer && (
+                          <div className="text-xs text-muted-foreground">
+                            {expandedAnswer ? '↑ Collapse' : '↓ Expand'}
+                          </div>
+                        )}
+                      </div>
+                      {result.content && (
+                        <div
+                          className={`mt-1 text-xs text-muted-foreground ${isExpertAnswer
+                              ? expandedAnswer
+                                ? ''
+                                : 'line-clamp-2'
+                              : 'line-clamp-2'
+                            }`}
+                        >
+                          {result.content}
                         </div>
                       )}
-                    </div>
-                    {result.content && (
-                      <div
-                        className={`mt-1 text-xs text-muted-foreground ${isExpertAnswer
-                            ? expandedAnswer
-                              ? ''
-                              : 'line-clamp-2'
-                            : 'line-clamp-2'
-                          }`}
-                      >
-                        {result.content}
-                      </div>
-                    )}
-                  </button>
-                </div>
-              )
-            })
-          )}
-        </div>
-      )}
-    </div>
+                    </button>
+                  </div>
+                )
+              })
+            )}
+          </div>
+        )}
+      </div>
+    </>
   )
 }
