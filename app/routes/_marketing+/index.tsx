@@ -3,12 +3,12 @@ import { Link } from '@remix-run/react'
 
 export default function Index() {
 	return (
-		<div className="min-h-screen bg-background text-gray-100">
+		<div className="min-h-screen bg-background text-gray-100 pt-20">
 			{/* Hero Section */}
 			<section className="hero-section relative flex h-[650px] items-center justify-center bg-[url('/img/marketing/hero.jpg')] bg-cover bg-center text-white">
-				<div className="absolute inset-0 opacity-70"></div>
+				<div className="absolute inset-0 bg-black/50 md:bg-transparent"></div>
 				<div className="flex justify-between">
-					<div></div>
+					<div role="presentation"></div>
 					<div className="relative px-4 md:w-1/2">
 						<h1 className="font-serif leading-normal lg:leading-snug mb-6 text-4xl font-extrabold drop-shadow-lg lg:text-6xl">
 							Dive into the Future of Aquarium Care
