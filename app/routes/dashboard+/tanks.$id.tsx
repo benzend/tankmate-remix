@@ -484,29 +484,6 @@ const ParameterChart = ({
 	)
 }
 
-const ParameterLog = ({
-	logId,
-	createdAt,
-	tankId,
-	tankName,
-}: {
-	logId: string
-	createdAt: string
-	tankId?: string
-	tankName?: string
-}) => {
-	return (
-		<div>
-			<div className="flex justify-between border-b border-l p-2 text-sm text-accent-foreground">
-				<Link to={`/dashboard/parameter-log/${logId}`}>
-					{DateFrom(createdAt).toLocaleDateString()}
-				</Link>
-				<Link to={`/dashboard/tanks/${tankId}`}>{tankName}</Link>
-			</div>
-		</div>
-	)
-}
-
 type TankWithLogs = {
 	id: string
 	name: string
