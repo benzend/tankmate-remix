@@ -49,7 +49,22 @@ export async function action({ request }: ActionFunctionArgs) {
   const content: Array<ChatCompletionContentPart> = [
     {
       type: 'text',
-      text: `Analyze this coral image and provide details in the following JSON format. For healthScore, use a scale of 1-10 where 10 is perfectly healthy. Keep otherDetails brief (max 2 sentences) focusing on distinctive features and any visible health concerns.
+      text: `You are a coral identification expert. Analyze this coral image carefully, paying attention to:
+- Morphology (branching, plating, massive, encrusting, etc.)
+- Color patterns and variations
+- Polyp structure and arrangement
+- Texture and surface features
+- Signs of bleaching, disease, or damage
+
+Provide a detailed analysis in the following JSON format:
+- friendlyName: Common name used by reef enthusiasts
+- scientificName: Full genus and species if identifiable, or just genus if species is unclear
+- healthScore: Scale of 1-10 where:
+  10 = Perfect health (vibrant colors, no damage)
+  7-9 = Good health (minor issues)
+  4-6 = Moderate concerns (some bleaching/damage)
+  1-3 = Poor health (severe bleaching/disease)
+- otherDetails: Focus on distinctive identifying features and health indicators
 
 \`\`\`json
 {
