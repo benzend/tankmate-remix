@@ -8,6 +8,7 @@
 import { Link, useLocation } from '@remix-run/react'
 import { GeneralErrorBoundary } from '#app/components/error-boundary.tsx'
 import { Icon } from '#app/components/ui/icon.tsx'
+import { useOptionalUser } from '#app/utils/user.js'
 
 export async function loader() {
 	throw new Response('Not found', { status: 404 })
@@ -21,6 +22,8 @@ export default function NotFound() {
 
 export function ErrorBoundary() {
 	const location = useLocation()
+  const user = useOptionalUser()
+  const link = user ? '/dashboard' : '/'
 	return (
 		<GeneralErrorBoundary
 			statusHandlers={{
@@ -32,7 +35,7 @@ export function ErrorBoundary() {
 								{location.pathname}
 							</pre>
 						</div>
-						<Link to="/" className="text-body-md underline">
+						<Link to={link} className="text-body-md underline">
 							<Icon name="arrow-left">Back to home</Icon>
 						</Link>
 					</div>

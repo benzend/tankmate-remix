@@ -19,13 +19,14 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  image       UserImage?
-  password    Password?
-  notes       Note[]
-  roles       Role[]
-  sessions    Session[]
-  connections Connection[]
-  fishTanks   FishTank[]
+  image         UserImage?
+  password      Password?
+  notes         Note[]
+  roles         Role[]
+  sessions      Session[]
+  connections   Connection[]
+  fishTanks     FishTank[]
+  CoralAnalysis CoralAnalysis[]
 }
 
 model Note {
@@ -173,7 +174,7 @@ model TankScore {
   id String @id @default(cuid())
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   result   String
   context  String?
@@ -223,8 +224,9 @@ model FishTank {
 
   volume Int?
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId        String
+  CoralAnalysis CoralAnalysis[]
 }
 
 model FishTankPump {
@@ -303,6 +305,28 @@ model PlantSpecies {
   count Int
 }
 
+model CoralAnalysis {
+  id String @id @default(cuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  friendlyName   String
+  scientificName String
+
+  healthScore Int
+
+  otherDetails String?
+
+  imageUrl String?
+
+  fishTank   FishTank? @relation(fields: [fishTankId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  fishTankId String?
+
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ownerId String
+}
+
 model FishTankMaintenance {
   id String @id @default(cuid())
 
@@ -323,15 +347,14 @@ model FishTankParameterLog {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  calcium Int?
-  alk Float?
+  calcium   Int?
+  alk       Float?
   magnesium Int?
-  pH Float?
-  temp Float?
-  nitrate Float?
+  pH        Float?
+  temp      Float?
+  nitrate   Float?
   phosphate Float?
 
   fishTank   FishTank? @relation(fields: [fishTankId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   fishTankId String?
 }
-

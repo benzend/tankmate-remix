@@ -55,37 +55,56 @@ const SideNav = () => {
   return (
     <nav className="hidden w-60 flex-col justify-between rounded-tr-xl bg-accent-background p-5 md:flex">
       <TopOfSidenav>
-        <Button
-          variant={
-            location.pathname === '/dashboard' ? 'sidenav-active' : 'sidenav'
-          }
-          size="full"
-          className="mb-4"
-        >
-          <Link to="/dashboard">Dashboard</Link>
-        </Button>
-        <Button
-          variant={
-            location.pathname === '/dashboard/maintenance'
-              ? 'sidenav-active'
-              : 'sidenav'
-          }
-          size="full"
-          className="mb-4"
-        >
-          <Link to="/dashboard/maintenance">Maintenance</Link>
-        </Button>
-        <Button
-          variant={
-            location.pathname === '/dashboard/parameter-log'
-              ? 'sidenav-active'
-              : 'sidenav'
-          }
-          size="full"
-          className="mb-4"
-        >
-          <Link to="/dashboard/parameter-log">Parameter Log</Link>
-        </Button>
+        <Link to="/dashboard">
+          <Button
+            variant={
+              location.pathname === '/dashboard' ? 'sidenav-active' : 'sidenav'
+            }
+            size="full"
+            className="mb-4"
+          >
+            Dashboard
+          </Button>
+        </Link>
+        <Link to="/dashboard/maintenance">
+          <Button
+            variant={
+              location.pathname === '/dashboard/maintenance'
+                ? 'sidenav-active'
+                : 'sidenav'
+            }
+            size="full"
+            className="mb-4"
+          >
+            Maintenance
+          </Button>
+        </Link>
+        <Link to="/dashboard/parameter-log">
+          <Button
+            variant={
+              location.pathname === '/dashboard/parameter-log'
+                ? 'sidenav-active'
+                : 'sidenav'
+            }
+            size="full"
+            className="mb-4"
+          >
+            Parameter Log
+          </Button>
+        </Link>
+        <Link to="/dashboard/coral-analyses">
+          <Button
+            variant={
+              location.pathname === '/dashboard/coral-analyses'
+                ? 'sidenav-active'
+                : 'sidenav'
+            }
+            size="full"
+            className="mb-4"
+          >
+            Coral Analyzer
+          </Button>
+        </Link>
       </TopOfSidenav>
 
       <BottomOfSidenav>
@@ -123,15 +142,27 @@ const Nav = () => {
 
           <div className="flex h-[calc(100vh-100px)] flex-col justify-between">
             <div className="text-center">
-              <Button variant="outline" size="full">
-                <Link to="/dashboard">Dashboard</Link>
-              </Button>
-              <Button variant="outline" size="full">
-                <Link to="/dashboard/maintenance">Maintenance</Link>
-              </Button>
-              <Button variant="outline" size="full">
-                <Link to="/dashboard/parameter-log">Parameter Log</Link>
-              </Button>
+              <Link to="/dashboard">
+                <Button variant="outline" size="full">
+                  Dashboard
+                </Button>
+              </Link>
+              <Link to="/dashboard/maintenance">
+                <Button variant="outline" size="full">
+                  Maintenance
+                </Button>
+              </Link>
+              <Link to="/dashboard/parameter-log">
+                <Button variant="outline" size="full">
+                  Parameter Log
+                </Button>
+              </Link>
+              <Link to="/dashboard/coral-analyses">
+                <Button variant="outline" size="full">
+                  Coral Analyzer
+                </Button>
+              </Link>
+
             </div>
 
             <div>
@@ -207,6 +238,7 @@ function Breadcrumbs() {
     'tanks',
     'maintenance',
     'parameter-log',
+    'coral-analyses',
     'new',
   ]
   const to = (pathPart: string) => {
