@@ -3,7 +3,7 @@ import { Link } from '@remix-run/react'
 
 export default function Index() {
 	return (
-		<div className="min-h-screen bg-background text-gray-100 pt-20">
+		<div className="min-h-screen bg-background text-gray-100">
 			{/* Hero Section */}
 			<section className="hero-section relative flex h-[650px] items-center justify-center bg-[url('/img/marketing/hero.jpg')] bg-cover bg-center text-white">
 				<div className="absolute inset-0 bg-black/50 md:bg-transparent"></div>

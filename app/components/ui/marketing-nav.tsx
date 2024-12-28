@@ -14,7 +14,7 @@ export const MarketingNav = () => {
   }, [location.pathname]);
 
   return (
-    <header className="fixed top-0 left-0 px-10 py-4 md:py-6 bg-gradient-to-r bg-black from-blue-800 z-10 w-full">
+    <header className="sticky top-0 left-0 px-10 py-4 md:py-6 bg-gradient-to-r bg-black from-blue-800 z-10 w-full">
       {navOpen && (
         <nav className="z-2 fixed left-0 top-0 h-screen w-screen bg-accent-background px-10">
           <header className="flex h-20 justify-between"></header>

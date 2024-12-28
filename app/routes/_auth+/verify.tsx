@@ -86,7 +86,7 @@ export default function VerifyRoute() {
 	})
 
 	return (
-		<main className="bg-slate-950 bg-gradient-to-br from-blue-800 flex flex-col justify-center pb-32 pt-40">
+		<main className="bg-slate-950 bg-gradient-to-br from-blue-800 flex flex-col justify-center pb-32 pt-20">
       <div className="container">
         <div className="text-center">
           {type ? headings[type] : 'Invalid Verification Type'}

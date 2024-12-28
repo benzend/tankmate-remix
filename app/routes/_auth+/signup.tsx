@@ -132,7 +132,7 @@ export default function SignupRoute() {
 	})
 
 	return (
-		<div className="flex flex-col justify-center bg-slate-950 bg-gradient-to-br from-blue-800 pb-32 pt-40">
+		<div className="flex flex-col justify-center bg-slate-950 bg-gradient-to-br from-blue-800 pb-32 pt-20">
 			<div className="container">
 				<div className="text-center">
 					<h1 className="text-h1">Create an account</h1>

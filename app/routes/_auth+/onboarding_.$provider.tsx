@@ -196,7 +196,7 @@ export default function OnboardingProviderRoute() {
 	})
 
 	return (
-		<div className="container flex min-h-full flex-col justify-center pb-32 pt-40">
+		<div className="container flex min-h-full flex-col justify-center pb-32 pt-20">
 			<div className="mx-auto w-full max-w-lg">
 				<div className="flex flex-col gap-3 text-center">
 					<h1 className="text-h1">Welcome aboard {data.email}!</h1>
