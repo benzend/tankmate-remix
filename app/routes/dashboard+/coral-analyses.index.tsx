@@ -56,7 +56,7 @@ export default function DashboardCoralAnalysesPage() {
 
 				</div>
 			) : (
-				<Link to="/dashboard/coral-analyses/new">+ Analyze</Link>
+				<Link className="text-foreground" to="/dashboard/coral-analyses/new">+ Analyze</Link>
 			)}
 		</div>
 	)
