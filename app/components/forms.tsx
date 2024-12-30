@@ -1,6 +1,8 @@
 import { useInputControl } from '@conform-to/react'
 import { REGEXP_ONLY_DIGITS_AND_CHARS, type OTPInputProps } from 'input-otp'
 import React, { useId } from 'react'
+import { cn } from '#app/utils/misc.tsx'
+import { cva, type VariantProps } from 'class-variance-authority'
 import { Checkbox, type CheckboxProps } from './ui/checkbox.tsx'
 import {
 	InputOTP,
@@ -138,6 +140,10 @@ export function TextareaField({
 	)
 }
 
+const labelVariants = cva(
+	'self-center text-body-xs text-muted-foreground',
+)
+
 export function CheckboxField({
 	labelProps,
 	buttonProps,
@@ -190,8 +196,8 @@ export function CheckboxField({
 				/>
 				<label
 					htmlFor={id}
+					className={cn(labelVariants(), labelProps.className)}
 					{...labelProps}
-					className="self-center text-body-xs text-muted-foreground"
 				/>
 			</div>
 			<div className="px-4 pb-3 pt-1">

@@ -90,8 +90,8 @@ export default function ResetPasswordPage() {
     <div className="bg-slate-950 bg-gradient-to-br from-blue-800  flex flex-col justify-center pb-32 pt-20">
       <div className="container">
         <div className="text-center">
-          <h1 className="text-h1">Password Reset</h1>
-          <p className="mt-3 text-body-md text-muted-foreground">
+          <h1 className="text-h1 text-white">Password Reset</h1>
+          <p className="mt-3 text-body-md text-gray-300">
             Hi, {data.resetPasswordUsername}. No worries. It happens all the time.
           </p>
         </div>
@@ -101,6 +101,7 @@ export default function ResetPasswordPage() {
               labelProps={{
                 htmlFor: fields.password.id,
                 children: 'New Password',
+                className: 'text-white'
               }}
               inputProps={{
                 ...getInputProps(fields.password, { type: 'password' }),
@@ -113,6 +114,7 @@ export default function ResetPasswordPage() {
               labelProps={{
                 htmlFor: fields.confirmPassword.id,
                 children: 'Confirm Password',
+                className: 'text-white'
               }}
               inputProps={{
                 ...getInputProps(fields.confirmPassword, { type: 'password' }),

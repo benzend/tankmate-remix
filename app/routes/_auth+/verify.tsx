@@ -49,8 +49,8 @@ export default function VerifyRoute() {
 
 	const checkEmail = (
 		<>
-			<h1 className="text-h1">Check your email</h1>
-			<p className="mt-3 text-body-md text-muted-foreground">
+			<h1 className="text-h1 text-white">Check your email</h1>
+			<p className="mt-3 text-body-md text-gray-300">
 				We've sent you a code to verify your email address.
 			</p>
 		</>
@@ -62,8 +62,8 @@ export default function VerifyRoute() {
 		'change-email': checkEmail,
 		'2fa': (
 			<>
-				<h1 className="text-h1">Check your 2FA app</h1>
-				<p className="mt-3 text-body-md text-muted-foreground">
+				<h1 className="text-h1 text-white">Check your 2FA app</h1>
+				<p className="mt-3 text-body-md text-gray-300">
 					Please enter your 2FA code to verify your identity.
 				</p>
 			</>
@@ -106,6 +106,7 @@ export default function VerifyRoute() {
                   labelProps={{
                     htmlFor: fields[codeQueryParam].id,
                     children: 'Code',
+                    className: 'text-white'
                   }}
                   inputProps={{
                     ...getInputProps(fields[codeQueryParam], { type: 'text' }),

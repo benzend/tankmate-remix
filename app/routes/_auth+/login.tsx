@@ -101,8 +101,8 @@ export default function LoginPage() {
 		<div className="bg-slate-950 bg-gradient-to-br from-blue-800 flex min-h-full flex-col justify-center pb-32 pt-20">
 			<div className="mx-auto w-full max-w-md">
 				<div className="flex flex-col gap-3 text-center">
-					<h1 className="text-h1">Welcome back!</h1>
-					<p className="text-body-md text-muted-foreground">
+					<h1 className="text-h1 text-white">Welcome back!</h1>
+					<p className="text-body-md text-gray-300">
 						Please enter your details.
 					</p>
 				</div>
@@ -113,7 +113,7 @@ export default function LoginPage() {
 						<Form method="POST" {...getFormProps(form)}>
 							<HoneypotInputs />
 							<Field
-								labelProps={{ children: 'Username' }}
+								labelProps={{ children: 'Username', className: 'text-white' }}
 								inputProps={{
 									...getInputProps(fields.username, { type: 'text' }),
 									autoFocus: true,
@@ -124,7 +124,7 @@ export default function LoginPage() {
 							/>
 
 							<Field
-								labelProps={{ children: 'Password' }}
+								labelProps={{ children: 'Password', className: 'text-white' }}
 								inputProps={{
 									...getInputProps(fields.password, {
 										type: 'password',
@@ -139,16 +139,18 @@ export default function LoginPage() {
 									labelProps={{
 										htmlFor: fields.remember.id,
 										children: 'Remember me',
+                    className: 'text-gray-300'
 									}}
 									buttonProps={getInputProps(fields.remember, {
 										type: 'checkbox',
+                    className: 'border-white'
 									})}
 									errors={fields.remember.errors}
 								/>
 								<div>
 									<Link
 										to="/forgot-password"
-										className="text-body-xs font-semibold"
+										className="text-body-xs font-semibold text-gray-300"
 									>
 										Forgot password?
 									</Link>
@@ -172,13 +174,14 @@ export default function LoginPage() {
 							</div>
 						</Form>
 						<div className="flex items-center justify-center gap-2 pt-6">
-							<span className="text-muted-foreground">New here?</span>
+							<span className="text-gray-300">New here?</span>
 							<Link
 								to={
 									redirectTo
 										? `/signup?${encodeURIComponent(redirectTo)}`
 										: '/signup'
 								}
+                className="text-white"
 							>
 								Create an account
 							</Link>

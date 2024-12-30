@@ -135,8 +135,8 @@ export default function SignupRoute() {
 		<div className="flex flex-col justify-center bg-slate-950 bg-gradient-to-br from-blue-800 pb-32 pt-20">
 			<div className="container">
 				<div className="text-center">
-					<h1 className="text-h1">Create an account</h1>
-					<p className="mt-3 text-body-md text-muted-foreground">
+					<h1 className="text-h1 text-white">Create an account</h1>
+					<p className="mt-3 text-body-md text-gray-300">
 						Please enter your email.
 					</p>
 				</div>
@@ -147,6 +147,7 @@ export default function SignupRoute() {
 							labelProps={{
 								htmlFor: fields.email.id,
 								children: 'Email',
+                className: 'text-white'
 							}}
 							inputProps={{
 								...getInputProps(fields.email, { type: 'email' }),
@@ -167,10 +168,10 @@ export default function SignupRoute() {
 					</Form>
 
 					<div className="flex items-center justify-center gap-2 pt-6">
-						<span className="text-muted-foreground">
+						<span className="text-gray-300">
 							Already have an account?
 						</span>
-						<Link to="/login">
+						<Link to="/login" className="text-white">
 							Sign in
 						</Link>
 					</div>
