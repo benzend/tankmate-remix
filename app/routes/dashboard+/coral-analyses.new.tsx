@@ -3,7 +3,7 @@ import { Input } from '#app/components/ui/input.js'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { Form, json, redirect, useFetcher } from '@remix-run/react'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { Tooltip } from 'react-tooltip'
 import { type action as cloudinaryAction } from '#app/routes/_image-upload+/cloudinary.tsx'
 import { z } from 'zod'
@@ -12,6 +12,8 @@ import { prisma } from '#app/utils/db.server.js'
 import { ChatCompletionContentPart } from 'openai/resources/index.mjs'
 import OpenAI from 'openai'
 import { tryJsonParse } from '#app/utils/misc.js'
+import { UploadDropzone } from '#app/utils/uploadthing'
+import { UploadedFileData } from 'uploadthing/types'
 
 const client = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
@@ -135,7 +137,7 @@ Provide a detailed analysis in the following JSON format:
       scientificName,
       healthScore,
       otherDetails,
-      imageUrl
+      imageUrl,
     },
     select: {
       id: true,
@@ -151,24 +153,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function DashboardCoralAnalysesNewPage() {
-  const imgFetcher = useFetcher<typeof cloudinaryAction>()
-  const imgUploadFormRef = useRef<HTMLFormElement | null>(null)
-
-  const handleImageChange = () => {
-    let formData = new FormData()
-
-    if (imgUploadFormRef.current) {
-      formData = new FormData(imgUploadFormRef.current)
-    }
-
-    imgFetcher.submit(formData, {
-      method: 'POST',
-      action: '/cloudinary',
-      encType: 'multipart/form-data',
-    })
-  }
-
-  const imgData = imgFetcher.data as any
+  const [imgData, setImgData] = useState<null | UploadedFileData>(null)
+  const [replacingImg, setReplacingImg] = useState(false)
 
   return (
     <div className="w-full">
@@ -178,51 +164,52 @@ export default function DashboardCoralAnalysesNewPage() {
           <Tooltip id="image-url-tooltip" className="absolute"></Tooltip>
         </label>
         <br />
-        <imgFetcher.Form
-          action="/cloudinary"
-          method="POST"
-          encType="multipart/form-data"
-          id="image-upload-form"
-          className="mt-3 w-80"
-          ref={imgUploadFormRef}
-        >
-          {imgData && (
-            <img
-              src={imgData.imgSource}
-              width="300px"
-              height="auto"
-              className="mb-4"
-              alt="uploaded fish tank"
-            />
-          )}
 
-          <Input
-            name="img"
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
+        {imgData && (
+          <img
+            src={imgData.appUrl}
+            width="300px"
+            height="auto"
+            className="mb-4"
+            alt="uploaded fish tank"
           />
-          <input
-            name="description"
-            type="text"
-            hidden
-            readOnly
-            value="Fishtank"
-          />
-        </imgFetcher.Form>
+        )}
+
+        {imgData && !replacingImg && (
+          <Button variant="outline" onClick={() => setReplacingImg(true)}>Replace Image</Button>
+        )}
+
+        {(!imgData || replacingImg) && (
+          <div className="relative">
+            <UploadDropzone
+              className="ut-button:bg-primary ut-button:text-primary-foreground"
+              endpoint="imageUploader"
+              onClientUploadComplete={(res) => {
+                setImgData(res[0] || null)
+                setReplacingImg(false)
+              }}
+              onUploadError={(error: Error) => {
+                // Do something with the error.
+                alert(`ERROR! ${error.message}`)
+              }}
+            />
+            {replacingImg && <button className="absolute top-2 right-4 text-primary" onClick={() => setReplacingImg(false)}>x</button>}
+            </div>
+          )}
 
         <Form method="POST">
           {imgData && (
             <input
               type="text"
-              value={imgData.imgSource}
+              value={imgData.appUrl}
+              readOnly
               hidden
               name="imageUrl"
             />
           )}
           <br />
           <div className="fixed inset-x-5 bottom-5 md:static">
-            <Button type="submit" className="w-full md:w-20">
+            <Button type="submit" className="w-full md:w-20" disabled={!imgData}>
               Analyze
             </Button>
           </div>

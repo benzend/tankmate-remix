@@ -9,9 +9,13 @@ const schema = z.object({
 	HONEYPOT_SECRET: z.string(),
   OPENAI_API_KEY: z.string().optional(),
 	CACHE_DATABASE_PATH: z.string(),
+
+  // images
   CLOUDINARY_CLOUD_NAME: z.string().optional(),
   CLOUDINARY_API_KEY: z.string().optional(),
   CLOUDINARY_API_SECRET: z.string().optional(),
+  UPLOADTHING_TOKEN: z.string().optional(),
+
 	// If you plan on using Sentry, uncomment this line
 	// SENTRY_DSN: z.string(),
 	// If you plan to use Resend, uncomment this line
