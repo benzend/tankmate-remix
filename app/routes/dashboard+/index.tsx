@@ -1,9 +1,11 @@
 import { invariantResponse } from '@epic-web/invariant'
-import { json, type LoaderFunctionArgs } from '@remix-run/node'
+import { json, MetaFunction, type LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
 import { DateFrom, getLatestTankScoreAverage, humanize, toTitleCase } from '#app/utils/misc.js'
+
+export const meta: MetaFunction = () => [{ title: 'TankMate | Dashboard' }]
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	const userId = await requireUserId(request, { redirectTo: '/' })
