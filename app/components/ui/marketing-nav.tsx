@@ -55,17 +55,17 @@ const Actions = ({ user }: { user: ReturnType<typeof useOptionalUser> }) => {
         <>
           {/* mobile */}
           <span className="inline-block md:hidden">
-            <Button asChild variant="default" size="default" className="font-bold">
+            <Button asChild variant="default" size="default" className="font-bold text-white">
               <Link to="/login">Sign in</Link>
             </Button>
           </span>
           {/* desktop */}
           <span className="hidden md:inline-block">
-            <Button asChild variant="link" size="lg" className="font-bold">
+            <Button asChild variant="link" size="lg" className="font-bold text-white">
               <Link to="/login">Sign in</Link>
             </Button>
 
-            <Button asChild variant="default" size="lg" className="font-bold">
+            <Button asChild variant="default" size="lg" className="font-bold text-white">
               <Link to="/signup">Create an Account</Link>
             </Button>
           </span>
