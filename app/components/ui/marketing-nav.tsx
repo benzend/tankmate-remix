@@ -65,7 +65,7 @@ const Actions = ({ user }: { user: ReturnType<typeof useOptionalUser> }) => {
               <Link to="/login">Sign in</Link>
             </Button>
 
-            <Button asChild variant="default" size="lg" className="font-bold text-white">
+            <Button asChild variant="default" size="lg" className="font-bold text-black bg-white hover:text-black hover:bg-white">
               <Link to="/signup">Create an Account</Link>
             </Button>
           </span>
