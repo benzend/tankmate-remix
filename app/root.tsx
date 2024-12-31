@@ -17,7 +17,7 @@ import {
 import { withSentry } from '@sentry/remix'
 import { HoneypotProvider } from 'remix-utils/honeypot/react'
 import appleTouchIconAssetUrl from './assets/favicons/apple-touch-icon.png'
-import faviconAssetUrl from './assets/favicons/favicon.svg'
+import faviconAssetUrl from './assets/favicons/favicon.webp'
 import { GeneralErrorBoundary } from './components/error-boundary.tsx'
 import { EpicProgress } from './components/progress-bar.tsx'
 import { useToast } from './components/toaster.tsx'
@@ -61,7 +61,7 @@ export const links: LinksFunction = () => {
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	return [
 		{ title: data ? 'TankMate' : 'Error | TankMate' },
-		{ name: 'description', content: `Create and manage aquariums on the fly` },
+		{ name: 'description', content: `Monitor and maintain your aquarium's health with AI-powered coral analysis, water quality tracking, and smart alerts. TankMate helps reef enthusiasts keep their marine ecosystems thriving.` },
 	]
 }
 
