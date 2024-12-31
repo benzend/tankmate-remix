@@ -52,42 +52,42 @@ export default function ParameterLogPage() {
       {parameterLog.calcium !== null && (
         <>
           <label className="text-xs text-foreground">Calcium</label>
-          <p>{parameterLog.calcium}</p>
+          <p className="text-foreground">{parameterLog.calcium}</p>
           <br />
         </>
       )}
       {parameterLog.pH !== null && (
         <>
           <label className="text-xs text-foreground">pH</label>
-          <p>{parameterLog.pH}</p>
+          <p className="text-foreground">{parameterLog.pH}</p>
           <br />
         </>
       )}
       {parameterLog.phosphate !== null && (
         <>
           <label className="text-xs text-foreground">Phosphate</label>
-          <p>{parameterLog.phosphate}</p>
+          <p className="text-foreground">{parameterLog.phosphate}</p>
           <br />
         </>
       )}
       {parameterLog.alk !== null && (
         <>
           <label className="text-xs text-foreground">Alk</label>
-          <p>{parameterLog.alk}</p>
+          <p className="text-foreground">{parameterLog.alk}</p>
           <br />
         </>
       )}
       {parameterLog.temp !== null && (
         <>
           <label className="text-xs text-foreground">Temp</label>
-          <p>{parameterLog.temp}</p>
+          <p className="text-foreground">{parameterLog.temp}</p>
           <br />
         </>
       )}
       {parameterLog.magnesium !== null && (
         <>
           <label className="text-xs text-foreground">Magnesium</label>
-          <p>{parameterLog.magnesium}</p>
+          <p className="text-foreground">{parameterLog.magnesium}</p>
           <br />
         </>
       )}
