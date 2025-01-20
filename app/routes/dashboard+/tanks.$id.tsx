@@ -427,30 +427,30 @@ const humanizeParameter = (parameter: Parameter) => {
 			return 'Nitrate'
 		case 'phosphate':
 			return 'Phosphate'
-	case 'temp':
-		return 'Temperature'
+		case 'temp':
+			return 'Temperature'
 	}
 }
 
 const getChartColorFromParameter = (parameter: Parameter) => {
-switch (parameter) {
-	case 'pH':
-		return '#60A5FA' // blue
-	case 'alk':
-		return '#34D399' // green
-	case 'calcium':
-		return '#A78BFA' // purple
-	case 'magnesium':
-		return '#FBBF24' // yellow/amber
-	case 'nitrate':
-		return '#EC4899' // pink
-	case 'phosphate':
-		return '#6366F1' // indigo
-	case 'temp':
-		return '#F87171' // red
-	default:
-		return '#60A5FA' // default blue
-}
+	switch (parameter) {
+		case 'pH':
+			return '#60A5FA' // blue
+		case 'alk':
+			return '#34D399' // green
+		case 'calcium':
+			return '#A78BFA' // purple
+		case 'magnesium':
+			return '#FBBF24' // yellow/amber
+		case 'nitrate':
+			return '#EC4899' // pink
+		case 'phosphate':
+			return '#6366F1' // indigo
+		case 'temp':
+			return '#F87171' // red
+		default:
+			return '#60A5FA' // default blue
+	}
 }
 
 const ParameterChart = ({
@@ -516,9 +516,7 @@ type TankWithLogs = {
 
 const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 	const location = useLocation()
-	const [isOpen, setIsOpen] = useState(
-		tank.parameterLogs.length > 0 ? false : true,
-	)
+	const [isOpen, setIsOpen] = useState(true)
 	return (
 		<div className="sm:w-120 w-full">
 			<header className="flex justify-between rounded-t border p-4 text-foreground">
