@@ -137,7 +137,7 @@ const Nav = () => {
   return (
     <>
       {navOpen && (
-        <nav className="z-2 fixed left-0 top-0 h-screen w-screen bg-accent-background px-10">
+        <nav className="z-10 fixed left-0 top-0 h-screen w-screen bg-accent-background px-10">
           <header className="flex h-20 justify-between"></header>
 
           <div className="flex h-[calc(100vh-100px)] flex-col justify-between">
