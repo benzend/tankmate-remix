@@ -138,7 +138,7 @@ const Nav = () => {
     <>
       {navOpen && (
         <nav className="z-10 fixed left-0 top-0 h-screen w-screen bg-accent-background px-10">
-          <div className="flex h-[calc(100vh-100px)] flex-col justify-between mt-32">
+          <div className="flex h-[calc(100vh-200px)] flex-col justify-between mt-32">
             <div className="text-center">
               <Link to="/dashboard">
                 <Button variant="outline" size="full">
