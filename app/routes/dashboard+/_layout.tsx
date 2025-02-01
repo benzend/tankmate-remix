@@ -184,7 +184,7 @@ const Nav = () => {
         </nav>
       )}
 
-      <header className="flex justify-between px-10 py-6">
+      <header className="flex justify-between px-10 py-6 z-10 relative">
         <div className="flex items-center gap-20">
           <Logo to="/dashboard" mode="follow-theme" />
           <div className="ml-2">
