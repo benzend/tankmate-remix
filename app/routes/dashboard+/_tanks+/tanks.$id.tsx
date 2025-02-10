@@ -521,11 +521,11 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 		<div className="sm:w-120 w-full">
 			<header className="flex justify-between rounded-t border p-4 text-foreground">
 				Parameter Log
-				{tank.parameterLogs.length && (
+				{tank.parameterLogs.length ? (
 					<button onClick={() => setIsOpen((prev) => !prev)}>
 						{isOpen ? 'Collapse' : 'Expand'}
 					</button>
-				)}
+				) : null}
 			</header>
 			<div className="rounded-b border-b border-l border-r">
 				{tank.parameterLogs.length ? (
@@ -551,7 +551,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 					to={`/dashboard/parameter-log/new?redirectTo=${location.pathname}&tankId=${tank.id}`}
 				>
 					<div className="w-40 rounded-b border border-t-0 p-2 text-xs text-foreground">
-						+ Add Log
+						+ Add Parameters
 					</div>
 				</Link>
 			</div>
