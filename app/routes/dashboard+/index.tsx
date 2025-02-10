@@ -105,7 +105,7 @@ export default function Dashboard() {
 						<div>
 							<Link to="/dashboard/tanks/new">
 								<div className="w-40 rounded-b border border-t-0 p-2 text-xs text-foreground">
-									+ Add Tank
+									+ Add New Tank
 								</div>
 							</Link>
 						</div>
@@ -164,7 +164,7 @@ export default function Dashboard() {
 						<div>
 							<Link to="/dashboard/parameter-log/new">
 								<div className="w-40 rounded-b border border-t-0 p-2 text-xs text-foreground">
-									+ Add Log
+									+ Add Parameters
 								</div>
 							</Link>
 						</div>
