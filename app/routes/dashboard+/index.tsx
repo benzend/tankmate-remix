@@ -110,66 +110,6 @@ export default function Dashboard() {
 							</Link>
 						</div>
 					</div>
-					<div className="m-2 w-full sm:w-80">
-						<header className="rounded-t border p-4 text-foreground">
-							Maintenance Log
-						</header>
-						<div className="rounded-b border-b border-l border-r">
-							{tankMaintenanceLog.length ? (
-								tankMaintenanceLog.map((log) => (
-									<MaintenanceLog
-                    key={log.id}
-										logId={log.id}
-										maintenanceType={log.maintenanceType}
-										tankId={log.fishTank?.id}
-										tankName={log.fishTank?.name}
-									></MaintenanceLog>
-								))
-							) : (
-								<div className="border-b border-l p-2 text-sm text-accent-foreground">
-									No Logs
-								</div>
-							)}
-						</div>
-						<div>
-							<Link to="/dashboard/maintenance/new">
-								<div className="w-40 rounded-b border border-t-0 p-2 text-xs text-foreground">
-									+ Add Log
-								</div>
-							</Link>
-						</div>
-					</div>
-
-					<div className="m-2 w-full sm:w-80">
-						<header className="rounded-t border p-4 text-foreground">
-							Parameter Log
-						</header>
-						<div className="rounded-b border-b border-l border-r">
-							{tankParameterLog.length ? (
-								tankParameterLog.map((log) => (
-									<ParameterLog
-                    key={log.id}
-										logId={log.id}
-										createdAt={log.createdAt}
-										tankId={log.fishTank?.id}
-										tankName={log.fishTank?.name}
-									></ParameterLog>
-								))
-							) : (
-								<div className="border-b border-l p-2 text-sm text-accent-foreground">
-									No Logs
-								</div>
-							)}
-						</div>
-						<div>
-							<Link to="/dashboard/parameter-log/new">
-								<div className="w-40 rounded-b border border-t-0 p-2 text-xs text-foreground">
-									+ Add Parameters
-								</div>
-							</Link>
-						</div>
-					</div>
-
 				</div>
 			) : (
 				<Link to="/dashboard/tanks/new">+ Add your first tank</Link>
