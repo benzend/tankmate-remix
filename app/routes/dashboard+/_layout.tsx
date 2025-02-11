@@ -196,25 +196,36 @@ const Nav = () => {
 function Breadcrumbs() {
   const location = useLocation()
   const validCrumbs = [
-    'dashboard',
-    'tanks',
-    'maintenance',
-    'parameter-log',
-    'coral-analyses',
-    'new',
+    ['dashboard'],
+    ['tanks'],
+    ['maintenance'],
+    ['parameter-log'],
+    ['coral-analyses', 'Coral Analyzer'],
+    ['new'],
   ]
   const to = (pathPart: string) => {
     const index = location.pathname.indexOf(pathPart)
     return location.pathname.slice(0, index + pathPart.length)
   }
 
+  const findCrumbFromPathPart = (pathPart: string) => {
+    return validCrumbs.filter(v => v[0] === pathPart).at(0);
+  }
+
+  const labelFromPathPart = (pathPart: string) => {
+    const crumb = findCrumbFromPathPart(pathPart);
+    if (!crumb) return '';
+    return crumb.at(1) || '';
+  }
+
   const validPathParts = location.pathname
     .split('/')
-    .filter((_p) => validCrumbs.includes(_p))
+    .filter(findCrumbFromPathPart)
   const crumbs = validPathParts.map((pathPart, i) => {
+    const label = labelFromPathPart(pathPart);
     return {
       link: to(pathPart),
-      label: toTitleCase(humanize(pathPart)),
+      label: label || toTitleCase(humanize(pathPart)),
       last: i === validPathParts.length - 1,
     }
   })
@@ -471,10 +482,10 @@ function Search() {
                         {result.content && (
                           <div
                             className={`mt-1 text-sm text-muted-foreground ${index === 0 && result.title === 'Expert Answer'
-                                ? expandedAnswer
-                                  ? ''
-                                  : 'line-clamp-2'
+                              ? expandedAnswer
+                                ? ''
                                 : 'line-clamp-2'
+                              : 'line-clamp-2'
                               }`}
                           >
                             {result.content}
@@ -591,10 +602,10 @@ function Search() {
                       {result.content && (
                         <div
                           className={`mt-1 text-sm text-muted-foreground ${isExpertAnswer
-                              ? expandedAnswer
-                                ? ''
-                                : 'line-clamp-2'
+                            ? expandedAnswer
+                              ? ''
                               : 'line-clamp-2'
+                            : 'line-clamp-2'
                             }`}
                         >
                           {result.content}
