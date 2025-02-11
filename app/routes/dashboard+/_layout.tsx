@@ -66,32 +66,6 @@ const SideNav = () => {
             Dashboard
           </Button>
         </Link>
-        <Link to="/dashboard/maintenance">
-          <Button
-            variant={
-              location.pathname === '/dashboard/maintenance'
-                ? 'sidenav-active'
-                : 'sidenav'
-            }
-            size="full"
-            className="mb-4"
-          >
-            Maintenance
-          </Button>
-        </Link>
-        <Link to="/dashboard/parameter-log">
-          <Button
-            variant={
-              location.pathname === '/dashboard/parameter-log'
-                ? 'sidenav-active'
-                : 'sidenav'
-            }
-            size="full"
-            className="mb-4"
-          >
-            Parameter Log
-          </Button>
-        </Link>
         <Link to="/dashboard/coral-analyses">
           <Button
             variant={
@@ -143,16 +117,6 @@ const Nav = () => {
               <Link to="/dashboard">
                 <Button variant="outline" size="full">
                   Dashboard
-                </Button>
-              </Link>
-              <Link to="/dashboard/maintenance">
-                <Button variant="outline" size="full">
-                  Maintenance
-                </Button>
-              </Link>
-              <Link to="/dashboard/parameter-log">
-                <Button variant="outline" size="full">
-                  Parameter Log
                 </Button>
               </Link>
               <Link to="/dashboard/coral-analyses">
