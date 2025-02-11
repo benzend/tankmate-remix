@@ -27,11 +27,12 @@ export async function sendEmail({
 }: {
 	to: string
 	subject: string
+  from?: string
 } & (
 	| { html: string; text: string; react?: never }
 	| { react: ReactElement; html?: never; text?: never }
 )) {
-	const from = 'hello@tankmate.tech'
+	const from = options.from || 'hello@tankmate.tech'
 
 	const email = {
 		from,
@@ -95,4 +96,36 @@ async function renderReactEmail(react: ReactElement) {
 		renderAsync(react, { plainText: true }),
 	])
 	return { html, text }
+}
+
+interface ContactFormData {
+	name: string
+	email: string
+	message: string
+}
+
+export async function sendContactEmail({ name, email, message }: ContactFormData) {
+	const html = `
+		<h2>New Contact Form Submission</h2>
+		<p><strong>From:</strong> ${name} (${email})</p>
+		<p><strong>Message:</strong></p>
+		<p>${message}</p>
+	`
+
+	const text = `
+New Contact Form Submission
+--------------------------
+From: ${name} (${email})
+
+Message:
+${message}
+	`.trim()
+
+	return sendEmail({
+		from: 'contact@tankmate.tech',
+		to: 'support@tankmate.tech',
+		subject: `[Contact Form] New message from ${name}`,
+		html,
+		text,
+	})
 }
