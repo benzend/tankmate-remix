@@ -211,7 +211,7 @@ export default function TankPage() {
 				<span className="capitalize text-muted-foreground">
 					{tank.waterType}
 				</span>
-				{typeof tank.volume !== 'undefined' && (
+				{typeof tank.volume !== 'undefined' && typeof tank.volume !== null && (
 					<span className="ml-1 capitalize text-muted-foreground">
 						- {tank.volume} Gal
 					</span>
