@@ -26,7 +26,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 1. Provide accurate, concise answers about reef tank management, parameters, and maintenance
 2. Format your response in two parts:
    - First, give a direct answer to the query
-   - Then, list 2-3 relevant reference articles with titles and brief descriptions
+   - Then, list 2-3 relevant reference articles with titles and brief descriptions, and urls if relevant. Format should be \`title::description::url\`.
 3. Focus on scientific accuracy and practical advice
 4. When discussing parameters, always include safe ranges and testing frequency
 5. For any potentially harmful advice, include safety warnings
@@ -63,12 +63,12 @@ Use '---' to separate your direct answer from the reference articles.`,
         .filter((line) => line.trim())
       for (const line of referenceLines) {
         if (line.includes(':')) {
-          const [title, description] = line
-            .split(':')
+          const [title, description, url] = line
+            .split('::')
             .map((part) => part.trim())
           results.push({
             title: title || '',
-            url: `/articles/search?title=${encodeURIComponent(title || '')}`,
+            url: url || '',
             content: description,
           })
         }

@@ -486,9 +486,11 @@ function Search() {
                           if (index === 0 && result.title === 'Expert Answer') {
                             setExpandedAnswer(!expandedAnswer)
                           } else {
-                            navigate(result.url)
-                            setSearchResults([])
-                            setIsMobileSearchOpen(false)
+                            if (result.url) {
+                              window.location.assign(result.url)
+                              setSearchResults([])
+                              setIsMobileSearchOpen(false)
+                            }
                           }
                         }}
                       >
@@ -604,8 +606,11 @@ function Search() {
                         if (isExpertAnswer) {
                           setExpandedAnswer(!expandedAnswer)
                         } else {
-                          navigate(result.url)
-                          setSearchResults([])
+
+                          if (result.url) {
+                            window.location.assign(result.url)
+                            setSearchResults([])
+                          }
                         }
                       }}
                     >
