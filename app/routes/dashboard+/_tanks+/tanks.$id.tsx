@@ -1,4 +1,5 @@
 import {
+    MetaFunction,
 	type ActionFunctionArgs,
 	type LoaderFunctionArgs,
 } from '@remix-run/node'
@@ -29,6 +30,8 @@ Chart.register(CategoryScale)
 Chart.register(LinearScale)
 Chart.register(PointElement)
 Chart.register(LineElement)
+
+export const meta: MetaFunction = () => [{ title: 'TankMate | Tank Details' }]
 
 export async function action({ request, params }: ActionFunctionArgs) {
 	const userId = await requireUserId(request, { redirectTo: '/' })

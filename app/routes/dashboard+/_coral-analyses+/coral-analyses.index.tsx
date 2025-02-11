@@ -1,7 +1,9 @@
-import { json, type LoaderFunctionArgs } from '@remix-run/node'
+import { json, MetaFunction, type LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
+
+export const meta: MetaFunction = () => [{ title: 'TankMate | Coral Analyses' }]
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	const userId = await requireUserId(request, { redirectTo: '/' })

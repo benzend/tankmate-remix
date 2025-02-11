@@ -2,6 +2,7 @@ import { parseWithZod } from '@conform-to/zod'
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
+  MetaFunction,
 } from '@remix-run/node'
 import { Form, json, redirect, useFetcher } from '@remix-run/react'
 import { useRef } from 'react'
@@ -12,6 +13,8 @@ import { type action as cloudinaryAction } from '#app/routes/_image-upload+/clou
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
 import { Button } from '#app/components/ui/button.js'
+
+export const meta: MetaFunction = () => [{ title: 'TankMate | New Tank' }]
 
 const WaterEnum = z.enum(['saltwater', 'freshwater'])
 
