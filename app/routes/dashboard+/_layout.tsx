@@ -16,6 +16,7 @@ import { requireUserId } from "#app/utils/auth.server.js";
 import { getHints } from "#app/utils/client-hints.js";
 import { getDomainUrl, humanize, toTitleCase } from "#app/utils/misc.js";
 import { getTheme } from "#app/utils/theme.server.js";
+import { type SearchResult } from "../resources+/search";
 import { ThemeSwitch } from "../resources+/theme-switch";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -272,12 +273,6 @@ function BottomOfSidenav({ children }: { children: any }) {
   return <div>{children}</div>;
 }
 
-interface SearchResult {
-  title: string;
-  url: string;
-  content?: string;
-}
-
 interface SearchResponse {
   results: SearchResult[];
 }
@@ -294,8 +289,8 @@ function isSearchResponse(data: unknown): data is SearchResponse {
         item !== null &&
         "title" in item &&
         "url" in item &&
-        typeof item.title === "string" &&
-        typeof item.url === "string",
+        (typeof item.title === "string" || item.title === null) &&
+        (typeof item.url === "string" || item.url === null),
     )
   );
 }
@@ -323,7 +318,6 @@ function Search() {
   const [expandedAnswer, setExpandedAnswer] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const debouncedSearchQuery = useDebounce(searchQuery, 300); // 300ms delay
-  const navigate = useNavigate();
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -454,44 +448,61 @@ function Search() {
                   searchResults.map((result, index) => (
                     // ... same result rendering as desktop ...
                     <div key={index} className="mb-2 last:mb-0">
-                      <button
-                        className="w-full rounded-md p-2 text-left hover:bg-accent"
-                        onClick={() => {
-                          if (index === 0 && result.title === "Expert Answer") {
-                            setExpandedAnswer(!expandedAnswer);
-                          } else {
-                            if (result.url) {
-                              window.location.assign(result.url);
-                              setSearchResults([]);
-                              setIsMobileSearchOpen(false);
-                            }
-                          }
-                        }}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="text-lg font-medium">
-                            {result.title}
+                      {result.url ? (
+                        <a href={result.url} target="_blank">
+                          <div className="w-full rounded-md p-2 text-left hover:bg-accent">
+                            <span className="text-lg font-medium">
+                              {result.title}
+                            </span>
+                            <span className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                              {result.content}
+                            </span>
                           </div>
-                          {index === 0 && result.title === "Expert Answer" && (
-                            <div className="text-xs text-muted-foreground">
-                              {expandedAnswer ? "↑ Collapse" : "↓ Expand"}
+                        </a>
+                      ) : (
+                        <button
+                          className="w-full rounded-md p-2 text-left hover:bg-accent"
+                          onClick={() => {
+                            if (
+                              index === 0 &&
+                              result.title === "Expert Answer"
+                            ) {
+                              setExpandedAnswer(!expandedAnswer);
+                            } else {
+                              if (result.url) {
+                                window.location.assign(result.url);
+                                setSearchResults([]);
+                                setIsMobileSearchOpen(false);
+                              }
+                            }
+                          }}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="text-lg font-medium">
+                              {result.title}
+                            </div>
+                            {index === 0 &&
+                              result.title === "Expert Answer" && (
+                                <div className="text-xs text-muted-foreground">
+                                  {expandedAnswer ? "↑ Collapse" : "↓ Expand"}
+                                </div>
+                              )}
+                          </div>
+                          {result.content && (
+                            <div
+                              className={`mt-1 text-sm text-muted-foreground ${
+                                index === 0 && result.title === "Expert Answer"
+                                  ? expandedAnswer
+                                    ? ""
+                                    : "line-clamp-2"
+                                  : "line-clamp-2"
+                              }`}
+                            >
+                              {result.content}
                             </div>
                           )}
-                        </div>
-                        {result.content && (
-                          <div
-                            className={`mt-1 text-sm text-muted-foreground ${
-                              index === 0 && result.title === "Expert Answer"
-                                ? expandedAnswer
-                                  ? ""
-                                  : "line-clamp-2"
-                                : "line-clamp-2"
-                            }`}
-                          >
-                            {result.content}
-                          </div>
-                        )}
-                      </button>
+                        </button>
+                      )}
                     </div>
                   ))
                 )}
@@ -576,43 +587,56 @@ function Search() {
 
                 return (
                   <div key={index} className="mb-2 last:mb-0">
-                    <button
-                      className="w-full rounded-md p-2 text-left hover:bg-accent"
-                      onClick={() => {
-                        if (isExpertAnswer) {
-                          setExpandedAnswer(!expandedAnswer);
-                        } else {
-                          if (result.url) {
-                            window.location.assign(result.url);
-                            setSearchResults([]);
-                          }
-                        }
-                      }}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="text-lg font-medium">
-                          {result.title}
+                    {result.url ? (
+                      <a href={result.url} target="_blank">
+                        <div className="w-full rounded-md p-2 text-left hover:bg-accent">
+                          <span className="text-lg font-medium">
+                            {result.title}
+                          </span>
+                          <span className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                            {result.content}
+                          </span>
                         </div>
-                        {isExpertAnswer && (
-                          <div className="text-xs text-muted-foreground">
-                            {expandedAnswer ? "↑ Collapse" : "↓ Expand"}
+                      </a>
+                    ) : (
+                      <button
+                        className="w-full rounded-md p-2 text-left hover:bg-accent"
+                        onClick={() => {
+                          if (isExpertAnswer) {
+                            setExpandedAnswer(!expandedAnswer);
+                          } else {
+                            if (result.url) {
+                              window.location.assign(result.url);
+                              setSearchResults([]);
+                            }
+                          }
+                        }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="text-lg font-medium">
+                            {result.title}
+                          </div>
+                          {isExpertAnswer && (
+                            <div className="text-xs text-muted-foreground">
+                              {expandedAnswer ? "↑ Collapse" : "↓ Expand"}
+                            </div>
+                          )}
+                        </div>
+                        {result.content && (
+                          <div
+                            className={`mt-1 text-sm text-muted-foreground ${
+                              isExpertAnswer
+                                ? expandedAnswer
+                                  ? ""
+                                  : "line-clamp-2"
+                                : "line-clamp-2"
+                            }`}
+                          >
+                            {result.content}
                           </div>
                         )}
-                      </div>
-                      {result.content && (
-                        <div
-                          className={`mt-1 text-sm text-muted-foreground ${
-                            isExpertAnswer
-                              ? expandedAnswer
-                                ? ""
-                                : "line-clamp-2"
-                              : "line-clamp-2"
-                          }`}
-                        >
-                          {result.content}
-                        </div>
-                      )}
-                    </button>
+                      </button>
+                    )}
                   </div>
                 );
               })
