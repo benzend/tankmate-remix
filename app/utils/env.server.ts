@@ -16,6 +16,9 @@ const schema = z.object({
   CLOUDINARY_API_SECRET: z.string().optional(),
   UPLOADTHING_TOKEN: z.string().optional(),
 
+  STRIPE_PUBLISHABLE_KEY: z.string().default('MOCK_STRIPE_PUBLISHABLE_KEY'),
+  STRIPE_SECRET_KEY: z.string().default('MOCK_STRIPE_SECRET_KEY'),
+
 	// If you plan on using Sentry, uncomment this line
 	// SENTRY_DSN: z.string(),
 	// If you plan to use Resend, uncomment this line
