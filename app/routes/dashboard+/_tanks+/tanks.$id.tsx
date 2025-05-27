@@ -106,6 +106,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 					phosphate: true,
 					createdAt: true,
 				},
+        orderBy: {
+          createdAt: 'asc',
+        }
 			},
 			imageUrl: true,
 			volume: true,
