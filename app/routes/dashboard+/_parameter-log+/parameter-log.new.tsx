@@ -17,6 +17,7 @@ import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
 import { dateOrNow, numberOrNull } from '#app/utils/misc.js'
 import { redirectWithToast } from '#app/utils/toast.server.js'
+import { Parameter, PARAMETERS } from '../_tanks+/tanks.$id'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await requireUserId(request, { redirectTo: '/' })
@@ -107,12 +108,61 @@ export async function action({ request }: ActionFunctionArgs) {
   )
 }
 
+const ParameterLabel = ({ parameter }: { parameter: Parameter }) => {
+  switch (parameter) {
+    case 'alk':
+      return <label htmlFor="alk" className="text-foreground">Alk <span>(dKH)</span></label>
+    case 'calcium':
+      return <label htmlFor="calcium" className="text-foreground">Calcium <span>(ppm)</span></label>
+    case 'magnesium':
+      return <label htmlFor="magnesium" className="text-foreground">Magnesium <span>(ppm)</span></label>
+    case 'pH':
+      return <label htmlFor="pH" className="text-foreground">pH</label>
+    case 'nitrate':
+      return <label htmlFor="nitrate" className="text-foreground">Nitrate <span>(ppm)</span></label>
+    case 'phosphate':
+      return <label htmlFor="phosphate" className="text-foreground">Phosphate <span>(ppm)</span></label>
+    case 'temp':
+      return <label htmlFor="temp" className="text-foreground">Temp <span>(°F)</span></label>
+  }
+}
+
+const ParameterInput = ({ parameter }: { parameter: Parameter }) => {
+  switch (parameter) {
+    case 'alk':
+      return <Input id="alk" name="alk" type="number" step="0.1" placeholder="9.2" />
+    case 'calcium':
+      return <Input id="calcium" name="calcium" type="number" placeholder="450" />
+    case 'magnesium':
+      return <Input id="magnesium" name="magnesium" type="number" placeholder="1500" />
+    case 'pH':
+      return <Input id="pH" name="pH" type="number" step="0.1" placeholder="8.4" />
+    case 'nitrate':
+      return <Input id="nitrate" name="nitrate" type="number" step="0.1" placeholder="7.0" />
+    case 'phosphate':
+      return <Input id="phosphate" name="phosphate" type="number" step="0.01" placeholder="0.12" />
+    case 'temp':
+      return <Input id="temp" name="temp" type="number" placeholder="80.0" step="0.1
+      " />
+  }
+}
+
+const ParameterField = ({ parameter }: { parameter: Parameter }) => {
+  return (
+    <div>
+      <ParameterLabel parameter={parameter} />
+      <ParameterInput parameter={parameter} />
+    </div>
+  )
+}
+
 export default function NewParameterLog() {
   const { tanks } = useLoaderData<typeof loader>()
   const [searchParams] = useSearchParams()
 
   const redirectTo = searchParams.get('redirectTo')
   const tankId = searchParams.get('tankId')
+  const parameter = searchParams.get('parameter')
 
   return (
     <>
@@ -142,73 +192,24 @@ export default function NewParameterLog() {
                 </>
               )}
               <br />
-              <label htmlFor="calcium" className="text-foreground">
-                Calcium <span>(ppm)</span>
+              {parameter ? (
+                <div className="mb-5">
+                  <ParameterField parameter={parameter as Parameter} />
+                </div>
+              ) : (
+                <>
+                {PARAMETERS.map((parameter) => (
+                  <>
+                    <ParameterField key={parameter} parameter={parameter} />
+                    <br />
+                  </>
+                ))}
+
+                </>
+              )}
+              <label htmlFor="createdAt" className="text-foreground">
+                Date
               </label>
-              <Input
-                id="calcium"
-                name="calcium"
-                type="number"
-                placeholder="450"
-              />
-              <br />
-              <label htmlFor="alk" className="text-foreground">
-                Alk <span>(dKH)</span>
-              </label>
-              <Input
-                id="alk"
-                name="alk"
-                type="number"
-                step="0.1"
-                placeholder="9.2"
-              />
-              <br />
-              <label htmlFor="magnesium" className="text-foreground">
-                Magnesium <span>(ppm)</span>
-              </label>
-              <Input
-                id="magnesium"
-                name="magnesium"
-                type="number"
-                placeholder="1500"
-              />
-              <br />
-              <label htmlFor="pH" className="text-foreground">pH</label>
-              <Input
-                id="pH"
-                name="pH"
-                type="number"
-                step="0.1"
-                placeholder="8.4"
-              />
-              <br />
-              <label htmlFor="temp" className="text-foreground">Temp (°F)</label>
-              <Input
-                id="temp"
-                name="temp"
-                type="number"
-                placeholder="80.0"
-                step="0.1"
-              />
-              <br />
-              <label htmlFor="nitrate" className="text-foreground">Nitrate (ppm)</label>
-              <Input
-                id="nitrate"
-                name="nitrate"
-                type="number"
-                step="0.1"
-                placeholder="7.0"
-              />
-              <br />
-              <label htmlFor="phosphate" className="text-foreground">Phosphate (ppm)</label>
-              <Input
-                id="phosphate"
-                name="phosphate"
-                type="number"
-                step="0.01"
-                placeholder="0.12"
-              />
-              <br />
               <Input
                 id="createdAt"
                 name="createdAt"

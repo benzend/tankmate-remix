@@ -280,16 +280,11 @@ const MaintenanceLog = ({
 	)
 }
 
-type Parameter =
-	| 'alk'
-	| 'calcium'
-	| 'magnesium'
-	| 'pH'
-	| 'nitrate'
-	| 'phosphate'
-	| 'temp'
+export const PARAMETERS = ['alk', 'calcium', 'magnesium', 'pH', 'nitrate', 'phosphate', 'temp'] as const;
 
-const humanizeParameter = (parameter: Parameter) => {
+export type Parameter = typeof PARAMETERS[number];
+
+export const humanizeParameter = (parameter: Parameter) => {
 	switch (parameter) {
 		case 'alk':
 			return 'Alkaline'
@@ -336,9 +331,13 @@ const ParameterChart = ({
 	tank: TankWithLogs
 	parameter: Parameter
 }) => {
+  const location = useLocation()
 	return (
 		<div className="rounded border p-4 text-foreground">
-			<h3 className="mb-2 text-lg font-bold">{humanizeParameter(parameter)}</h3>
+			<h3 className="mb-2 text-lg font-bold">
+        {humanizeParameter(parameter)}
+        <Link to={`/dashboard/parameter-log/new?redirectTo=${location.pathname}&tankId=${tank.id}&parameter=${parameter}`}>+</Link>
+      </h3>
 			<LineChart
 				data={{
 					labels: tank.parameterLogs.map((l) =>
