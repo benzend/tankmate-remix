@@ -349,7 +349,7 @@ const ParameterChart = ({
 					datasets: [
 						{
 							label: humanizeParameter(parameter),
-							data: tank.parameterLogs.map((l) => l[parameter] || 0),
+							data: tank.parameterLogs.map((l) => l[parameter] || null),
 							backgroundColor: getChartColorFromParameter(parameter),
 							borderColor: getChartColorFromParameter(parameter),
 						},
