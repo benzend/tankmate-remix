@@ -3,7 +3,7 @@ import { json, MetaFunction, type LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
-import { DateFrom, getLatestTankScoreAverage, humanize, toTitleCase } from '#app/utils/misc.js'
+import { getLatestTankScoreAverage } from '#app/utils/misc.js'
 
 export const meta: MetaFunction = () => [{ title: 'TankMate | Dashboard' }]
 
@@ -30,9 +30,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 			dimensionsWidth: true,
 			dimensionsLength: true,
 			dimensionsHeight: true,
+      imageUrl: true,
 			fishTankScores: {
 				select: {
 					result: true,
+          imageUrl: true,
 				},
 			},
 		},
@@ -82,32 +84,52 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function Dashboard() {
-	const { tanks, tankMaintenanceLog, tankParameterLog } = useLoaderData<typeof loader>()
+	const { tanks } = useLoaderData<typeof loader>()
 
 	return (
 		<div className="w-full">
 			{tanks.length ? (
-				<div className="flex flex-wrap">
-					<div className="m-2 w-full sm:w-80">
-						<header className="rounded-t border p-4 text-foreground">
-							Tanks
-						</header>
-						<div className="rounded-b border-b border-l border-r">
-							{tanks.map((tank) => (
-								<Tank
-                  key={tank.id}
-									name={tank.name}
-									tankId={tank.id}
-									score={getLatestTankScoreAverage(tank.fishTankScores as any)}
-								/>
-							))}
-						</div>
-						<div>
+				<div>
+					<div>
+						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+							{tanks.map((tank) => {
+                const image = (() => {
+                  if (tank.imageUrl) {
+                    return tank.imageUrl
+                  } else if (tank.fishTankScores.length) {
+                    const tankImageUrls = tank.fishTankScores
+                      .map((s) => s.imageUrl)
+                      .filter(Boolean)
+
+                    if (!tankImageUrls.length) {
+                      return null
+                    }
+
+                    return tankImageUrls[tankImageUrls.length - 1]!
+                  }
+                  return null
+                })()
+
+                return (
+                  <Tank
+                    key={tank.id}
+                    name={tank.name}
+                    imageUrl={image}
+                    tankId={tank.id}
+                    score={getLatestTankScoreAverage(tank.fishTankScores as any)}
+                  />
+                )
+
+              })}
 							<Link to="/dashboard/tanks/new">
-								<div className="w-40 rounded-b border border-t-0 p-2 text-xs text-foreground">
-									+ Add New Tank
+								<div className="w-full h-full flex justify-center items-center rounded border p-2 bg-foreground text-xs text-background">
+									+ Add Tank
 								</div>
 							</Link>
+
+						</div>
+
+						<div>
 						</div>
 					</div>
 				</div>
@@ -121,78 +143,31 @@ export default function Dashboard() {
 const Tank = ({
 	tankId,
 	name,
-	score,
+  imageUrl,
 }: {
 	tankId: string
 	name: string
+  imageUrl: string | null
 	score: number
 }) => {
-	const borderColor = (function () {
-		if (!score) return ''
-		if (score > 9) return 'border-l-positive-green'
-		if (score > 8) return 'border-l-positive-green'
-		if (score > 7) return 'border-l-neutral-yellow'
-		if (score > 6) return 'border-l-neutral-yellow'
-		if (score > 5) return 'border-l-negative-red'
-		if (score > 4) return 'border-l-negative-red'
-		return 'border-l-red-500'
-	})()
-
 	return (
 		<div>
 			<Link to={`/dashboard/tanks/${tankId}`}>
 				<div
-					className={`border-b border-l p-2 text-sm text-accent-foreground ${borderColor}`}
+					className="p-2 border h-full w-full min-h-[130px]"
 				>
-					{name}
+          <h3 className="text-xl mb-2 text-foreground">{name}</h3>
+          {imageUrl && (
+            <img
+              height="100%"
+              width="auto"
+              className="max-h-[100px] max-w-full"
+              src={imageUrl}
+              alt={name}
+            />
+          )}
 				</div>
 			</Link>
-		</div>
-	)
-}
-
-const MaintenanceLog = ({
-	logId,
-	maintenanceType,
-	tankId,
-	tankName,
-}: {
-	logId: string
-	maintenanceType: string
-	tankId?: string
-	tankName?: string
-}) => {
-	return (
-		<div>
-			<div className="flex justify-between border-b border-l p-2 text-sm text-accent-foreground">
-				<Link to={`/dashboard/maintenance/${logId}`}>
-					{toTitleCase(humanize(maintenanceType))}
-				</Link>
-				<Link to={`/dashboard/tanks/${tankId}`}>{tankName}</Link>
-			</div>
-		</div>
-	)
-}
-
-const ParameterLog = ({
-	logId,
-  createdAt,
-	tankId,
-	tankName,
-}: {
-	logId: string
-	createdAt: string
-	tankId?: string
-	tankName?: string
-}) => {
-	return (
-		<div>
-			<div className="flex justify-between border-b border-l p-2 text-sm text-accent-foreground">
-				<Link to={`/dashboard/parameter-log/${logId}`}>
-					{DateFrom(createdAt).toLocaleDateString()}
-				</Link>
-				<Link to={`/dashboard/tanks/${tankId}`}>{tankName}</Link>
-			</div>
 		</div>
 	)
 }

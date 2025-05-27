@@ -110,6 +110,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 					phosphate: true,
 					createdAt: true,
 				},
+        orderBy: {
+          createdAt: 'asc',
+        }
 			},
 			imageUrl: true,
 			volume: true,
@@ -222,9 +225,10 @@ export default function TankPage() {
 					</div>
 				)}
 			</header>
-			{tank.fishTankScores.map((score) => (
-				<TankScore key={score.id} data={score} />
-			))}
+
+      <div className="mt-10">
+        <ParameterLogs tank={tank} />
+      </div>
 
 			<div className="my-10 flex flex-wrap gap-5">
 				<div className="w-full sm:w-80">
@@ -258,135 +262,6 @@ export default function TankPage() {
 						</Link>
 					</div>
 				</div>
-
-				<ParameterLogs tank={tank} />
-			</div>
-		</div>
-	)
-}
-
-const TankScore = ({ data }: { data: any }) => {
-	if (data?.result) {
-		const result = JSON.parse(data.result) as Record<string, any>
-		if (typeof result === 'object' && result !== null) {
-			const typedResult = result as Record<string, any>
-			return (
-				<div>
-					<div className="flex flex-wrap">
-						{Object.keys(typedResult).map((key) => {
-							const value = typedResult[key]
-							if (
-								key === 'fish_health' ||
-								key === 'aquarium_health' ||
-								key === 'tank_health'
-							) {
-								if (typeof value === 'object' && value !== null) {
-									return Object.keys(value).map((key) => {
-										if (value[key]['type'] === 'score') {
-											return (
-												<Health
-													key={key}
-													label={value[key]['label']}
-													score={value[key]['score']}
-													note={value[key]['note']}
-												/>
-											)
-										}
-									})
-								}
-							} else if (key === 'fish_count' || key === 'plant_count') {
-								if (typeof value === 'object' && value !== null) {
-									return Object.keys(value).map((key) => {
-										if (value[key]['type'] === 'count') {
-											return (
-												<Count
-													key={key}
-													label={value[key]['label']}
-													count={value[key]['total'] || value[key]['count']}
-												/>
-											)
-										}
-									})
-								}
-							} else if (value['type'] === 'score') {
-								return (
-									<Health
-										key={key}
-										label={value['label']}
-										score={value['score']}
-										note={value['note']}
-									/>
-								)
-							}
-						})}
-					</div>
-
-					<div className="invisible">{data.context}</div>
-				</div>
-			)
-		} else {
-			return <div className="mx-auto max-w-xl">Invalid Data</div>
-		}
-	} else {
-		return <div className="mx-auto max-w-xl">No data</div>
-	}
-}
-
-const Health = ({
-	note,
-	score,
-	label,
-}: {
-	note: string
-	score: number | null
-	label: string
-}) => {
-	const textColor = (function () {
-		if (!score) return ''
-		if (score > 9) return 'text-positive-green'
-		if (score > 8) return 'text-positive-green'
-		if (score > 7) return 'text-neutral-yellow'
-		if (score > 6) return 'text-neutral-yellow'
-		if (score > 5) return 'text-negative-orange'
-		if (score > 4) return 'text-negative-orange'
-		return 'text-negative-red'
-	})()
-
-	const borderColor = (function () {
-		if (!score) return ''
-		if (score > 9) return 'border-positive-green'
-		if (score > 8) return 'border-positive-green'
-		if (score > 7) return 'border-neutral-yellow'
-		if (score > 6) return 'border-neutral-yellow'
-		if (score > 5) return 'border-negative-orange'
-		if (score > 4) return 'border-negative-orange'
-		return 'border-negative-red'
-	})()
-
-	return (
-		<div className={`w-40 border-b border-l ${borderColor} rounded p-4`}>
-			<div className={`text-foreground md:text-2xl lg:text-4xl ${textColor}`}>
-				{score}
-			</div>
-			<div className="mb-3 text-lg font-bold text-foreground">{label}</div>
-			<div className="text-xs text-accent-foreground">{note}</div>
-		</div>
-	)
-}
-
-const Count = ({ count, label }: { count: number | null; label: string }) => {
-	return (
-		<div className={`w-40 rounded border-b border-l p-4`}>
-			{typeof count === 'number' && (
-				<div className="text-foreground md:text-2xl lg:text-4xl">{count}</div>
-			)}
-			{typeof count === 'string' && (
-				<div className="mb-4 text-xl font-bold italic text-foreground">
-					{count}
-				</div>
-			)}
-			<div className="mb-3 text-lg font-bold text-accent-foreground">
-				{label}
 			</div>
 		</div>
 	)
@@ -415,16 +290,11 @@ const MaintenanceLog = ({
 	)
 }
 
-type Parameter =
-	| 'alk'
-	| 'calcium'
-	| 'magnesium'
-	| 'pH'
-	| 'nitrate'
-	| 'phosphate'
-	| 'temp'
+export const PARAMETERS = ['alk', 'calcium', 'magnesium', 'pH', 'nitrate', 'phosphate', 'temp'] as const;
 
-const humanizeParameter = (parameter: Parameter) => {
+export type Parameter = typeof PARAMETERS[number];
+
+export const humanizeParameter = (parameter: Parameter) => {
 	switch (parameter) {
 		case 'alk':
 			return 'Alkaline'
@@ -471,12 +341,16 @@ const ParameterChart = ({
 	tank: TankWithLogs
 	parameter: Parameter
 }) => {
+  const location = useLocation()
 	return (
 		<div className="rounded border p-4 text-foreground">
-			<h3 className="mb-2 text-lg font-bold">{humanizeParameter(parameter)}</h3>
+			<h3 className="mb-2 text-lg font-bold">
+        {humanizeParameter(parameter)}
+        <Link to={`/dashboard/parameter-log/new?redirectTo=${location.pathname}&tankId=${tank.id}&parameter=${parameter}`}>+</Link>
+      </h3>
 			<LineChart
 				data={{
-					labels: tank.parameterLogs.map((l) =>
+					labels: tank.parameterLogs.filter(l => l[parameter]).map((l) =>
 						formatDateBasedOnRecency(
 							DateFrom(l.createdAt).toLocaleDateString(),
 						),
@@ -484,7 +358,7 @@ const ParameterChart = ({
 					datasets: [
 						{
 							label: humanizeParameter(parameter),
-							data: tank.parameterLogs.map((l) => l[parameter] || 0),
+							data: tank.parameterLogs.filter(l => l[parameter]).map((l) => l[parameter] || null),
 							backgroundColor: getChartColorFromParameter(parameter),
 							borderColor: getChartColorFromParameter(parameter),
 						},
@@ -541,7 +415,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 			<div className="rounded-b border-b border-l border-r">
 				{tank.parameterLogs.length ? (
 					<div
-						className={cn('grid grid-cols-2 gap-4', !isOpen && 'invisible h-0')}
+						className={cn('grid grid-cols-1 sm:grid-cols-2 gap-4', !isOpen && 'invisible h-0')}
 					>
 						<ParameterChart tank={tank} parameter="temp" />
 						<ParameterChart tank={tank} parameter="pH" />
