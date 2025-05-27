@@ -1,11 +1,9 @@
 import { Button } from '#app/components/ui/button.js'
-import { Input } from '#app/components/ui/input.js'
 import { requireUserId } from '#app/utils/auth.server.js'
-import { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
-import { Form, json, redirect, useFetcher } from '@remix-run/react'
-import { useRef, useState } from 'react'
+import { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
+import { Form, json, redirect } from '@remix-run/react'
+import { useState } from 'react'
 import { Tooltip } from 'react-tooltip'
-import { type action as cloudinaryAction } from '#app/routes/_image-upload+/cloudinary.tsx'
 import { z } from 'zod'
 import { parseWithZod } from '@conform-to/zod'
 import { prisma } from '#app/utils/db.server.js'
@@ -14,6 +12,8 @@ import OpenAI from 'openai'
 import { tryJsonParse } from '#app/utils/misc.js'
 import { UploadDropzone } from '#app/utils/uploadthing'
 import { UploadedFileData } from 'uploadthing/types'
+
+export const meta: MetaFunction = () => [{ title: 'TankMate | Coral Analysis' }]
 
 const client = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted

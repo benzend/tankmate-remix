@@ -1,4 +1,5 @@
 import {
+    MetaFunction,
   type LoaderFunctionArgs,
 } from '@remix-run/node'
 import {
@@ -10,6 +11,7 @@ import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
 import { getLatestTankScoreAverage } from '#app/utils/misc.js'
 
+export const meta: MetaFunction = () => [{ title: 'TankMate | Tanks' }]
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await requireUserId(request, { redirectTo: '/' })

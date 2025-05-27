@@ -1,4 +1,5 @@
 import {
+    MetaFunction,
 	type ActionFunctionArgs,
 	type LoaderFunctionArgs,
 } from '@remix-run/node'
@@ -24,10 +25,13 @@ import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
 import { DateFrom, humanize, toTitleCase } from '#app/utils/misc.js'
 import { cn, formatDateBasedOnRecency } from '#app/utils/misc.tsx'
+import { Icon } from '#app/components/ui/icon.js'
 Chart.register(CategoryScale)
 Chart.register(LinearScale)
 Chart.register(PointElement)
 Chart.register(LineElement)
+
+export const meta: MetaFunction = () => [{ title: 'TankMate | Tank Details' }]
 
 export async function action({ request, params }: ActionFunctionArgs) {
 	const userId = await requireUserId(request, { redirectTo: '/' })
@@ -167,21 +171,19 @@ export default function TankPage() {
 	return (
 		<div>
 			<header>
-				<span className="capitalize text-muted-foreground">
-					{tank.waterType}
-				</span>
-				{typeof tank.volume !== 'undefined' && (
-					<span className="ml-1 capitalize text-muted-foreground">
-						- {tank.volume} Gal
-					</span>
-				)}
+        <Link to="/dashboard/tanks">
+          <span className="flex gap-1 text-muted-foreground">
+            <Icon name="arrow-left" /> Tanks
+          </span>
+        </Link>
+        <br className="mb-4"/>
 				{editingName ? (
 					<div>
 						<input
 							type="text"
 							value={editName}
 							onChange={handleInputNameChange}
-							className="mb-10 mr-4 rounded bg-slate-100 px-2 py-2 text-center text-base font-bold text-foreground outline-white dark:bg-slate-800 md:text-lg lg:text-left lg:text-2xl"
+							className="mr-4 rounded bg-slate-100 px-2 py-2 text-center text-base font-bold text-foreground outline-white dark:bg-slate-800 md:text-lg lg:text-left lg:text-2xl"
 						/>
 						<button className="mr-4" onClick={handleSaveTankNameClick}>
 							Save
@@ -195,7 +197,7 @@ export default function TankPage() {
 					</div>
 				) : (
 					<>
-						<div className="mb-10 flex gap-4 align-baseline">
+						<div className="flex gap-4 align-baseline">
 							<h1 className="cursor-pointer text-center text-2xl font-bold text-foreground lg:text-left lg:text-3xl">
 								{tank.name}
 							</h1>
@@ -207,6 +209,15 @@ export default function TankPage() {
 							</button>
 						</div>
 					</>
+				)}
+
+				<span className="capitalize text-muted-foreground">
+					{tank.waterType}
+				</span>
+				{typeof tank.volume !== 'undefined' && typeof tank.volume !== null && (
+					<span className="ml-1 capitalize text-muted-foreground">
+						- {tank.volume} Gal
+					</span>
 				)}
 				{latestImage && (
 					<div className="mb-10">
@@ -394,14 +405,12 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 	return (
 		<div className="sm:w-120 w-full">
 			<header className="flex justify-between rounded-t border p-4 text-foreground">
-				<div><span className="mr-2">Parameter Log</span> <Link
-					to={`/dashboard/parameter-log/new?redirectTo=${location.pathname}&tankId=${tank.id}`}
-        >+</Link></div>
-				{tank.parameterLogs.length && (
+				Parameter Log
+				{tank.parameterLogs.length ? (
 					<button onClick={() => setIsOpen((prev) => !prev)}>
 						{isOpen ? 'Collapse' : 'Expand'}
 					</button>
-				)}
+				) : null}
 			</header>
 			<div className="rounded-b border-b border-l border-r">
 				{tank.parameterLogs.length ? (
@@ -427,7 +436,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 					to={`/dashboard/parameter-log/new?redirectTo=${location.pathname}&tankId=${tank.id}`}
 				>
 					<div className="w-40 rounded-b border border-t-0 p-2 text-xs text-foreground">
-						+ Add Log
+						+ Add Parameters
 					</div>
 				</Link>
 			</div>

@@ -1,4 +1,4 @@
-import { json, type LoaderFunctionArgs } from '@remix-run/node'
+import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import {
   Form,
   Link,
@@ -6,20 +6,21 @@ import {
   useLoaderData,
   useLocation,
   useNavigate,
-} from '@remix-run/react'
+} from "@remix-run/react";
 
-import { useEffect, useState } from 'react'
-import { Button } from '#app/components/ui/button.js'
-import { Input } from '#app/components/ui/input.js'
-import { Logo } from '#app/components/ui/logo.js'
-import { requireUserId } from '#app/utils/auth.server.js'
-import { getHints } from '#app/utils/client-hints.js'
-import { getDomainUrl, humanize, toTitleCase } from '#app/utils/misc.js'
-import { getTheme } from '#app/utils/theme.server.js'
-import { ThemeSwitch } from '../resources+/theme-switch'
+import { useEffect, useState } from "react";
+import { Button } from "#app/components/ui/button.js";
+import { Input } from "#app/components/ui/input.js";
+import { Logo } from "#app/components/ui/logo.js";
+import { requireUserId } from "#app/utils/auth.server.js";
+import { getHints } from "#app/utils/client-hints.js";
+import { getDomainUrl, humanize, toTitleCase } from "#app/utils/misc.js";
+import { getTheme } from "#app/utils/theme.server.js";
+import { type SearchResult } from "../resources+/search";
+import { ThemeSwitch } from "../resources+/theme-switch";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await requireUserId(request, { redirectTo: '/' })
+  await requireUserId(request, { redirectTo: "/" });
 
   return json({
     requestInfo: {
@@ -30,7 +31,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         theme: getTheme(request),
       },
     },
-  })
+  });
 }
 
 export default function DashboardLayout() {
@@ -46,19 +47,19 @@ export default function DashboardLayout() {
         </div>
       </div>
     </main>
-  )
+  );
 }
 
 const SideNav = () => {
-  const data = useLoaderData<typeof loader>()
-  const location = useLocation()
+  const data = useLoaderData<typeof loader>();
+  const location = useLocation();
   return (
     <nav className="hidden w-60 flex-col justify-between rounded-tr-xl bg-accent-background p-5 md:flex">
       <TopOfSidenav>
         <Link to="/dashboard">
           <Button
             variant={
-              location.pathname === '/dashboard' ? 'sidenav-active' : 'sidenav'
+              location.pathname === "/dashboard" ? "sidenav-active" : "sidenav"
             }
             size="full"
             className="mb-4"
@@ -66,38 +67,12 @@ const SideNav = () => {
             Dashboard
           </Button>
         </Link>
-        <Link to="/dashboard/maintenance">
-          <Button
-            variant={
-              location.pathname === '/dashboard/maintenance'
-                ? 'sidenav-active'
-                : 'sidenav'
-            }
-            size="full"
-            className="mb-4"
-          >
-            Maintenance
-          </Button>
-        </Link>
-        <Link to="/dashboard/parameter-log">
-          <Button
-            variant={
-              location.pathname === '/dashboard/parameter-log'
-                ? 'sidenav-active'
-                : 'sidenav'
-            }
-            size="full"
-            className="mb-4"
-          >
-            Parameter Log
-          </Button>
-        </Link>
         <Link to="/dashboard/coral-analyses">
           <Button
             variant={
-              location.pathname === '/dashboard/coral-analyses'
-                ? 'sidenav-active'
-                : 'sidenav'
+              location.pathname === "/dashboard/coral-analyses"
+                ? "sidenav-active"
+                : "sidenav"
             }
             size="full"
             className="mb-4"
@@ -122,17 +97,17 @@ const SideNav = () => {
         />
       </BottomOfSidenav>
     </nav>
-  )
-}
+  );
+};
 
 const Nav = () => {
-  const data = useLoaderData<typeof loader>()
-  const [navOpen, setNavOpen] = useState(false)
-  const location = useLocation()
+  const data = useLoaderData<typeof loader>();
+  const [navOpen, setNavOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
-    if (navOpen) setNavOpen(false)
-  }, [location.pathname])
+    if (navOpen) setNavOpen(false);
+  }, [location.pathname]);
 
   return (
     <>
@@ -145,22 +120,11 @@ const Nav = () => {
                   Dashboard
                 </Button>
               </Link>
-              <Link to="/dashboard/maintenance">
-                <Button variant="outline" size="full">
-                  Maintenance
-                </Button>
-              </Link>
-              <Link to="/dashboard/parameter-log">
-                <Button variant="outline" size="full">
-                  Parameter Log
-                </Button>
-              </Link>
               <Link to="/dashboard/coral-analyses">
                 <Button variant="outline" size="full">
                   Coral Analyzer
                 </Button>
               </Link>
-
             </div>
 
             <div>
@@ -201,23 +165,23 @@ const Nav = () => {
             >
               <div className="flex h-[20px] w-[20px] origin-center transform flex-col justify-between overflow-hidden transition-all duration-300">
                 <div
-                  className={`h-[2px] w-7 origin-left transform bg-foreground transition-all delay-100 duration-300 ${navOpen ? 'translate-y-6' : ''}`}
+                  className={`h-[2px] w-7 origin-left transform bg-foreground transition-all delay-100 duration-300 ${navOpen ? "translate-y-6" : ""}`}
                 ></div>
                 <div
-                  className={`h-[2px] w-7 transform rounded bg-foreground transition-all delay-75 duration-300 ${navOpen ? 'translate-y-6' : ''}`}
+                  className={`h-[2px] w-7 transform rounded bg-foreground transition-all delay-75 duration-300 ${navOpen ? "translate-y-6" : ""}`}
                 ></div>
                 <div
-                  className={`h-[2px] w-7 origin-left transform bg-foreground transition-all duration-300 ${navOpen ? 'translate-y-6' : ''}`}
+                  className={`h-[2px] w-7 origin-left transform bg-foreground transition-all duration-300 ${navOpen ? "translate-y-6" : ""}`}
                 ></div>
 
                 <div
-                  className={`absolute top-2.5 flex w-0 -translate-x-10 transform items-center justify-between transition-all duration-500 ${navOpen ? 'w-12 translate-x-0' : ''}`}
+                  className={`absolute top-2.5 flex w-0 -translate-x-10 transform items-center justify-between transition-all duration-500 ${navOpen ? "w-12 translate-x-0" : ""}`}
                 >
                   <div
-                    className={`absolute h-[2px] w-5 rotate-0 transform bg-foreground transition-all delay-300 duration-500 ${navOpen ? 'rotate-45' : ''}`}
+                    className={`absolute h-[2px] w-5 rotate-0 transform bg-foreground transition-all delay-300 duration-500 ${navOpen ? "rotate-45" : ""}`}
                   ></div>
                   <div
-                    className={`absolute h-[2px] w-5 -rotate-0 transform bg-foreground transition-all delay-300 duration-500 ${navOpen ? '-rotate-45' : ''}`}
+                    className={`absolute h-[2px] w-5 -rotate-0 transform bg-foreground transition-all delay-300 duration-500 ${navOpen ? "-rotate-45" : ""}`}
                   ></div>
                 </div>
               </div>
@@ -226,47 +190,58 @@ const Nav = () => {
         </div>
       </header>
     </>
-  )
-}
+  );
+};
 
 function Breadcrumbs() {
-  const location = useLocation()
+  const location = useLocation();
   const validCrumbs = [
-    'dashboard',
-    'tanks',
-    'maintenance',
-    'parameter-log',
-    'coral-analyses',
-    'new',
-  ]
+    ["dashboard"],
+    ["tanks"],
+    ["maintenance"],
+    ["parameter-log"],
+    ["coral-analyses", "Coral Analyzer"],
+    ["new"],
+  ];
   const to = (pathPart: string) => {
-    const index = location.pathname.indexOf(pathPart)
-    return location.pathname.slice(0, index + pathPart.length)
-  }
+    const index = location.pathname.indexOf(pathPart);
+    return location.pathname.slice(0, index + pathPart.length);
+  };
+
+  const findCrumbFromPathPart = (pathPart: string) => {
+    return validCrumbs.filter((v) => v[0] === pathPart).at(0);
+  };
+
+  const labelFromPathPart = (pathPart: string) => {
+    const crumb = findCrumbFromPathPart(pathPart);
+    if (!crumb) return "";
+    return crumb.at(1) || "";
+  };
 
   const validPathParts = location.pathname
-    .split('/')
-    .filter((_p) => validCrumbs.includes(_p))
+    .split("/")
+    .filter(findCrumbFromPathPart);
   const crumbs = validPathParts.map((pathPart, i) => {
+    const label = labelFromPathPart(pathPart);
     return {
       link: to(pathPart),
-      label: toTitleCase(humanize(pathPart)),
+      label: label || toTitleCase(humanize(pathPart)),
       last: i === validPathParts.length - 1,
-    }
-  })
+    };
+  });
 
-  const pathsWithSingles = ['/maintenance/', '/tanks/', '/parameter-log/']
-  const excludedLastPaths = ['/new']
+  const pathsWithSingles = ["/maintenance/", "/tanks/", "/parameter-log/"];
+  const excludedLastPaths = ["/new"];
 
   const endElement = (() => {
     if (excludedLastPaths.some((_p) => location.pathname.includes(_p))) {
-      return
+      return;
     }
     if (pathsWithSingles.some((_p) => location.pathname.includes(_p))) {
-      const _split = location.pathname.split('/')
-      return _split[_split.length - 1]
+      const _split = location.pathname.split("/");
+      return _split[_split.length - 1];
     }
-  })()
+  })();
 
   return (
     <div className="hidden gap-2 md:flex">
@@ -275,131 +250,124 @@ function Breadcrumbs() {
           <Link to={crumb.link}>
             <span className="text-foreground">{crumb.label}</span>
           </Link>
-          {!crumb.last && <span className="ml-2 text-foreground">{'>'}</span>}
+          {!crumb.last && <span className="ml-2 text-foreground">{">"}</span>}
         </div>
       ))}
       {endElement && (
         <div>
-          <span className="mr-2 text-foreground">{'>'}</span>
+          <span className="mr-2 text-foreground">{">"}</span>
           <Link to={to(endElement)}>
             <span className="text-foreground">{endElement}</span>
           </Link>
         </div>
       )}
     </div>
-  )
+  );
 }
 
 function TopOfSidenav({ children }: { children: any }) {
-  return <div>{children}</div>
+  return <div>{children}</div>;
 }
 
 function BottomOfSidenav({ children }: { children: any }) {
-  return <div>{children}</div>
-}
-
-interface SearchResult {
-  title: string
-  url: string
-  content?: string
+  return <div>{children}</div>;
 }
 
 interface SearchResponse {
-  results: SearchResult[]
+  results: SearchResult[];
 }
 
 function isSearchResponse(data: unknown): data is SearchResponse {
   return (
-    typeof data === 'object' &&
+    typeof data === "object" &&
     data !== null &&
-    'results' in data &&
+    "results" in data &&
     Array.isArray((data as SearchResponse).results) &&
     (data as SearchResponse).results.every(
       (item): item is SearchResult =>
-        typeof item === 'object' &&
+        typeof item === "object" &&
         item !== null &&
-        'title' in item &&
-        'url' in item &&
-        typeof item.title === 'string' &&
-        typeof item.url === 'string',
+        "title" in item &&
+        "url" in item &&
+        (typeof item.title === "string" || item.title === null) &&
+        (typeof item.url === "string" || item.url === null),
     )
-  )
+  );
 }
 
 function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value)
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedValue(value)
-    }, delay)
+      setDebouncedValue(value);
+    }, delay);
 
     return () => {
-      clearTimeout(handler)
-    }
-  }, [value, delay])
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
 
-  return debouncedValue
+  return debouncedValue;
 }
 
 function Search() {
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([])
-  const [isSearching, setIsSearching] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [expandedAnswer, setExpandedAnswer] = useState(false)
-  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false)
-  const debouncedSearchQuery = useDebounce(searchQuery, 300) // 300ms delay
-  const navigate = useNavigate()
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [expandedAnswer, setExpandedAnswer] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  const debouncedSearchQuery = useDebounce(searchQuery, 300); // 300ms delay
 
   useEffect(() => {
-    const abortController = new AbortController()
+    const abortController = new AbortController();
 
     const performSearch = async () => {
       if (debouncedSearchQuery.length > 2) {
-        setIsSearching(true)
+        setIsSearching(true);
         try {
           const response = await fetch(
             `/resources/search?query=${encodeURIComponent(debouncedSearchQuery)}`,
             {
               signal: abortController.signal,
-            }
-          )
-          const data: unknown = await response.json()
+            },
+          );
+          const data: unknown = await response.json();
 
           // Only update if the request wasn't aborted
           if (!abortController.signal.aborted) {
             if (isSearchResponse(data)) {
-              setSearchResults(data.results)
+              setSearchResults(data.results);
             } else {
-              console.error('Invalid search response format')
-              setSearchResults([])
+              console.error("Invalid search response format");
+              setSearchResults([]);
             }
           }
         } catch (error) {
           // Only log and update state if the request wasn't aborted
-          if (error instanceof Error && error.name === 'AbortError') {
-            return
+          if (error instanceof Error && error.name === "AbortError") {
+            return;
           }
-          console.error('Search error:', error)
-          setSearchResults([])
+          console.error("Search error:", error);
+          setSearchResults([]);
         } finally {
           if (!abortController.signal.aborted) {
-            setIsSearching(false)
+            setIsSearching(false);
           }
         }
       } else {
-        setSearchResults([])
-        setIsSearching(false)
+        setSearchResults([]);
+        setIsSearching(false);
       }
-    }
+    };
 
-    performSearch().catch(err => console.error('failed to search', err))
+    performSearch().catch((err) => console.error("failed to search", err));
 
     // Cleanup: abort any pending requests when the query changes or component unmounts
     return () => {
-      abortController.abort()
-    }
-  }, [debouncedSearchQuery])
+      abortController.abort();
+    };
+  }, [debouncedSearchQuery]);
 
   return (
     <>
@@ -413,10 +381,10 @@ function Search() {
                 action="/resources/search"
                 className="w-full"
                 onChange={(e) => {
-                  const form = e.currentTarget
-                  const formData = new FormData(form)
-                  const query = formData.get('search')
-                  setSearchQuery(query?.toString() || '')
+                  const form = e.currentTarget;
+                  const formData = new FormData(form);
+                  const query = formData.get("search");
+                  setSearchQuery(query?.toString() || "");
                 }}
               >
                 <div className="relative">
@@ -446,9 +414,9 @@ function Search() {
               </Form>
               <button
                 onClick={() => {
-                  setIsMobileSearchOpen(false)
-                  setSearchQuery('')
-                  setSearchResults([])
+                  setIsMobileSearchOpen(false);
+                  setSearchQuery("");
+                  setSearchResults([]);
                 }}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground"
               >
@@ -480,41 +448,61 @@ function Search() {
                   searchResults.map((result, index) => (
                     // ... same result rendering as desktop ...
                     <div key={index} className="mb-2 last:mb-0">
-                      <button
-                        className="w-full rounded-md p-2 text-left hover:bg-accent"
-                        onClick={() => {
-                          if (index === 0 && result.title === 'Expert Answer') {
-                            setExpandedAnswer(!expandedAnswer)
-                          } else {
-                            navigate(result.url)
-                            setSearchResults([])
-                            setIsMobileSearchOpen(false)
-                          }
-                        }}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="text-lg font-medium">
-                            {result.title}
+                      {result.url ? (
+                        <a href={result.url} target="_blank">
+                          <div className="w-full rounded-md p-2 text-left hover:bg-accent">
+                            <span className="text-lg font-medium">
+                              {result.title}
+                            </span>
+                            <span className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                              {result.content}
+                            </span>
                           </div>
-                          {index === 0 && result.title === 'Expert Answer' && (
-                            <div className="text-xs text-muted-foreground">
-                              {expandedAnswer ? '↑ Collapse' : '↓ Expand'}
+                        </a>
+                      ) : (
+                        <button
+                          className="w-full rounded-md p-2 text-left hover:bg-accent"
+                          onClick={() => {
+                            if (
+                              index === 0 &&
+                              result.title === "Expert Answer"
+                            ) {
+                              setExpandedAnswer(!expandedAnswer);
+                            } else {
+                              if (result.url) {
+                                window.location.assign(result.url);
+                                setSearchResults([]);
+                                setIsMobileSearchOpen(false);
+                              }
+                            }
+                          }}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="text-lg font-medium">
+                              {result.title}
+                            </div>
+                            {index === 0 &&
+                              result.title === "Expert Answer" && (
+                                <div className="text-xs text-muted-foreground">
+                                  {expandedAnswer ? "↑ Collapse" : "↓ Expand"}
+                                </div>
+                              )}
+                          </div>
+                          {result.content && (
+                            <div
+                              className={`mt-1 text-sm text-muted-foreground ${
+                                index === 0 && result.title === "Expert Answer"
+                                  ? expandedAnswer
+                                    ? ""
+                                    : "line-clamp-2"
+                                  : "line-clamp-2"
+                              }`}
+                            >
+                              {result.content}
                             </div>
                           )}
-                        </div>
-                        {result.content && (
-                          <div
-                            className={`mt-1 text-sm text-muted-foreground ${index === 0 && result.title === 'Expert Answer'
-                                ? expandedAnswer
-                                  ? ''
-                                  : 'line-clamp-2'
-                                : 'line-clamp-2'
-                              }`}
-                          >
-                            {result.content}
-                          </div>
-                        )}
-                      </button>
+                        </button>
+                      )}
                     </div>
                   ))
                 )}
@@ -550,10 +538,10 @@ function Search() {
           method="GET"
           action="/resources/search"
           onChange={(e) => {
-            const form = e.currentTarget
-            const formData = new FormData(form)
-            const query = formData.get('search')
-            setSearchQuery(query?.toString() || '')
+            const form = e.currentTarget;
+            const formData = new FormData(form);
+            const query = formData.get("search");
+            setSearchQuery(query?.toString() || "");
           }}
         >
           <div className="relative">
@@ -584,8 +572,9 @@ function Search() {
         {/* Search Results Dropdown */}
         {(searchResults.length > 0 || isSearching) && (
           <div
-            className={`absolute top-full mt-1 w-[300px] rounded-md border bg-background p-2 shadow-lg ${expandedAnswer ? 'max-h-[80vh] overflow-y-auto' : ''
-              }`}
+            className={`absolute top-full mt-1 w-[300px] rounded-md border bg-background p-2 shadow-lg ${
+              expandedAnswer ? "max-h-[80vh] overflow-y-auto" : ""
+            }`}
           >
             {isSearching ? (
               <div className="p-2 text-sm text-muted-foreground">
@@ -594,51 +583,67 @@ function Search() {
             ) : (
               searchResults.map((result, index) => {
                 const isExpertAnswer =
-                  index === 0 && result.title === 'Expert Answer'
+                  index === 0 && result.title === "Expert Answer";
 
                 return (
                   <div key={index} className="mb-2 last:mb-0">
-                    <button
-                      className="w-full rounded-md p-2 text-left hover:bg-accent"
-                      onClick={() => {
-                        if (isExpertAnswer) {
-                          setExpandedAnswer(!expandedAnswer)
-                        } else {
-                          navigate(result.url)
-                          setSearchResults([])
-                        }
-                      }}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="text-lg font-medium">
-                          {result.title}
+                    {result.url ? (
+                      <a href={result.url} target="_blank">
+                        <div className="w-full rounded-md p-2 text-left hover:bg-accent">
+                          <span className="text-lg font-medium">
+                            {result.title}
+                          </span>
+                          <span className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                            {result.content}
+                          </span>
                         </div>
-                        {isExpertAnswer && (
-                          <div className="text-xs text-muted-foreground">
-                            {expandedAnswer ? '↑ Collapse' : '↓ Expand'}
+                      </a>
+                    ) : (
+                      <button
+                        className="w-full rounded-md p-2 text-left hover:bg-accent"
+                        onClick={() => {
+                          if (isExpertAnswer) {
+                            setExpandedAnswer(!expandedAnswer);
+                          } else {
+                            if (result.url) {
+                              window.location.assign(result.url);
+                              setSearchResults([]);
+                            }
+                          }
+                        }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="text-lg font-medium">
+                            {result.title}
+                          </div>
+                          {isExpertAnswer && (
+                            <div className="text-xs text-muted-foreground">
+                              {expandedAnswer ? "↑ Collapse" : "↓ Expand"}
+                            </div>
+                          )}
+                        </div>
+                        {result.content && (
+                          <div
+                            className={`mt-1 text-sm text-muted-foreground ${
+                              isExpertAnswer
+                                ? expandedAnswer
+                                  ? ""
+                                  : "line-clamp-2"
+                                : "line-clamp-2"
+                            }`}
+                          >
+                            {result.content}
                           </div>
                         )}
-                      </div>
-                      {result.content && (
-                        <div
-                          className={`mt-1 text-sm text-muted-foreground ${isExpertAnswer
-                              ? expandedAnswer
-                                ? ''
-                                : 'line-clamp-2'
-                              : 'line-clamp-2'
-                            }`}
-                        >
-                          {result.content}
-                        </div>
-                      )}
-                    </button>
+                      </button>
+                    )}
                   </div>
-                )
+                );
               })
             )}
           </div>
         )}
       </div>
     </>
-  )
+  );
 }
