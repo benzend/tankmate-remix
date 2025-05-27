@@ -106,7 +106,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 					phosphate: true,
 					createdAt: true,
 				},
-        take: 5,
         orderBy: {
           createdAt: 'asc',
         }
@@ -340,7 +339,7 @@ const ParameterChart = ({
       </h3>
 			<LineChart
 				data={{
-					labels: tank.parameterLogs.map((l) =>
+					labels: tank.parameterLogs.filter(l => l[parameter]).map((l) =>
 						formatDateBasedOnRecency(
 							DateFrom(l.createdAt).toLocaleDateString(),
 						),
@@ -348,7 +347,7 @@ const ParameterChart = ({
 					datasets: [
 						{
 							label: humanizeParameter(parameter),
-							data: tank.parameterLogs.map((l) => l[parameter] || null),
+							data: tank.parameterLogs.filter(l => l[parameter]).map((l) => l[parameter] || null),
 							backgroundColor: getChartColorFromParameter(parameter),
 							borderColor: getChartColorFromParameter(parameter),
 						},
