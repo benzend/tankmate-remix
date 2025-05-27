@@ -211,9 +211,10 @@ export default function TankPage() {
 					</div>
 				)}
 			</header>
-			{tank.fishTankScores.map((score) => (
-				<TankScore key={score.id} data={score} />
-			))}
+
+      <div className="mt-10">
+        <ParameterLogs tank={tank} />
+      </div>
 
 			<div className="my-10 flex flex-wrap gap-5">
 				<div className="w-full sm:w-80">
@@ -247,8 +248,6 @@ export default function TankPage() {
 						</Link>
 					</div>
 				</div>
-
-				<ParameterLogs tank={tank} />
 			</div>
 		</div>
 	)
@@ -520,7 +519,9 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 	return (
 		<div className="sm:w-120 w-full">
 			<header className="flex justify-between rounded-t border p-4 text-foreground">
-				Parameter Log
+				<div><span className="mr-2">Parameter Log</span> <Link
+					to={`/dashboard/parameter-log/new?redirectTo=${location.pathname}&tankId=${tank.id}`}
+        >+</Link></div>
 				{tank.parameterLogs.length && (
 					<button onClick={() => setIsOpen((prev) => !prev)}>
 						{isOpen ? 'Collapse' : 'Expand'}
@@ -530,7 +531,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
 			<div className="rounded-b border-b border-l border-r">
 				{tank.parameterLogs.length ? (
 					<div
-						className={cn('grid grid-cols-2 gap-4', !isOpen && 'invisible h-0')}
+						className={cn('grid grid-cols-1 sm:grid-cols-2 gap-4', !isOpen && 'invisible h-0')}
 					>
 						<ParameterChart tank={tank} parameter="temp" />
 						<ParameterChart tank={tank} parameter="pH" />
