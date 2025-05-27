@@ -6,7 +6,6 @@ import {
 import {
   Form,
   json,
-  redirect,
   useLoaderData,
   useSearchParams,
   Link,
@@ -49,7 +48,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  const userId = await requireUserId(request, { redirectTo: '/' })
+  await requireUserId(request, { redirectTo: '/' })
 
   const body = await request.formData()
 
