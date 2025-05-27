@@ -15,7 +15,7 @@ import { Button } from '#app/components/ui/button.js'
 import { Input } from '#app/components/ui/input.js'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
-import { numberOrNull } from '#app/utils/misc.js'
+import { dateOrNow, numberOrNull } from '#app/utils/misc.js'
 import { redirectWithToast } from '#app/utils/toast.server.js'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -60,6 +60,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const temp = numberOrNull(body.get('temp'))
   const nitrate = numberOrNull(body.get('nitrate'))
   const phosphate = numberOrNull(body.get('phosphate'))
+  const createdAt = dateOrNow(body.get('createdAt'))
 
   if (typeof tankId !== 'string') {
     console.error("typeof tankId !== 'string'", { tankId })
@@ -85,6 +86,7 @@ export async function action({ request }: ActionFunctionArgs) {
       nitrate,
       phosphate,
       fishTankId: tankId,
+      createdAt: createdAt ? new Date(createdAt) : new Date(),
     },
     select: {
       id: true,
@@ -207,6 +209,13 @@ export default function NewParameterLog() {
                 placeholder="0.12"
               />
               <br />
+              <Input
+                id="createdAt"
+                name="createdAt"
+                type="datetime-local"
+                defaultValue={toLocalISOString(new Date())}
+                placeholder="2023-01-01"
+              />
             </div>
 
             {redirectTo && (
@@ -223,4 +232,13 @@ export default function NewParameterLog() {
       </main>
     </>
   )
+}
+
+function toLocalISOString(date: Date) {
+  const localDate = new Date(Date.now() - date.getTimezoneOffset() * 60000); //offset in milliseconds. Credit https://stackoverflow.com/questions/10830357/javascript-toisostring-ignores-timezone-offset
+
+  // Optionally remove second/millisecond if needed
+  localDate.setSeconds(0);
+  localDate.setMilliseconds(0);
+  return localDate.toISOString().slice(0, -1);
 }

@@ -6,6 +6,7 @@ import { extendTailwindMerge } from 'tailwind-merge'
 import { ok, err, type Result } from 'true-myth/result'
 import { extendedTheme } from './extended-theme.ts'
 import { FishTankScore } from '@prisma/client'
+import { isDate } from 'date-fns'
 
 export function getUserImgSrc(imageId?: string | null) {
 	return imageId ? `/resources/user-images/${imageId}` : '/img/user.png'
@@ -372,6 +373,23 @@ export function numberOrNull(v: unknown): null | number {
   if (typeof v === 'number') return v
   if (Number.isNaN(Number(v))) return null
   return Number(v)
+}
+
+export function dateOrNow(dateInput: unknown): Date {
+  if (!dateInput) return new Date();
+  if (typeof dateInput === "string" && dateInput.length === 0) return new Date();
+
+  if (isDate(dateInput)) return dateInput;
+
+  try {
+    if (typeof dateInput === "number") return new Date(dateInput);
+    if (typeof dateInput === "string") return new Date(dateInput);
+  } catch (e) {
+    console.error("Invalid date", { dateInput })
+    return new Date();
+  }
+
+  return new Date();
 }
 
 export function getWeekdayFromDate(dateInput: string | Date): string {
