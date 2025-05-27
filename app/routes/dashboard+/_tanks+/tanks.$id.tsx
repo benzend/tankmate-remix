@@ -106,6 +106,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 					phosphate: true,
 					createdAt: true,
 				},
+        take: 5,
         orderBy: {
           createdAt: 'asc',
         }
