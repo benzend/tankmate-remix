@@ -108,6 +108,27 @@ export async function action({ request }: ActionFunctionArgs) {
   )
 }
 
+type Measurement = 'dKH' | 'ppm' | 'pH' | '°F' | 'ppm'
+
+export const getMeasurementFromParameter = (parameter: Parameter): Measurement => {
+  switch (parameter) {
+    case 'alk':
+      return 'dKH'
+    case 'calcium':
+      return 'ppm'
+    case 'magnesium':
+      return 'ppm'
+    case 'pH':
+      return 'pH'
+    case 'nitrate':
+      return 'ppm'
+    case 'phosphate':
+      return 'ppm'
+    case 'temp':
+      return '°F'
+  }
+}
+
 const ParameterLabel = ({ parameter }: { parameter: Parameter }) => {
   switch (parameter) {
     case 'alk':
