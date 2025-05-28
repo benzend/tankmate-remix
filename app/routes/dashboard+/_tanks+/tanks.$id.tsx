@@ -185,7 +185,7 @@ export default function TankPage() {
 							onChange={handleInputNameChange}
 							className="mr-4 rounded bg-slate-100 px-2 py-2 text-center text-base font-bold text-foreground outline-white dark:bg-slate-800 md:text-lg lg:text-left lg:text-2xl"
 						/>
-						<button className="mr-4" onClick={handleSaveTankNameClick}>
+						<button className="mr-4 text-foreground" onClick={handleSaveTankNameClick}>
 							Save
 						</button>
 						<button
