@@ -134,7 +134,7 @@ export default function Dashboard() {
 					</div>
 				</div>
 			) : (
-				<Link to="/dashboard/tanks/new">+ Add your first tank</Link>
+				<Link to="/dashboard/tanks/new" className="text-foreground">+ Add your first tank</Link>
 			)}
 		</div>
 	)

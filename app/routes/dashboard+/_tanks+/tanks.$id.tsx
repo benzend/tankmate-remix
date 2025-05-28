@@ -362,6 +362,12 @@ const ParameterChart = ({
 							backgroundColor: getChartColorFromParameter(parameter),
 							borderColor: getChartColorFromParameter(parameter),
 						},
+            {
+              label: 'Average',
+              data: tank.parameterLogs.map((l) => l[parameter] || 0),
+              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              borderColor: 'rgba(255, 255, 255, 0.2)',
+            },
 					],
 				}}
 			/>

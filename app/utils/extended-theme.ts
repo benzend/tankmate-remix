@@ -33,6 +33,10 @@ export const extendedTheme = {
 			DEFAULT: 'hsl(var(--muted))',
 			foreground: 'hsl(var(--muted-foreground))',
 		},
+    muuted: {
+			DEFAULT: 'hsl(var(--muuted))',
+			foreground: 'hsl(var(--muuted-foreground))',
+    },
 		accent: {
 			DEFAULT: 'hsl(var(--accent))',
 			foreground: 'hsl(var(--accent-foreground))',
