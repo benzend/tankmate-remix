@@ -5,7 +5,6 @@ import {
   Outlet,
   useLoaderData,
   useLocation,
-  useNavigate,
 } from "@remix-run/react";
 
 import { useEffect, useState } from "react";
@@ -38,7 +37,7 @@ export default function DashboardLayout() {
   return (
     <main className="bg-background text-gray-100">
       <Nav />
-      <div className="flex h-[calc(100vh-92px)]">
+      <div className="flex h-[calc(100vh-98px)]">
         <SideNav />
         <div className="w-full overflow-y-auto px-6 pt-4">
           <div className="pb-10">
