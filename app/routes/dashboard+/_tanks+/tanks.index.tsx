@@ -1,9 +1,15 @@
 import { invariantResponse } from '@epic-web/invariant'
 import { json, MetaFunction, type LoaderFunctionArgs } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
+import { Link, useLoaderData, Form, useActionData } from '@remix-run/react'
+import { useState } from 'react'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
-import { getLatestTankScoreAverage } from '#app/utils/misc.js'
+import { getLatestTankScoreAverage, useDoubleCheck, useIsPending } from '#app/utils/misc.js'
+import { Button } from '#app/components/ui/button.js'
+import { Icon } from '#app/components/ui/icon.js'
+import { action } from './tanks.server.js'
+
+export { action }
 
 export const meta: MetaFunction = () => [{ title: 'TankMate | Tanks' }]
 
@@ -144,18 +150,50 @@ const Tank = ({
 	tankId,
 	name,
   imageUrl,
+	score,
 }: {
 	tankId: string
 	name: string
   imageUrl: string | null
 	score: number
 }) => {
+	const dc = useDoubleCheck()
+	const isPending = useIsPending()
+	const [showMobileDelete, setShowMobileDelete] = useState(false)
+
 	return (
-		<div>
+		<div 
+			className="relative group"
+			onClick={() => {
+				// Hide mobile delete button when clicking elsewhere
+				if (showMobileDelete) {
+					setShowMobileDelete(false)
+				}
+			}}
+		>
 			<Link to={`/dashboard/tanks/${tankId}`}>
 				<div
-					className="p-2 border h-full w-full min-h-[130px]"
+					className="p-2 border h-full w-full min-h-[130px] relative"
+					onTouchStart={() => {
+						// Show delete button on long press for mobile
+						const timer = setTimeout(() => {
+							setShowMobileDelete(true)
+						}, 500)
+						
+						// Store timer reference to clear on touch end
+						const touchEndHandler = () => {
+							clearTimeout(timer)
+							document.removeEventListener('touchend', touchEndHandler)
+						}
+						document.addEventListener('touchend', touchEndHandler)
+					}}
 				>
+					{/* Mobile hint - only show on small screens */}
+					<div className="absolute bottom-1 left-1 md:hidden">
+						<div className="text-xs text-muted-foreground/60 bg-background/80 px-1 py-0.5 rounded">
+							Long press for options
+						</div>
+					</div>
           <h3 className="text-xl mb-2 text-foreground">{name}</h3>
           {imageUrl && (
             <img
@@ -168,6 +206,64 @@ const Tank = ({
           )}
 				</div>
 			</Link>
+			
+			{/* Delete button - always visible on mobile, hover-only on desktop */}
+			<div className={`absolute top-2 right-2 transition-opacity ${
+				showMobileDelete || dc.doubleCheck 
+					? 'opacity-100' 
+					: 'md:opacity-0 md:group-hover:opacity-100'
+			}`}>
+				<Form method="POST" action="?index">
+					<input type="hidden" name="intent" value="delete-tank" />
+					<input type="hidden" name="tankId" value={tankId} />
+					<Button
+						{...dc.getButtonProps({
+							type: 'submit',
+							className: 'h-8 w-8 p-0 bg-destructive text-destructive-foreground hover:bg-destructive/80 shadow-sm',
+							disabled: isPending,
+						})}
+					>
+						<Icon name="trash" className="h-4 w-4" />
+					</Button>
+				</Form>
+			</div>
+			
+			{/* Double-check confirmation */}
+			{dc.doubleCheck && (
+				<div className="absolute inset-0 bg-background/95 rounded border flex items-center justify-center z-10 p-4">
+					<div className="text-center w-full max-w-xs">
+						<div className="mb-4">
+							<Icon name="trash" className="h-8 w-8 text-destructive mx-auto mb-2" />
+							<p className="text-base font-medium mb-2">Delete "{name}"?</p>
+							<p className="text-sm text-muted-foreground">This action cannot be undone.</p>
+						</div>
+						<Form method="POST" action="?index" className="space-y-3">
+							<input type="hidden" name="intent" value="delete-tank" />
+							<input type="hidden" name="tankId" value={tankId} />
+							<div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+								<Button
+									type="submit"
+									className="flex-1 px-4 py-2.5 text-sm bg-destructive text-destructive-foreground hover:bg-destructive/80 rounded-md min-h-[44px]"
+									disabled={isPending}
+								>
+									{isPending ? 'Deleting...' : 'Delete'}
+								</Button>
+								<button
+									type="button"
+									className="flex-1 px-4 py-2.5 text-sm border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground rounded-md min-h-[44px]"
+																	onClick={() => {
+									// Reset the double check state by clicking outside
+									document.body.click()
+									setShowMobileDelete(false)
+								}}
+								>
+									Cancel
+								</button>
+							</div>
+						</Form>
+					</div>
+				</div>
+			)}
 		</div>
 	)
 }
