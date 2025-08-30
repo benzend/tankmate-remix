@@ -509,6 +509,7 @@ const ParameterChart = ({
         }}
         options={{
           plugins: {
+            // @ts-ignore
             successRange: {
               enabled: true,
               range: getSuccessRangeFromParameter(parameter),
