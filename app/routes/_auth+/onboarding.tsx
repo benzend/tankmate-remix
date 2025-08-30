@@ -169,7 +169,6 @@ export default function OnboardingRoute() {
               inputProps={{
                 ...getInputProps(fields.username, { type: 'text' }),
                 autoComplete: 'username',
-                className: 'lowercase',
               }}
               errors={fields.username.errors}
             />
