@@ -2,7 +2,7 @@ import {
   MetaFunction,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
-} from '@remix-run/node'
+} from "@remix-run/node";
 import {
   json,
   redirect,
@@ -11,7 +11,7 @@ import {
   useSubmit,
   useActionData,
   useLocation,
-} from '@remix-run/react'
+} from "@remix-run/react";
 import {
   Chart,
   CategoryScale,
@@ -19,48 +19,48 @@ import {
   PointElement,
   LineElement,
   Plugin,
-} from 'chart.js'
-import { useEffect, useState } from 'react'
-import { Line as LineChart } from 'react-chartjs-2'
-import { requireUserId } from '#app/utils/auth.server.js'
-import { prisma } from '#app/utils/db.server.js'
-import { DateFrom, humanize, toTitleCase } from '#app/utils/misc.js'
-import { cn, formatDateBasedOnRecency } from '#app/utils/misc.tsx'
-import { Icon } from '#app/components/ui/icon.js'
-import { getMeasurementFromParameter } from '../_parameter-log+/parameter-log.new'
-Chart.register(CategoryScale)
-Chart.register(LinearScale)
-Chart.register(PointElement)
-Chart.register(LineElement)
+} from "chart.js";
+import { useEffect, useState } from "react";
+import { Line as LineChart } from "react-chartjs-2";
+import { requireUserId } from "#app/utils/auth.server.js";
+import { prisma } from "#app/utils/db.server.js";
+import { DateFrom, humanize, toTitleCase } from "#app/utils/misc.js";
+import { cn, formatDateBasedOnRecency } from "#app/utils/misc.tsx";
+import { Icon } from "#app/components/ui/icon.js";
+import { getMeasurementFromParameter } from "../_parameter-log+/parameter-log.new";
+Chart.register(CategoryScale);
+Chart.register(LinearScale);
+Chart.register(PointElement);
+Chart.register(LineElement);
 
-export const meta: MetaFunction = () => [{ title: 'TankMate | Tank Details' }]
+export const meta: MetaFunction = () => [{ title: "TankMate | Tank Details" }];
 
 export async function action({ request, params }: ActionFunctionArgs) {
-  const userId = await requireUserId(request, { redirectTo: '/' })
-  const data = await request.formData()
+  const userId = await requireUserId(request, { redirectTo: "/" });
+  const data = await request.formData();
 
   const tank = await prisma.fishTank.findFirst({
     where: { id: params.id, userId },
     select: {
       id: true,
     },
-  })
+  });
 
   if (!tank) {
-    return redirect('/dashboard')
+    return redirect("/dashboard");
   }
 
-  const name = data.get('name')
+  const name = data.get("name");
 
-  if (typeof name !== 'string') {
+  if (typeof name !== "string") {
     return json({
       error: `name (${String(name)}) isnt a valid string`,
       success: false,
-    })
+    });
   }
 
   if (!name) {
-    return json({ error: `name is an empty string`, success: false })
+    return json({ error: `name is an empty string`, success: false });
   }
 
   try {
@@ -69,16 +69,16 @@ export async function action({ request, params }: ActionFunctionArgs) {
       data: {
         name,
       },
-    })
+    });
   } catch {
-    return json({ error: 'failed to update tank name', success: false })
+    return json({ error: "failed to update tank name", success: false });
   }
 
-  return json({ error: null, success: true })
+  return json({ error: null, success: true });
 }
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const userId = await requireUserId(request, { redirectTo: '/' })
+  const userId = await requireUserId(request, { redirectTo: "/" });
 
   const tank = await prisma.fishTank.findFirst({
     where: { id: params.id, userId },
@@ -113,62 +113,62 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
           createdAt: true,
         },
         orderBy: {
-          createdAt: 'asc',
-        }
+          createdAt: "asc",
+        },
       },
       imageUrl: true,
       volume: true,
       waterType: true,
     },
-  })
+  });
 
   if (!tank) {
-    return redirect('/dashboard')
+    return redirect("/dashboard");
   }
 
-  return json({ tank })
+  return json({ tank });
 }
 
 export default function TankPage() {
-  const actionData = useActionData<typeof action>()
+  const actionData = useActionData<typeof action>();
 
-  const { tank } = useLoaderData<typeof loader>()
+  const { tank } = useLoaderData<typeof loader>();
 
-  const [editName, setEditName] = useState(tank.name)
-  const [editingName, setEditingName] = useState(false)
+  const [editName, setEditName] = useState(tank.name);
+  const [editingName, setEditingName] = useState(false);
 
-  const location = useLocation()
+  const location = useLocation();
 
-  const submit = useSubmit()
+  const submit = useSubmit();
 
   const handleEditTankNameClick = () => {
-    setEditingName(true)
-  }
+    setEditingName(true);
+  };
 
   const handleCancelEditTankNameClick = () => {
-    setEditingName(false)
-  }
+    setEditingName(false);
+  };
 
   const handleInputNameChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setEditName(e.currentTarget.value)
-  }
+    setEditName(e.currentTarget.value);
+  };
 
   const handleSaveTankNameClick = () => {
-    const formData = new FormData()
-    formData.append('name', editName)
-    submit(formData, { method: 'POST' })
-  }
+    const formData = new FormData();
+    formData.append("name", editName);
+    submit(formData, { method: "POST" });
+  };
 
   useEffect(() => {
     if (actionData?.success) {
-      setEditingName(false)
+      setEditingName(false);
     }
-  }, [actionData])
+  }, [actionData]);
 
   const tankImageUrls = tank.fishTankScores
     .map((s) => s.imageUrl)
-    .filter(Boolean)
-  const latestImage = tankImageUrls[tankImageUrls.length - 1]
+    .filter(Boolean);
+  const latestImage = tankImageUrls[tankImageUrls.length - 1];
 
   return (
     <div>
@@ -187,7 +187,10 @@ export default function TankPage() {
               onChange={handleInputNameChange}
               className="mr-4 rounded bg-slate-100 px-2 py-2 text-center text-base font-bold text-foreground outline-white dark:bg-slate-800 md:text-lg lg:text-left lg:text-2xl"
             />
-            <button className="mr-4 text-foreground" onClick={handleSaveTankNameClick}>
+            <button
+              className="mr-4 text-foreground"
+              onClick={handleSaveTankNameClick}
+            >
               Save
             </button>
             <button
@@ -216,7 +219,7 @@ export default function TankPage() {
         <span className="capitalize text-muted-foreground">
           {tank.waterType}
         </span>
-        {typeof tank.volume !== 'undefined' && typeof tank.volume !== null && (
+        {typeof tank.volume !== "undefined" && typeof tank.volume !== null && (
           <span className="ml-1 capitalize text-muted-foreground">
             - {tank.volume} Gal
           </span>
@@ -266,7 +269,7 @@ export default function TankPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 const MaintenanceLog = ({
@@ -275,10 +278,10 @@ const MaintenanceLog = ({
   tankId,
   tankName,
 }: {
-  logId: string
-  maintenanceType: string
-  tankId?: string
-  tankName?: string
+  logId: string;
+  maintenanceType: string;
+  tankId?: string;
+  tankName?: string;
 }) => {
   return (
     <div>
@@ -289,102 +292,155 @@ const MaintenanceLog = ({
         <Link to={`/dashboard/tanks/${tankId}`}>{tankName}</Link>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export const PARAMETERS = ['alk', 'calcium', 'magnesium', 'pH', 'nitrate', 'phosphate', 'temp'] as const;
+export const PARAMETERS = [
+  "alk",
+  "calcium",
+  "magnesium",
+  "pH",
+  "nitrate",
+  "phosphate",
+  "temp",
+] as const;
 
-export type Parameter = typeof PARAMETERS[number];
+export type Parameter = (typeof PARAMETERS)[number];
 
 export const humanizeParameter = (parameter: Parameter) => {
   switch (parameter) {
-    case 'alk':
-      return 'Alkaline'
-    case 'calcium':
-      return 'Calcium'
-    case 'magnesium':
-      return 'Magnesium'
-    case 'pH':
-      return 'pH'
-    case 'nitrate':
-      return 'Nitrate'
-    case 'phosphate':
-      return 'Phosphate'
-    case 'temp':
-      return 'Temperature'
+    case "alk":
+      return "Alkaline";
+    case "calcium":
+      return "Calcium";
+    case "magnesium":
+      return "Magnesium";
+    case "pH":
+      return "pH";
+    case "nitrate":
+      return "Nitrate";
+    case "phosphate":
+      return "Phosphate";
+    case "temp":
+      return "Temperature";
   }
-}
+};
 
 const getChartColorFromParameter = (parameter: Parameter) => {
   switch (parameter) {
-    case 'pH':
-      return '#60A5FA' // blue
-    case 'alk':
-      return '#34D399' // green
-    case 'calcium':
-      return '#A78BFA' // purple
-    case 'magnesium':
-      return '#FBBF24' // yellow/amber
-    case 'nitrate':
-      return '#EC4899' // pink
-    case 'phosphate':
-      return '#6366F1' // indigo
-    case 'temp':
-      return '#F87171' // red
+    case "pH":
+      return "#60A5FA"; // blue
+    case "alk":
+      return "#34D399"; // green
+    case "calcium":
+      return "#A78BFA"; // purple
+    case "magnesium":
+      return "#FBBF24"; // yellow/amber
+    case "nitrate":
+      return "#EC4899"; // pink
+    case "phosphate":
+      return "#6366F1"; // indigo
+    case "temp":
+      return "#F87171"; // red
     default:
-      return '#60A5FA' // default blue
+      return "#60A5FA"; // default blue
   }
-}
+};
 
-const getSuccessRangeFromParameter = (parameter: Parameter): { lower: number, upper: number } => {
+const getSuccessRangeFromParameter = (
+  parameter: Parameter,
+): { lower: number; upper: number } => {
   switch (parameter) {
-    case 'pH':
+    case "pH":
       return {
         lower: 8.0,
         upper: 8.4,
-      }
-    case 'alk':
+      };
+    case "alk":
       return {
         lower: 8.0,
         upper: 12.0,
-      }
-    case 'calcium':
+      };
+    case "calcium":
       return {
         lower: 350,
         upper: 450,
-      }
-    case 'magnesium':
+      };
+    case "magnesium":
       return {
         lower: 1180,
         upper: 1460,
-      }
-    case 'nitrate':
+      };
+    case "nitrate":
       return {
         lower: 5,
         upper: 10,
-      }
-    case 'phosphate':
+      };
+    case "phosphate":
       return {
         lower: 0.3,
         upper: 0.5,
-      }
-    case 'temp':
+      };
+    case "temp":
       return {
         lower: 76,
         upper: 82,
-      }
+      };
   }
-}
+};
 
-const successRangePlugin: Plugin<'line'> = {
-  id: 'successRange',
+const getMinFromParameter = (parameter: Parameter): number => {
+  switch (parameter) {
+    case "pH":
+      return 7.5;
+    case "alk":
+      return 6.0;
+    case "calcium":
+      return 300;
+    case "magnesium":
+      return 1000;
+    case "nitrate":
+      return 0;
+    case "phosphate":
+      return 0;
+    case "temp":
+      return 70;
+  }
+};
 
-  beforeDraw: function(chart, args, options) {
+const getMaxFromParameter = (parameter: Parameter): number => {
+  switch (parameter) {
+    case "pH":
+      return 8.8;
+    case "alk":
+      return 15.0;
+    case "calcium":
+      return 500;
+    case "magnesium":
+      return 1600;
+    case "nitrate":
+      return 20;
+    case "phosphate":
+      return 1.0;
+    case "temp":
+      return 86;
+  }
+};
+
+const successRangePlugin: Plugin<"line"> = {
+  id: "successRange",
+
+  beforeDraw: function (chart, args, options) {
     const { ctx, chartArea, scales } = chart;
     const { lower, upper } = options.range;
     const { backgroundColor, borderColor, borderWidth, enabled } = options;
 
-    if (!enabled || lower === undefined || upper === undefined || scales.y === undefined) {
+    if (
+      !enabled ||
+      lower === undefined ||
+      upper === undefined ||
+      scales.y === undefined
+    ) {
       return; // Don't draw if not enabled or range is not defined
     }
 
@@ -400,7 +456,7 @@ const successRangePlugin: Plugin<'line'> = {
       chartArea.left,
       chartArea.top,
       chartArea.right - chartArea.left,
-      chartArea.bottom - chartArea.top
+      chartArea.bottom - chartArea.top,
     );
     ctx.clip();
 
@@ -410,7 +466,7 @@ const successRangePlugin: Plugin<'line'> = {
       chartArea.left,
       Math.min(yLowerPixel, yUpperPixel), // Handle potential inverted scales
       chartArea.right - chartArea.left,
-      Math.abs(yLowerPixel - yUpperPixel)
+      Math.abs(yLowerPixel - yUpperPixel),
     );
 
     // Optionally draw a border
@@ -421,26 +477,36 @@ const successRangePlugin: Plugin<'line'> = {
         chartArea.left,
         Math.min(yLowerPixel, yUpperPixel),
         chartArea.right - chartArea.left,
-        Math.abs(yLowerPixel - yUpperPixel)
+        Math.abs(yLowerPixel - yUpperPixel),
       );
     }
 
     ctx.restore();
   },
 
-  afterDatasetsDraw: function(chart, args, options) {
-    const { ctx, data: { datasets }, scales } = chart;
+  afterDatasetsDraw: function (chart, args, options) {
+    const {
+      ctx,
+      data: { datasets },
+      scales,
+    } = chart;
     const { lower, upper } = options.range;
     const { enabled } = options;
 
-    if (!enabled || lower === undefined || upper === undefined || scales.y === undefined) {
+    if (
+      !enabled ||
+      lower === undefined ||
+      upper === undefined ||
+      scales.y === undefined
+    ) {
       return;
     }
 
     datasets.forEach((dataset, datasetIndex) => {
       const meta = chart.getDatasetMeta(datasetIndex);
 
-      if (!meta.hidden) { // Only process visible datasets
+      if (!meta.hidden) {
+        // Only process visible datasets
         meta.data.forEach((element, index) => {
           const value = dataset.data[index] || 0;
 
@@ -452,8 +518,8 @@ const successRangePlugin: Plugin<'line'> = {
             const originalBackgroundColor = element.options.backgroundColor;
             const originalBorderColor = element.options.borderColor;
 
-            element.options.backgroundColor = 'green'; // Or a color from plugin options
-            element.options.borderColor = 'darkgreen';
+            element.options.backgroundColor = "green"; // Or a color from plugin options
+            element.options.borderColor = "darkgreen";
 
             // You might need to manually redraw the point here if changing
             // options after drawing in the core chart rendering process.
@@ -475,33 +541,42 @@ const ParameterChart = ({
   tank,
   parameter,
 }: {
-  tank: TankWithLogs
-  parameter: Parameter
+  tank: TankWithLogs;
+  parameter: Parameter;
 }) => {
-  const location = useLocation()
-  const successRange = getSuccessRangeFromParameter(parameter)
+  const location = useLocation();
+  const successRange = getSuccessRangeFromParameter(parameter);
   return (
     <div className="rounded border p-4 text-foreground">
       <h3 className="mb-2 text-lg font-bold">
         {humanizeParameter(parameter)}
-        <Link to={`/dashboard/parameter-log/new?redirectTo=${location.pathname}&tankId=${tank.id}&parameter=${parameter}`}>+</Link>
+        <Link
+          to={`/dashboard/parameter-log/new?redirectTo=${location.pathname}&tankId=${tank.id}&parameter=${parameter}`}
+        >
+          +
+        </Link>
         <div className="flex gap-2 items-center">
           <div className="text-xs text-muted-foreground">
-            Success Range: {successRange.lower} - {successRange.upper} {getMeasurementFromParameter(parameter)}
+            Success Range: {successRange.lower} - {successRange.upper}{" "}
+            {getMeasurementFromParameter(parameter)}
           </div>
         </div>
       </h3>
       <LineChart
         data={{
-          labels: tank.parameterLogs.filter(l => l[parameter]).map((l) =>
-            formatDateBasedOnRecency(
-              DateFrom(l.createdAt).toLocaleDateString(),
+          labels: tank.parameterLogs
+            .filter((l) => l[parameter])
+            .map((l) =>
+              formatDateBasedOnRecency(
+                DateFrom(l.createdAt).toLocaleDateString(),
+              ),
             ),
-          ),
           datasets: [
             {
               label: humanizeParameter(parameter),
-              data: tank.parameterLogs.filter(l => l[parameter]).map((l) => l[parameter] || null),
+              data: tank.parameterLogs
+                .filter((l) => l[parameter])
+                .map((l) => l[parameter] || null),
               backgroundColor: getChartColorFromParameter(parameter),
               borderColor: getChartColorFromParameter(parameter),
             },
@@ -513,65 +588,74 @@ const ParameterChart = ({
             successRange: {
               enabled: true,
               range: getSuccessRangeFromParameter(parameter),
-              backgroundColor: 'rgba(0, 204, 0, 0.1)',
-              borderColor: 'rgba(255, 255, 255, 0.2)',
+              backgroundColor: "rgba(0, 204, 0, 0.1)",
+              borderColor: "rgba(255, 255, 255, 0.2)",
               borderWidth: 1,
-            }
-          }
+            },
+          },
+          scales: {
+            y: {
+              min: getMinFromParameter(parameter),
+              max: getMaxFromParameter(parameter),
+            },
+          },
         }}
         plugins={[successRangePlugin]}
       />
     </div>
-  )
-}
+  );
+};
 
 type TankWithLogs = {
-  id: string
-  name: string
+  id: string;
+  name: string;
   fishTankScores: Array<{
-    id: string
-    result: string | null
-    imageUrl: string | null
-  }>
+    id: string;
+    result: string | null;
+    imageUrl: string | null;
+  }>;
   fishTankMaintenances: Array<{
-    id: string
-    createdAt: string
-    maintenanceType: string
-    extraDetails: string | null
-  }>
+    id: string;
+    createdAt: string;
+    maintenanceType: string;
+    extraDetails: string | null;
+  }>;
   parameterLogs: Array<{
-    id: string
-    temp: number | null
-    alk: number | null
-    calcium: number | null
-    magnesium: number | null
-    pH: number | null
-    nitrate: number | null
-    phosphate: number | null
-    createdAt: string
-  }>
-  imageUrl: string | null
-  volume: number | null
-  waterType: string
-}
+    id: string;
+    temp: number | null;
+    alk: number | null;
+    calcium: number | null;
+    magnesium: number | null;
+    pH: number | null;
+    nitrate: number | null;
+    phosphate: number | null;
+    createdAt: string;
+  }>;
+  imageUrl: string | null;
+  volume: number | null;
+  waterType: string;
+};
 
 const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
-  const location = useLocation()
-  const [isOpen, setIsOpen] = useState(true)
+  const location = useLocation();
+  const [isOpen, setIsOpen] = useState(true);
   return (
     <div className="sm:w-120 w-full">
       <header className="flex justify-between rounded-t border p-4 text-foreground">
         Parameter Log
         {tank.parameterLogs.length ? (
           <button onClick={() => setIsOpen((prev) => !prev)}>
-            {isOpen ? 'Collapse' : 'Expand'}
+            {isOpen ? "Collapse" : "Expand"}
           </button>
         ) : null}
       </header>
       <div className="rounded-b border-b border-l border-r">
         {tank.parameterLogs.length ? (
           <div
-            className={cn('grid grid-cols-1 sm:grid-cols-2 gap-4', !isOpen && 'invisible h-0')}
+            className={cn(
+              "grid grid-cols-1 sm:grid-cols-2 gap-4",
+              !isOpen && "invisible h-0",
+            )}
           >
             <ParameterChart tank={tank} parameter="temp" />
             <ParameterChart tank={tank} parameter="pH" />
@@ -597,5 +681,5 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
         </Link>
       </div>
     </div>
-  )
-}
+  );
+};
