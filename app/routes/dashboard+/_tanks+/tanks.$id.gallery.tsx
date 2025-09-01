@@ -73,6 +73,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
       await prisma.tankGallery.delete({
         where: { id: imageId, fishTank: { userId } },
       });
+
       return json({ error: null, success: true, intent: "delete" });
     } catch {
       return json({ error: "Failed to delete image", success: false });
@@ -231,7 +232,7 @@ export default function TankGalleryPage() {
             <Icon name="arrow-left" /> Back to {tank.name}
           </span>
         </Link>
-        <h1 className="mt-4 text-3xl font-bold">{tank.name} Gallery</h1>
+        <h1 className="mt-4 text-3xl font-bold text-foreground">{tank.name} Gallery</h1>
         <p className="text-muted-foreground">
           Showcase your beautiful fish tank with photos and descriptions
         </p>
@@ -239,7 +240,7 @@ export default function TankGalleryPage() {
 
       {/* Add Image Section */}
       <div className="mb-8 rounded-lg border p-6">
-        <h2 className="mb-4 text-xl font-semibold">Add New Images</h2>
+        <h2 className="mb-4 text-xl font-semibold text-foreground">Add New Images</h2>
         <div className="space-y-4">
           {/* Upload Button */}
           <div className="flex flex-wrap gap-4">
@@ -290,7 +291,7 @@ export default function TankGalleryPage() {
 
         {/* Add Image Form */}
         {isAdding && (
-          <div className="mt-4 rounded border p-4">
+          <div className="mt-4 rounded border p-4 text-foreground">
             {/* Image Preview */}
             {tempImages.length > 0 && (
               <div className="mb-4">
@@ -365,7 +366,7 @@ export default function TankGalleryPage() {
 
       {/* Gallery Grid */}
       <div className="mb-8">
-        <h2 className="mb-4 text-xl font-semibold">Gallery Images</h2>
+        <h2 className="mb-4 text-xl font-semibold text-foreground">Gallery Images</h2>
         {tank.gallery.length === 0 ? (
           <div className="rounded-lg border-2 border-dashed border-muted-foreground/25 p-12 text-center">
             <Icon name="camera" className="mx-auto mb-4 h-12 w-12 text-muted-foreground/50" />
@@ -426,7 +427,7 @@ export default function TankGalleryPage() {
 
       {/* Edit Image Modal */}
       {editingImage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 text-foreground">
           <div className="w-full max-w-md rounded-lg bg-background p-6">
             <h3 className="mb-4 text-lg font-semibold">Edit Image</h3>
             <div className="space-y-4">
@@ -472,7 +473,7 @@ export default function TankGalleryPage() {
 
       {/* Delete Confirmation Modal */}
       {deletingImage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 text-foreground">
           <div className="w-full max-w-md rounded-lg bg-background p-6">
             <div className="text-center">
               <Icon name="trash" className="h-12 w-12 text-destructive mx-auto mb-4" />
