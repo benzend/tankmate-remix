@@ -389,3 +389,7 @@ Also, summarize the fish count data into a JSON format. For each fish species or
 	return redirect('/dashboard/tanks/' + tank.id)
 }
 
+export async function updateTank(request: Request) {
+}
+
+

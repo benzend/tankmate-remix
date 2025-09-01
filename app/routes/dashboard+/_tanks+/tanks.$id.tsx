@@ -28,6 +28,8 @@ import { DateFrom, humanize, toTitleCase } from "#app/utils/misc.js";
 import { cn, formatDateBasedOnRecency } from "#app/utils/misc.tsx";
 import { Icon } from "#app/components/ui/icon.js";
 import { getMeasurementFromParameter } from "../_parameter-log+/parameter-log.new";
+import { Button } from "#app/components/ui/button.js";
+import { UploadButton } from "#app/utils/uploadthing.js";
 Chart.register(CategoryScale);
 Chart.register(LinearScale);
 Chart.register(PointElement);
@@ -168,7 +170,15 @@ export default function TankPage() {
   const tankImageUrls = tank.fishTankScores
     .map((s) => s.imageUrl)
     .filter(Boolean);
-  const latestImage = tankImageUrls[tankImageUrls.length - 1];
+  const latestImage = tankImageUrls[tankImageUrls.length - 1] || tank.imageUrl;
+
+  const updateImageUrl = (url: string) => {
+    const formData = new FormData();
+    formData.append("tankId", tank.id);
+    formData.append("imageUrl", url);
+    submit(formData, { method: "POST", action: `/dashboard/tanks/${tank.id}/update` });
+    tank.imageUrl = url;
+  };
 
   return (
     <div>
@@ -224,9 +234,30 @@ export default function TankPage() {
             - {tank.volume} Gal
           </span>
         )}
-        {latestImage && (
+        {latestImage ? (
           <div className="mb-10">
             <img src={latestImage} width="500" height="auto" />
+
+            <UploadButton
+              className="w-full md:w-40 mt-2 mb-5"
+              appearance={{
+                button: 'w-full'
+              }}
+              endpoint='imageUploader'
+              onClientUploadComplete={(data) => {
+                updateImageUrl(data[0]?.url || '');
+              }}
+              onUploadError={(error) => {
+                console.log("onUploadError", error);
+                alert('Upload error!');
+              }}
+            />
+          </div>
+        ) : (
+          <div className="my-10">
+            <Button variant="outline" size="full">
+            + Add Image
+            </Button>
           </div>
         )}
       </header>

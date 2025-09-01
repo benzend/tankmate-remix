@@ -5,7 +5,7 @@ import {
   MetaFunction,
 } from '@remix-run/node'
 import { Form, json, redirect, useFetcher } from '@remix-run/react'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { Tooltip } from 'react-tooltip'
 import { z } from 'zod'
 import { Input } from '#app/components/ui/input.js'
@@ -13,6 +13,7 @@ import { type action as cloudinaryAction } from '#app/routes/_image-upload+/clou
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
 import { Button } from '#app/components/ui/button.js'
+import { UploadButton } from '#app/utils/uploadthing.js'
 
 export const meta: MetaFunction = () => [{ title: 'TankMate | New Tank' }]
 
@@ -66,24 +67,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function NewTank() {
-  const imgFetcher = useFetcher<typeof cloudinaryAction>()
-  const imgUploadFormRef = useRef<HTMLFormElement | null>(null)
-
-  const handleImageChange = () => {
-    let formData = new FormData()
-
-    if (imgUploadFormRef.current) {
-      formData = new FormData(imgUploadFormRef.current)
-    }
-
-    imgFetcher.submit(formData, {
-      method: 'POST',
-      action: '/cloudinary',
-      encType: 'multipart/form-data',
-    })
-  }
-
-  const imgData = imgFetcher.data as any
+  const [imgUrl, setImgUrl] = useState<string>('');
 
   return (
     <>
@@ -99,44 +83,45 @@ export default function NewTank() {
             <Tooltip id="image-url-tooltip" className="absolute"></Tooltip>
           </label>
           <br />
-          <imgFetcher.Form
-            action="/cloudinary"
-            method="POST"
-            encType="multipart/form-data"
-            id="image-upload-form"
-            className="mt-3 w-80"
-            ref={imgUploadFormRef}
-          >
-            {imgData && (
-              <img
-                src={imgData.imgSource}
-                width="300px"
-                height="auto"
-                className="mb-4"
-                alt="uploaded fish tank"
-              />
-            )}
+          <UploadButton
+          className="w-full md:w-40 mt-2 mb-5"
+          appearance={{
+            button: 'w-full'
+          }}
+          endpoint='imageUploader'
+          onClientUploadComplete={(data) => {
+            setImgUrl(data[0]?.url || '');
+            alert('Upload complete!');
+          }}
+          onUploadError={(error) => {
+            console.log("onUploadError", error);
+            alert('Upload error!');
+          }}
+          />
 
-            <Input
-              name="img"
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
+          {imgUrl && (
+            <img
+              src={imgUrl}
+              width="300px"
+              height="auto"
+              className="mb-4"
+              alt="uploaded fish tank"
             />
-            <input
-              name="description"
-              type="text"
-              hidden
-              readOnly
-              value="Fishtank"
-            />
-          </imgFetcher.Form>
+          )}
+
+          <input
+            name="description"
+            type="text"
+            hidden
+            readOnly
+            value="Fishtank"
+          />
 
           <Form method="POST">
-            {imgData && (
+            {imgUrl && (
               <input
                 type="text"
-                value={imgData.imgSource}
+                value={imgUrl}
                 hidden
                 name="imageUrl"
               />
@@ -148,7 +133,7 @@ export default function NewTank() {
               name="name"
               type="text"
               placeholder="Living Room Tank"
-              className="w-40"
+              className="w-full md:w-40"
             />
             <br />
             <label htmlFor="volume" className="text-foreground">Volume (Gallons)</label>
@@ -157,7 +142,7 @@ export default function NewTank() {
               name="volume"
               type="number"
               placeholder="20"
-              className="w-40"
+              className="w-full md:w-40"
             />
             <br />
             <label htmlFor="waterType" className="text-foreground">Watertype</label>
@@ -165,7 +150,7 @@ export default function NewTank() {
             <select
               id="waterType"
               name="waterType"
-              className="mb-5 w-40 rounded border border-input bg-background px-2 py-2 text-foreground"
+              className="mb-5 w-full md:w-40 rounded border border-input bg-background px-2 py-2 text-foreground"
             >
               <option value="saltwater">Salt Water</option>
               <option value="freshwater">Fresh Water</option>
