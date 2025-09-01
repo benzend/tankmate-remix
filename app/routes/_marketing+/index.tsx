@@ -46,9 +46,42 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-background text-gray-100">
       {/* Hero Section */}
-      <section className="hero-section relative flex h-[650px] items-center justify-center bg-[url('/img/marketing/hero.jpg')] bg-cover bg-center text-white">
+      <section className="hero-section relative flex h-[650px] items-center justify-center bg-[url('/img/marketing/hero.jpg')] bg-cover bg-center text-white overflow-hidden">
+        {/* Animated Background Elements */}
         <div className="absolute inset-0 bg-black/50 md:bg-transparent"></div>
-        <div className="flex justify-between">
+        
+        {/* Wave Animation */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="wave wave1"></div>
+          <div className="wave wave2"></div>
+          <div className="wave wave3"></div>
+        </div>
+        
+        {/* Floating Bubbles */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="bubble bubble1"></div>
+          <div className="bubble bubble2"></div>
+          <div className="bubble bubble3"></div>
+          <div className="bubble bubble4"></div>
+          <div className="bubble bubble5"></div>
+          <div className="bubble bubble6"></div>
+        </div>
+        
+        {/* Light Refraction Effect */}
+        <div className="absolute inset-0">
+          <div className="light-shimmer shimmer1"></div>
+          <div className="light-shimmer shimmer2"></div>
+          <div className="light-shimmer shimmer3"></div>
+        </div>
+        
+        {/* Fish Silhouettes */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="fish fish1">🐠</div>
+          <div className="fish fish2">🐟</div>
+          <div className="fish fish3">🐡</div>
+        </div>
+        
+        <div className="flex justify-between relative z-10">
           <div role="presentation"></div>
           <div className="relative px-4 md:w-1/2">
             <h1 className="font-serif leading-normal lg:leading-snug mb-6 text-4xl font-extrabold drop-shadow-lg lg:text-6xl animate-in fade-in slide-in-from-bottom-4 duration-1000">
