@@ -15,10 +15,6 @@ import { CheckboxField, ErrorList, Field } from '#app/components/forms.tsx'
 import { Spacer } from '#app/components/spacer.tsx'
 import { StatusButton } from '#app/components/ui/status-button.tsx'
 import { login, requireAnonymous } from '#app/utils/auth.server.ts'
-import {
-	ProviderConnectionForm,
-	providerNames,
-} from '#app/utils/connections.tsx'
 import { checkHoneypot } from '#app/utils/honeypot.server.ts'
 import { useIsPending } from '#app/utils/misc.tsx'
 import { PasswordSchema, UsernameSchema } from '#app/utils/user-validation.ts'
@@ -117,7 +113,6 @@ export default function LoginPage() {
 								inputProps={{
 									...getInputProps(fields.username, { type: 'text' }),
 									autoFocus: true,
-									className: 'lowercase',
 									autoComplete: 'username',
 								}}
 								errors={fields.username.errors}
