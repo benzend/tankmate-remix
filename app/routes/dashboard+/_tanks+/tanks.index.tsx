@@ -2,11 +2,11 @@ import { invariantResponse } from '@epic-web/invariant'
 import { json, MetaFunction, type LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData, Form } from '@remix-run/react'
 import { useState } from 'react'
+import { Button } from '#app/components/ui/button.js'
+import { Icon } from '#app/components/ui/icon.js'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
 import { cn, getLatestTankScoreAverage, useDoubleCheck, useIsPending } from '#app/utils/misc.js'
-import { Button } from '#app/components/ui/button.js'
-import { Icon } from '#app/components/ui/icon.js'
 
 
 export const meta: MetaFunction = () => [{ title: 'TankMate | Tanks' }]
@@ -195,6 +195,19 @@ const Tank = ({
             </div>
           </div>
           <h3 className="text-xl mb-2 text-foreground">{name}</h3>
+          
+          {/* Gallery Link */}
+          <div className="mb-2">
+            <Link
+              to={`/dashboard/tanks/${tankId}/gallery`}
+              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Icon name="camera" className="h-3 w-3" />
+              Gallery
+            </Link>
+          </div>
+          
           {imageUrl && (
             <img
               height="100%"

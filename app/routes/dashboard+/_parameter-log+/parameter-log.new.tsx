@@ -17,7 +17,6 @@ import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
 import { dateOrNow, numberOrNull } from '#app/utils/misc.js'
 import { redirectWithToast } from '#app/utils/toast.server.js'
-import { Parameter, PARAMETERS } from '../_tanks+/tanks.$id'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await requireUserId(request, { redirectTo: '/' })
@@ -126,6 +125,8 @@ export const getMeasurementFromParameter = (parameter: Parameter): Measurement =
       return 'ppm'
     case 'temp':
       return '°F'
+    default:
+      throw new Error(`Unknown parameter: ${parameter}`)
   }
 }
 

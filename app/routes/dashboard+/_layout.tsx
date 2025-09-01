@@ -79,6 +79,19 @@ const SideNav = () => {
             Coral Analyzer
           </Button>
         </Link>
+        <Link to="/dashboard/galleries">
+          <Button
+            variant={
+              location.pathname === "/dashboard/galleries"
+                ? "sidenav-active"
+                : "sidenav"
+            }
+            size="full"
+            className="mb-4"
+          >
+            Galleries
+          </Button>
+        </Link>
       </TopOfSidenav>
 
       <BottomOfSidenav>
@@ -122,6 +135,11 @@ const Nav = () => {
               <Link to="/dashboard/coral-analyses">
                 <Button variant="outline" size="full">
                   Coral Analyzer
+                </Button>
+              </Link>
+              <Link to="/dashboard/galleries">
+                <Button variant="outline" size="full">
+                  Galleries
                 </Button>
               </Link>
             </div>
@@ -200,6 +218,7 @@ function Breadcrumbs() {
     ["maintenance"],
     ["parameter-log"],
     ["coral-analyses", "Coral Analyzer"],
+    ["galleries"],
     ["new"],
   ];
   const to = (pathPart: string) => {

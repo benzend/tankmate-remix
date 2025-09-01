@@ -7,35 +7,60 @@ const f = createUploadthing();
 
 // FileRouter for your app, can contain multiple FileRoutes
 const uploadRouter = {
-  // Define as many FileRoutes as you like, each with a unique routeSlug
+  // Single image uploader for tank main images
   imageUploader: f({
     image: {
-      /**
-       * For full list of options and defaults, see the File Route API reference
-       * @see https://docs.uploadthing.com/file-routes#route-config
-       */
       maxFileSize: "4MB",
       maxFileCount: 1,
+      acceptedFileTypes: ["image/jpeg", "image/png", "image/webp"],
     },
   })
-    // Set permissions and file types for this FileRoute
     .middleware(async ({ event }) => {
-      // This code runs on your server before upload
       const userId = await requireUserId(event.request);
-
-      // If you throw, the user will not be able to upload
       if (!userId) throw new UploadThingError("Unauthorized");
-
-      // Whatever is returned here is accessible in onUploadComplete as `metadata`
       return { userId };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      // This code RUNS ON YOUR SERVER after upload
       console.log("Upload complete for userId:", metadata.userId);
-
       console.log("file url", file.url);
+      return { uploadedBy: metadata.userId };
+    }),
 
-      // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
+  // Gallery image uploader with multiple file support
+  galleryUploader: f({
+    image: {
+      maxFileSize: "8MB",
+      maxFileCount: 10, // Allow multiple images for gallery
+      acceptedFileTypes: ["image/jpeg", "image/png", "image/webp", "image/gif"],
+    },
+  })
+    .middleware(async ({ event }) => {
+      const userId = await requireUserId(event.request);
+      if (!userId) throw new UploadThingError("Unauthorized");
+      return { userId };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log("Gallery upload complete for userId:", metadata.userId);
+      console.log("file url", file.url);
+      return { uploadedBy: metadata.userId };
+    }),
+
+  // Profile image uploader
+  profileUploader: f({
+    image: {
+      maxFileSize: "2MB",
+      maxFileCount: 1,
+      acceptedFileTypes: ["image/jpeg", "image/png", "image/webp"],
+    },
+  })
+    .middleware(async ({ event }) => {
+      const userId = await requireUserId(event.request);
+      if (!userId) throw new UploadThingError("Unauthorized");
+      return { userId };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log("Profile upload complete for userId:", metadata.userId);
+      console.log("file url", file.url);
       return { uploadedBy: metadata.userId };
     }),
 } satisfies FileRouter;
