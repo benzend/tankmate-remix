@@ -241,7 +241,7 @@ export default function TankPage() {
             <UploadButton
               className="w-full md:w-40 mt-2 mb-5"
               appearance={{
-                button: 'w-full'
+                button: 'w-full text-sm font-medium'
               }}
               endpoint='imageUploader'
               onClientUploadComplete={(data) => {
@@ -251,13 +251,26 @@ export default function TankPage() {
                 console.log("onUploadError", error);
                 alert('Upload error!');
               }}
+              content={{ button: '+ Update Image' }}
             />
           </div>
         ) : (
           <div className="my-10">
-            <Button variant="outline" size="full">
-            + Add Image
-            </Button>
+            <UploadButton
+              className="w-full md:w-40 mt-2 mb-5"
+              appearance={{
+                button: 'w-full text-sm font-medium'
+              }}
+              endpoint='imageUploader'
+              onClientUploadComplete={(data) => {
+                updateImageUrl(data[0]?.url || '');
+              }}
+              onUploadError={(error) => {
+                console.log("onUploadError", error);
+                alert('Upload error!');
+              }}
+              content={{ button: '+ Add Image' }}
+            />
           </div>
         )}
       </header>

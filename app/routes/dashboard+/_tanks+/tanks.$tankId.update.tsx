@@ -1,6 +1,5 @@
 import { requireUserId } from "#app/utils/auth.server.js";
 import { prisma } from "#app/utils/db.server.js";
-import { updateTank } from "#app/utils/tank.server.js";
 import { redirectWithToast } from "#app/utils/toast.server.js";
 
 export async function action({ request, params }: { request: Request; params: { tankId: string } }) {

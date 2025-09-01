@@ -84,19 +84,20 @@ export default function NewTank() {
           </label>
           <br />
           <UploadButton
-          className="w-full md:w-40 mt-2 mb-5"
-          appearance={{
-            button: 'w-full'
-          }}
-          endpoint='imageUploader'
-          onClientUploadComplete={(data) => {
-            setImgUrl(data[0]?.url || '');
-            alert('Upload complete!');
-          }}
-          onUploadError={(error) => {
-            console.log("onUploadError", error);
-            alert('Upload error!');
-          }}
+            className="w-full md:w-40 mt-2 mb-5"
+            appearance={{
+              button: 'w-full text-sm font-medium'
+            }}
+            endpoint='imageUploader'
+            onClientUploadComplete={(data) => {
+              setImgUrl(data[0]?.url || '');
+              alert('Upload complete!');
+            }}
+            onUploadError={(error) => {
+              console.log("onUploadError", error);
+              alert('Upload error!');
+            }}
+            content={{ button: '+ Add Image' }}
           />
 
           {imgUrl && (
