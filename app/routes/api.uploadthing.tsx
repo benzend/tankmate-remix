@@ -12,7 +12,6 @@ const uploadRouter = {
     image: {
       maxFileSize: "4MB",
       maxFileCount: 1,
-      acceptedFileTypes: ["image/jpeg", "image/png", "image/webp"],
     },
   })
     .middleware(async ({ event }) => {
@@ -31,7 +30,6 @@ const uploadRouter = {
     image: {
       maxFileSize: "8MB",
       maxFileCount: 10, // Allow multiple images for gallery
-      acceptedFileTypes: ["image/jpeg", "image/png", "image/webp", "image/gif"],
     },
   })
     .middleware(async ({ event }) => {
@@ -50,7 +48,6 @@ const uploadRouter = {
     image: {
       maxFileSize: "2MB",
       maxFileCount: 1,
-      acceptedFileTypes: ["image/jpeg", "image/png", "image/webp"],
     },
   })
     .middleware(async ({ event }) => {
