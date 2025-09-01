@@ -80,6 +80,17 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
           imageUrl: true,
         },
       },
+      gallery: {
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          imageUrl: true,
+          altText: true,
+          createdAt: true,
+        },
+        orderBy: { createdAt: "desc" },
+      },
       fishTankMaintenances: {
         select: {
           id: true,
@@ -221,7 +232,7 @@ export default function TankOverviewPage() {
         )}
         {latestImage ? (
           <div className="mb-10">
-            <img src={latestImage} width="500" height="auto" />
+            <img src={latestImage} className="h-40 w-auto object-cover my-4" />
 
             <UploadButton
               className="w-full md:w-40 mt-2 mb-5"
@@ -259,6 +270,8 @@ export default function TankOverviewPage() {
           </div>
         )}
 
+        <GalleryPreview tankId={tank.id} images={tank.gallery} />
+
         {/* Gallery Link */}
         <div className="mb-6">
           <Link
@@ -270,20 +283,6 @@ export default function TankOverviewPage() {
           </Link>
         </div>
       </header>
-
-      {/* Gallery Preview */}
-      <div className="mb-10">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Recent Gallery Images</h2>
-          <Link
-            to={`/dashboard/tanks/${tank.id}/gallery`}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            View All →
-          </Link>
-        </div>
-        <GalleryPreview tankId={tank.id} />
-      </div>
 
       <div className="mt-10">
         <ParameterLogs tank={tank} />
@@ -404,57 +403,15 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
   );
 };
 
-const GalleryPreview = ({ tankId }: { tankId: string }) => {
-  const [galleryImages, setGalleryImages] = useState<Array<{
-    id: string;
-    title: string | null;
-    description: string | null;
-    imageUrl: string;
-    altText: string | null;
-    createdAt: string;
-  }>>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchGalleryImages() {
-      try {
-        const response = await fetch(`/dashboard/tanks/${tankId}/gallery`);
-        if (response.ok) {
-          const data = await response.json() as {
-            tank: {
-              gallery: Array<{
-                id: string;
-                title: string | null;
-                description: string | null;
-                imageUrl: string;
-                altText: string | null;
-                createdAt: string;
-              }>
-            }
-          };
-          setGalleryImages(data.tank.gallery.slice(0, 3)); // Show only first 3 images
-        }
-      } catch (error) {
-        console.error('Failed to fetch gallery images:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchGalleryImages().catch(error => {
-      console.error('Failed to fetch gallery images:', error);
-    });
-  }, [tankId]);
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  if (galleryImages.length === 0) {
+const GalleryPreview = ({ tankId, images }: { tankId: string; images: Array<{
+  id: string;
+  title: string | null;
+  description: string | null;
+  imageUrl: string;
+  altText: string | null;
+  createdAt: string;
+}> }) => {
+  if (images.length === 0) {
     return (
       <div className="rounded-lg border-2 border-dashed border-muted-foreground/25 p-8 text-center">
         <Icon name="camera" className="mx-auto mb-4 h-12 w-12 text-muted-foreground/50" />
@@ -470,13 +427,13 @@ const GalleryPreview = ({ tankId }: { tankId: string }) => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {galleryImages.map((image) => (
+    <div className="flex flex-wrap gap-4 mb-4">
+      {images.map((image) => (
         <div key={image.id} className="group relative overflow-hidden rounded-lg border bg-card">
           <img
             src={image.imageUrl}
             alt={image.altText || image.title || "Fish tank image"}
-            className="h-32 w-full object-cover transition-transform group-hover:scale-105"
+            className="h-32 w-auto object-cover transition-transform group-hover:scale-105"
           />
 
           {/* Image Info Overlay */}
