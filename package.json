@@ -62,6 +62,7 @@
     "@sentry/profiling-node": "^8.18.0",
     "@sentry/remix": "^8.18.0",
     "@uploadthing/react": "^7.1.5",
+    "@vemetric/react": "^0.5.5",
     "address": "^2.0.3",
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^11.1.2",

@@ -5,6 +5,7 @@ import {
 	type LinksFunction,
 	type MetaFunction,
 } from '@remix-run/node'
+import { VemetricScript } from '@vemetric/react';
 import {
 	Links,
 	Meta,
@@ -162,6 +163,7 @@ function Document({
 				<Links />
 			</head>
 			<body className="bg-background text-foreground">
+        <VemetricScript token={process.env.VEMETRIC_TOKEN!} />
 				{children}
 				<script
 					nonce={nonce}
