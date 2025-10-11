@@ -37,7 +37,7 @@ export default function DashboardLayout() {
   return (
     <main className="bg-background text-gray-100">
       <Nav />
-      <div className="flex h-[calc(100vh-98px)]">
+      <div className="flex min-h-[calc(100vh-98px)] pt-28">
         <SideNav />
         <div className="w-full overflow-y-auto px-6 pt-4">
           <div className="pb-10">
@@ -122,9 +122,10 @@ const Nav = () => {
   }, [location.pathname]);
 
   return (
-    <>
+    <div className="max-w-screen overflow-hidden">
       {navOpen && (
         <nav className="z-10 fixed left-0 top-0 h-screen w-screen bg-accent-background px-10">
+
           <div className="flex h-[calc(100vh-200px)] flex-col justify-between mt-32">
             <div className="text-center">
               <Link to="/dashboard">
@@ -163,7 +164,7 @@ const Nav = () => {
         </nav>
       )}
 
-      <header className="flex justify-between px-10 py-6 z-10 relative">
+      <nav className="flex fixed top-0 left-0 justify-between px-10 py-6 z-10 w-full bg-background">
         <div className="flex items-center gap-20">
           <Logo to="/dashboard" mode="follow-theme" />
           <div className="ml-2">
@@ -205,8 +206,8 @@ const Nav = () => {
             </div>
           </button>
         </div>
-      </header>
-    </>
+      </nav>
+    </div>
   );
 };
 
