@@ -10,7 +10,7 @@ const uploadRouter = {
   // Single image uploader for tank main images
   imageUploader: f({
     image: {
-      maxFileSize: "4MB",
+      maxFileSize: "1GB",
       maxFileCount: 1,
     },
   })
@@ -46,7 +46,7 @@ const uploadRouter = {
   // Profile image uploader
   profileUploader: f({
     image: {
-      maxFileSize: "2MB",
+      maxFileSize: "1GB",
       maxFileCount: 1,
     },
   })
