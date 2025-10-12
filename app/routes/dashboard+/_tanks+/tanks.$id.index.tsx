@@ -136,6 +136,7 @@ export default function TankOverviewPage() {
 
   const [editName, setEditName] = useState(tank.name);
   const [editingName, setEditingName] = useState(false);
+  const [imageModalOpen, setImageModalOpen] = useState(false);
 
   const submit = useSubmit();
 
@@ -155,6 +156,14 @@ export default function TankOverviewPage() {
     const formData = new FormData();
     formData.append("name", editName);
     submit(formData, { method: "POST" });
+  };
+
+  const handleImageClick = () => {
+    setImageModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setImageModalOpen(false);
   };
 
   useEffect(() => {
@@ -207,7 +216,7 @@ export default function TankOverviewPage() {
             </button>
           </div>
         ) : (
-          <>
+          <div className="flex justify-between">
             <div className="flex gap-4 align-baseline">
               <h1 className="cursor-pointer text-center text-2xl font-bold text-foreground lg:text-left lg:text-3xl">
                 {tank.name}
@@ -219,7 +228,19 @@ export default function TankOverviewPage() {
                 Edit
               </button>
             </div>
-          </>
+
+            {/* Gallery Link */}
+            <div>
+              <Link
+                to={`/dashboard/tanks/${tank.id}/gallery`}
+                className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+              >
+                <Icon name="camera" className="h-4 w-4" />
+                View Gallery
+              </Link>
+            </div>
+
+          </div>
         )}
 
         <span className="capitalize text-muted-foreground">
@@ -232,22 +253,11 @@ export default function TankOverviewPage() {
         )}
         {latestImage ? (
           <div className="mb-10">
-            <img src={latestImage} className="h-40 w-auto object-cover my-4" />
-
-            <UploadButton
-              className="w-full md:w-40 mt-2 mb-5"
-              appearance={{
-                button: 'w-full text-sm font-medium'
-              }}
-              endpoint='imageUploader'
-              onClientUploadComplete={(data) => {
-                updateImageUrl(data[0]?.ufsUrl || '');
-              }}
-              onUploadError={(error) => {
-                console.log("onUploadError", error);
-                alert('Upload error!');
-              }}
-              content={{ button: '+ Update Image' }}
+            <img 
+              src={latestImage} 
+              className="h-40 w-auto object-cover my-4 cursor-pointer hover:opacity-80 transition-opacity" 
+              onClick={handleImageClick}
+              alt="Tank image"
             />
           </div>
         ) : (
@@ -270,18 +280,6 @@ export default function TankOverviewPage() {
           </div>
         )}
 
-        <GalleryPreview tankId={tank.id} images={tank.gallery} />
-
-        {/* Gallery Link */}
-        <div className="mb-6">
-          <Link
-            to={`/dashboard/tanks/${tank.id}/gallery`}
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
-          >
-            <Icon name="camera" className="h-4 w-4" />
-            View Gallery
-          </Link>
-        </div>
       </header>
 
       <div className="mt-10">
@@ -321,6 +319,45 @@ export default function TankOverviewPage() {
           </div>
         </div>
       </div>
+
+      {/* Image Modal */}
+      {imageModalOpen && latestImage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75" onClick={handleCloseModal}>
+          <div className="relative max-w-4xl max-h-[90vh] p-4" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={handleCloseModal}
+              className="absolute -top-2 right-0 z-10 rounded-full h-10 w-10 text-white hover:bg-gray-200 transition-colors"
+            >
+              <Icon name="cross-1" className="h-4 w-4" />
+            </button>
+            
+            <img
+              src={latestImage}
+              alt="Tank image"
+              className="max-w-full max-h-[80vh] object-contain rounded-lg"
+            />
+            
+            <div className="mt-4 flex justify-center">
+              <UploadButton
+                className="w-40"
+                appearance={{
+                  button: 'w-full text-sm font-medium'
+                }}
+                endpoint='imageUploader'
+                onClientUploadComplete={(data) => {
+                  updateImageUrl(data[0]?.ufsUrl || '');
+                  setImageModalOpen(false);
+                }}
+                onUploadError={(error) => {
+                  console.log("onUploadError", error);
+                  alert('Upload error!');
+                }}
+                content={{ button: '+ Update Image' }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 
@@ -398,56 +435,6 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
           </div>
         </Link>
       </div>
-    </div>
-  );
-};
-
-const GalleryPreview = ({ tankId, images }: { tankId: string; images: Array<{
-  id: string;
-  title: string | null;
-  description: string | null;
-  imageUrl: string;
-  altText: string | null;
-  createdAt: string;
-}> }) => {
-  if (images.length === 0) {
-    return (
-      <div className="rounded-lg border-2 border-dashed border-muted-foreground/25 p-8 text-center">
-        <Icon name="camera" className="mx-auto mb-4 h-12 w-12 text-muted-foreground/50" />
-        <p className="text-muted-foreground">No gallery images yet</p>
-        <Link
-          to={`/dashboard/tanks/${tankId}/gallery`}
-          className="text-sm text-primary hover:underline"
-        >
-          Add your first image →
-        </Link>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex flex-wrap gap-4 mb-4">
-      {images.map((image) => (
-        <div key={image.id} className="group relative overflow-hidden rounded-lg border bg-card">
-          <img
-            src={image.imageUrl}
-            alt={image.altText || image.title || "Fish tank image"}
-            className="h-32 w-auto object-cover transition-transform group-hover:scale-105"
-          />
-
-          {/* Image Info Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-            <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
-              {image.title && (
-                <h3 className="font-semibold text-sm mb-1">{image.title}</h3>
-              )}
-              {image.description && (
-                <p className="text-xs text-gray-200 line-clamp-2">{image.description}</p>
-              )}
-            </div>
-          </div>
-        </div>
-      ))}
     </div>
   );
 };

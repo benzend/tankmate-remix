@@ -18,6 +18,9 @@ import { requireUserId } from "#app/utils/auth.server.js";
 import { prisma } from "#app/utils/db.server.js";
 import { UploadButton, UploadDropzone } from "#app/utils/uploadthing.js";
 import { formatDateBasedOnRecency, useIsPending } from "#app/utils/misc.tsx";
+import { Input } from "#app/components/ui/input.tsx";
+import { Label } from "#app/components/ui/label.tsx";
+import { Textarea } from "#app/components/ui/textarea.tsx";
 
 export const meta: MetaFunction = () => [{ title: "TankMate | Tank Gallery" }];
 
@@ -322,8 +325,8 @@ export default function TankGalleryPage() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Title (optional)</label>
-                <input
+                <Label className="block text-sm font-medium mb-2">Title (optional)</Label>
+                <Input
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
@@ -332,22 +335,22 @@ export default function TankGalleryPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Alt Text (optional)</label>
-                <input
+                <Label className="block text-sm font-medium mb-2">Alt Text (optional)</Label>
+                <Input
                   type="text"
                   value={formData.altText}
                   onChange={(e) => setFormData(prev => ({ ...prev, altText: e.target.value }))}
-                  className="w-full rounded border px-3 py-2"
+                  className="w-full rounded border px-3 py-2 text-foreground"
                   placeholder="e.g., Beautiful reef tank with colorful fish"
                 />
               </div>
             </div>
             <div className="mt-4">
-              <label className="block text-sm font-medium mb-2">Description (optional)</label>
-              <textarea
+              <Label className="block text-sm font-medium mb-2">Description (optional)</Label>
+              <Textarea
                 value={formData.description}
                 onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                className="w-full rounded border px-3 py-2"
+                className="w-full rounded border px-3 py-2 text-foreground"
                 rows={3}
                 placeholder="Describe what's special about this photo..."
               />
@@ -432,8 +435,8 @@ export default function TankGalleryPage() {
             <h3 className="mb-4 text-lg font-semibold">Edit Image</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Title</label>
-                <input
+                <Label className="block text-sm font-medium mb-2">Title</Label>
+                <Input
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
@@ -441,8 +444,8 @@ export default function TankGalleryPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Description</label>
-                <textarea
+                <Label className="block text-sm font-medium mb-2">Description</Label>
+                <Textarea
                   value={formData.description}
                   onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   className="w-full rounded border px-3 py-2"
@@ -450,8 +453,8 @@ export default function TankGalleryPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Alt Text</label>
-                <input
+                <Label className="block text-sm font-medium mb-2">Alt Text</Label>
+                <Input
                   type="text"
                   value={formData.altText}
                   onChange={(e) => setFormData(prev => ({ ...prev, altText: e.target.value }))}
