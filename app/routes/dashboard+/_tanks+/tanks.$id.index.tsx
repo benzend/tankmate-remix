@@ -411,7 +411,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
         {tank.parameterLogs.length ? (
           <div
             className={cn(
-              "grid grid-cols-2 gap-4",
+              "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4",
             )}
           >
             <ParameterChart tank={tank} parameter="temp" />
