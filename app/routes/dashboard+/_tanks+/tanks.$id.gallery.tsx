@@ -40,28 +40,32 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const intent = data.get("intent");
 
   if (intent === "add") {
-    const imageUrl = data.get("imageUrl");
-    const title = data.get("title");
-    const description = data.get("description");
-    const altText = data.get("altText");
+    const imageUrls = data.getAll("imageUrls");
+    const titles = data.getAll("titles");
+    const descriptions = data.getAll("descriptions");
+    const altTexts = data.getAll("altTexts");
 
-    if (typeof imageUrl !== "string" || !imageUrl) {
-      return json({ error: "Image URL is required", success: false });
+    if (!imageUrls.length || imageUrls.some(url => typeof url !== "string" || !url)) {
+      return json({ error: "At least one valid image URL is required", success: false });
     }
 
     try {
-      await prisma.tankGallery.create({
-        data: {
-          imageUrl,
-          title: typeof title === "string" ? title : null,
-          description: typeof description === "string" ? description : null,
-          altText: typeof altText === "string" ? altText : null,
-          fishTankId: tank.id,
-        },
+      const imagesToCreate = imageUrls.map((url, index) => ({
+        imageUrl: url as string,
+        title: typeof titles[index] === "string" && titles[index] ? titles[index] as string : null,
+        description: typeof descriptions[index] === "string" && descriptions[index] ? descriptions[index] as string : null,
+        altText: typeof altTexts[index] === "string" && altTexts[index] ? altTexts[index] as string : null,
+        fishTankId: tank.id,
+      }));
+
+      await prisma.tankGallery.createMany({
+        data: imagesToCreate,
       });
-      return json({ error: null, success: true, intent: "add" });
-    } catch {
-      return json({ error: "Failed to add image to gallery", success: false });
+
+      return json({ error: null, success: true, intent: "add", count: imageUrls.length });
+    } catch (error) {
+      console.error("Failed to add images to gallery:", error);
+      return json({ error: "Failed to add images to gallery", success: false });
     }
   }
 
@@ -145,6 +149,7 @@ export default function TankGalleryPage() {
   const { tank } = useLoaderData<typeof loader>();
   const submit = useSubmit();
   const isPending = useIsPending();
+  const [showUploadForm, setShowUploadForm] = useState(false);
 
   const [isAdding, setIsAdding] = useState(false);
   const [editingImage, setEditingImage] = useState<string | null>(null);
@@ -166,19 +171,22 @@ export default function TankGalleryPage() {
   const handleSubmitAdd = () => {
     if (tempImages.length === 0) return;
 
-    // Add each image to the gallery
+    // Create a single FormData with all images
+    const data = new FormData();
+    data.append("intent", "add");
+    
+    // Add all image URLs and metadata
     tempImages.forEach((image, index) => {
-      const data = new FormData();
-      data.append("intent", "add");
-      data.append("imageUrl", image.url);
-      data.append("title", formData.title || `Image ${index + 1}`);
-      data.append("description", formData.description);
-      data.append("altText", formData.altText || image.name);
-      
-      submit(data, { method: "POST" });
+      data.append("imageUrls", image.url);
+      data.append("titles", formData.title || `Image ${index + 1}`);
+      data.append("descriptions", formData.description);
+      data.append("altTexts", formData.altText || image.name);
     });
+
+    submit(data, { method: "POST" });
     
     setIsAdding(false);
+    setShowUploadForm(false);
     setFormData({ title: "", description: "", altText: "" });
     setTempImages([]);
   };
@@ -242,130 +250,114 @@ export default function TankGalleryPage() {
       </header>
 
       {/* Add Image Section */}
-      <div className="mb-8 rounded-lg border p-6">
-        <h2 className="mb-4 text-xl font-semibold text-foreground">Add New Images</h2>
-        <div className="space-y-4">
-          {/* Upload Button */}
-          <div className="flex flex-wrap gap-4">
-            <UploadButton
-              className="w-full md:w-40"
-              appearance={{
-                button: 'w-full text-sm font-medium'
-              }}
-              endpoint='galleryUploader'
-              onClientUploadComplete={(data) => {
-                const uploadedFiles = data.map(file => ({
-                  url: file.url,
-                  name: file.name || 'gallery-image'
-                }));
-                handleAddImages(uploadedFiles);
-              }}
-              onUploadError={(error) => {
-                console.log("onUploadError", error);
-                alert('Upload error!');
-              }}
-              content={{ button: '+ Upload Images' }}
-            />
+      {!showUploadForm && <button className="mb-10 text-xl font-semibold text-foreground" onClick={() => setShowUploadForm(true)}>+ Add New Images</button> }
+      {showUploadForm && (
+        <div className="mb-8 rounded-lg border p-6">
+          <div className="space-y-4">
+            {/* Upload Dropzone */}
+              <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8">
+                <UploadDropzone
+                  endpoint='galleryUploader'
+                  onClientUploadComplete={(data) => {
+                    const uploadedFiles = data.map(file => ({
+                      url: file.ufsUrl,
+                      name: file.name || 'gallery-image'
+                    }));
+                    handleAddImages(uploadedFiles);
+                  }}
+                  onUploadError={(error) => {
+                    console.log("onUploadError", error);
+                    alert('Upload error!');
+                  }}
+                  appearance={{
+                    label: "Drop images here or click to upload",
+                    allowedContent: "Images up to 8MB (JPEG, PNG, WebP, GIF)",
+                    button: "Choose Files",
+                  }}
+                />
+              </div>
           </div>
 
-          {/* Upload Dropzone */}
-          <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8">
-            <UploadDropzone
-              endpoint='galleryUploader'
-              onClientUploadComplete={(data) => {
-                const uploadedFiles = data.map(file => ({
-                  url: file.url,
-                  name: file.name || 'gallery-image'
-                }));
-                handleAddImages(uploadedFiles);
-              }}
-              onUploadError={(error) => {
-                console.log("onUploadError", error);
-                alert('Upload error!');
-              }}
-              appearance={{
-                label: "Drop images here or click to upload",
-                allowedContent: "Images up to 8MB (JPEG, PNG, WebP, GIF)",
-                button: "Choose Files",
-              }}
-            />
-          </div>
-        </div>
+          {/* Add Image Form */}
+          {isAdding && (
+            <div className="mt-4 rounded border p-4 text-foreground">
+              {/* Image Preview */}
+              {tempImages.length > 0 && (
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-2">
+                    Image Preview ({tempImages.length} image{tempImages.length !== 1 ? 's' : ''})
+                  </label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {tempImages.map((image, index) => (
+                      <div key={index} className="relative">
+                        <img
+                          src={image.url}
+                          alt={`Preview ${index + 1}`}
+                          className="h-24 w-full object-cover rounded border"
+                        />
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setTempImages(prev => prev.filter((_, i) => i !== index))}
+                          className="absolute top-1 right-1 h-6 w-6 p-0"
+                        >
+                          <Icon name="cross-1" className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-        {/* Add Image Form */}
-        {isAdding && (
-          <div className="mt-4 rounded border p-4 text-foreground">
-            {/* Image Preview */}
-            {tempImages.length > 0 && (
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">
-                  Image Preview ({tempImages.length} image{tempImages.length !== 1 ? 's' : ''})
-                </label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {tempImages.map((image, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={image.url}
-                        alt={`Preview ${index + 1}`}
-                        className="h-24 w-full object-cover rounded border"
-                      />
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setTempImages(prev => prev.filter((_, i) => i !== index))}
-                        className="absolute top-1 right-1 h-6 w-6 p-0"
-                      >
-                        <Icon name="cross-1" className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label className="block text-sm font-medium mb-2">Title (optional)</Label>
+                  <Input
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                    className="w-full rounded border px-3 py-2"
+                    placeholder="e.g., Full Tank Shot"
+                  />
+                </div>
+                <div>
+                  <Label className="block text-sm font-medium mb-2">Alt Text (optional)</Label>
+                  <Input
+                    type="text"
+                    value={formData.altText}
+                    onChange={(e) => setFormData(prev => ({ ...prev, altText: e.target.value }))}
+                    className="w-full rounded border px-3 py-2 text-foreground"
+                    placeholder="e.g., Beautiful reef tank with colorful fish"
+                  />
                 </div>
               </div>
-            )}
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label className="block text-sm font-medium mb-2">Title (optional)</Label>
-                <Input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                  className="w-full rounded border px-3 py-2"
-                  placeholder="e.g., Full Tank Shot"
-                />
-              </div>
-              <div>
-                <Label className="block text-sm font-medium mb-2">Alt Text (optional)</Label>
-                <Input
-                  type="text"
-                  value={formData.altText}
-                  onChange={(e) => setFormData(prev => ({ ...prev, altText: e.target.value }))}
+              <div className="mt-4">
+                <Label className="block text-sm font-medium mb-2">Description (optional)</Label>
+                <Textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   className="w-full rounded border px-3 py-2 text-foreground"
-                  placeholder="e.g., Beautiful reef tank with colorful fish"
+                  rows={3}
+                  placeholder="Describe what's special about this photo..."
                 />
               </div>
+              <div className="mt-4 flex gap-2">
+                <Button onClick={handleSubmitAdd} disabled={tempImages.length === 0 || isPending}>
+                  {isPending ? "Adding..." : `Add ${tempImages.length} Image${tempImages.length !== 1 ? 's' : ''} to Gallery`}
+                </Button>
+                <Button variant="outline" onClick={handleCancel} disabled={isPending}>
+                  Cancel
+                </Button>
+              </div>
             </div>
-            <div className="mt-4">
-              <Label className="block text-sm font-medium mb-2">Description (optional)</Label>
-              <Textarea
-                value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                className="w-full rounded border px-3 py-2 text-foreground"
-                rows={3}
-                placeholder="Describe what's special about this photo..."
-              />
-            </div>
-            <div className="mt-4 flex gap-2">
-              <Button onClick={handleSubmitAdd} disabled={tempImages.length === 0 || isPending}>
-                {isPending ? "Adding..." : `Add ${tempImages.length} Image${tempImages.length !== 1 ? 's' : ''} to Gallery`}
-              </Button>
-              <Button variant="outline" onClick={handleCancel} disabled={isPending}>
-                Cancel
-              </Button>
-            </div>
+          )}
+
+          {/* Cancel Button */}
+          <div className="text-right">
+            <button className="mt-4 text-xl font-semibold text-foreground" onClick={() => setShowUploadForm(false)}>Cancel</button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Gallery Grid */}
       <div className="mb-8">

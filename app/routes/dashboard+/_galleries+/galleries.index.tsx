@@ -235,6 +235,7 @@ export default function DashboardGalleriesPage() {
     submit(data, { method: "POST" });
 
     setIsAdding(false);
+    setShowUploadForm(false);
     setFormData({ title: "", description: "", altText: "", tankId: "" });
     setTempImages([]);
   };
