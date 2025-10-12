@@ -18,6 +18,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       alk: true,
       temp: true,
       magnesium: true,
+      salinity: true,
       fishTank: {
         select: {
           id: true,
@@ -88,6 +89,13 @@ export default function ParameterLogPage() {
         <>
           <label className="text-xs text-foreground">Magnesium</label>
           <p className="text-foreground">{parameterLog.magnesium}</p>
+          <br />
+        </>
+      )}
+      {parameterLog.salinity !== null && (
+        <>
+          <label className="text-xs text-foreground">Salinity</label>
+          <p className="text-foreground">{parameterLog.salinity}</p>
           <br />
         </>
       )}

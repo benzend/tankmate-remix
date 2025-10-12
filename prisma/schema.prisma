@@ -373,6 +373,7 @@ model FishTankParameterLog {
   temp      Float?
   nitrate   Float?
   phosphate Float?
+  salinity  Float?
 
   fishTank   FishTank? @relation(fields: [fishTankId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   fishTankId String?

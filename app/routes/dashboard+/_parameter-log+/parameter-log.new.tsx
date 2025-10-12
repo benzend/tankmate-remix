@@ -61,6 +61,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const temp = numberOrNull(body.get('temp'))
   const nitrate = numberOrNull(body.get('nitrate'))
   const phosphate = numberOrNull(body.get('phosphate'))
+  const salinity = numberOrNull(body.get('salinity'))
   const createdAt = dateOrNow(body.get('createdAt'))
 
   if (typeof tankId !== 'string') {
@@ -86,6 +87,7 @@ export async function action({ request }: ActionFunctionArgs) {
       temp,
       nitrate,
       phosphate,
+      salinity,
       fishTankId: tankId,
       createdAt: createdAt ? new Date(createdAt) : new Date(),
     },
@@ -108,7 +110,7 @@ export async function action({ request }: ActionFunctionArgs) {
   )
 }
 
-type Measurement = 'dKH' | 'ppm' | 'pH' | '°F' | 'ppm'
+type Measurement = 'dKH' | 'ppm' | 'pH' | '°F' | 'ppm' | 'sg'
 
 export const getMeasurementFromParameter = (parameter: Parameter): Measurement => {
   switch (parameter) {
@@ -126,6 +128,8 @@ export const getMeasurementFromParameter = (parameter: Parameter): Measurement =
       return 'ppm'
     case 'temp':
       return '°F'
+    case 'salinity':
+      return 'sg'
     default:
       throw new Error(`Unknown parameter: ${parameter}`)
   }
@@ -147,6 +151,8 @@ const ParameterLabel = ({ parameter }: { parameter: Parameter }) => {
       return <label htmlFor="phosphate" className="text-foreground">Phosphate <span>(ppm)</span></label>
     case 'temp':
       return <label htmlFor="temp" className="text-foreground">Temp <span>(°F)</span></label>
+    case 'salinity':
+      return <label htmlFor="salinity" className="text-foreground">Salinity <span>(sg)</span></label>
   }
 }
 
@@ -166,6 +172,8 @@ const ParameterInput = ({ parameter }: { parameter: Parameter }) => {
       return <Input id="phosphate" name="phosphate" type="number" step="0.01" placeholder="0.12" />
     case 'temp':
       return <Input id="temp" name="temp" type="number" placeholder="80.0" step="0.1" />
+    case 'salinity':
+      return <Input id="salinity" name="salinity" type="number" placeholder="1.025" step="0.001" />
   }
 }
 

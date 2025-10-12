@@ -106,6 +106,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
           alk: true,
           calcium: true,
           magnesium: true,
+          salinity: true,
           pH: true,
           nitrate: true,
           phosphate: true,
@@ -382,6 +383,7 @@ type TankWithLogs = {
     alk: number | null;
     calcium: number | null;
     magnesium: number | null;
+    salinity: number | null;
     pH: number | null;
     nitrate: number | null;
     phosphate: number | null;
@@ -419,6 +421,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
             <ParameterChart tank={tank} parameter="magnesium" />
             <ParameterChart tank={tank} parameter="nitrate" />
             <ParameterChart tank={tank} parameter="phosphate" />
+            <ParameterChart tank={tank} parameter="salinity" />
           </div>
         ) : (
           <div className="border-b border-l p-2 text-sm text-accent-foreground">
@@ -470,6 +473,7 @@ export const PARAMETERS = [
   "nitrate",
   "phosphate",
   "temp",
+  "salinity",
 ] as const;
 
 export type Parameter = (typeof PARAMETERS)[number];
@@ -490,6 +494,8 @@ export const humanizeParameter = (parameter: Parameter) => {
       return "Phosphate";
     case "temp":
       return "Temperature";
+    case "salinity":
+      return "Salinity";
   }
 };
 
@@ -508,6 +514,8 @@ const getChartColorFromParameter = (parameter: Parameter) => {
     case "phosphate":
       return "#6366F1"; // indigo
     case "temp":
+      return "#F87171"; // red
+    case "salinity":
       return "#F87171"; // red
     default:
       return "#60A5FA"; // default blue
@@ -553,6 +561,11 @@ const getSuccessRangeFromParameter = (
         lower: 76,
         upper: 82,
       };
+    case "salinity":
+      return {
+        lower: 1.024,
+        upper: 1.027,
+      };
   }
 };
 
@@ -572,6 +585,8 @@ const getMinFromParameter = (parameter: Parameter): number => {
       return 0;
     case "temp":
       return 70;
+    case "salinity":
+      return 1.015;
   }
 };
 
@@ -591,6 +606,8 @@ const getMaxFromParameter = (parameter: Parameter): number => {
       return 1.0;
     case "temp":
       return 86;
+    case "salinity":
+      return 1.035;
   }
 };
 
