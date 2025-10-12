@@ -738,7 +738,7 @@ const ParameterChart = ({
           to={`/dashboard/parameter-log/new?redirectTo=${location.pathname}&tankId=${tank.id}&parameter=${parameter}`}
         >
           <span className="ml-2 text-xs text-muted-foreground">
-            + Add Log
+            + Track
           </span>
         </Link>
         <div className="flex gap-2 items-center">
