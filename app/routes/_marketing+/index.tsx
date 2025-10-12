@@ -85,12 +85,12 @@ export default function Index() {
           <div role="presentation"></div>
           <div className="relative px-4 md:w-1/2">
             <h1 className="font-serif leading-normal lg:leading-snug mb-6 text-4xl font-extrabold drop-shadow-lg lg:text-6xl animate-in fade-in slide-in-from-bottom-4 duration-1000">
-              Dive into the Future of Aquarium Care
+              Join the Future of Aquarium Care
             </h1>
             <p className="mx-auto mb-10 max-w-xl text-xl drop-shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
-              AI-powered aquarium tracking that analyzes fish counts, tank
-              health, and more. Your underwater ecosystem, optimized with the
-              latest tech.
+              Modern software tools and a thriving community that makes aquarium
+              care effortless. Connect with fellow aquarists and keep your
+              underwater ecosystem thriving.
             </p>
             <Link
               to="/signup"
@@ -127,10 +127,10 @@ export default function Index() {
               }`}
             >
               <FeatureCard
-                title="AI-Powered Insights"
-                description="Analyze fish counts, species, and tank conditions using AI-powered image recognition."
-                icon="🐠"
-                imageUrl="/img/marketing/features-ai.webp"
+                title="Smart Tracking Tools"
+                description="Intuitive parameter logging, maintenance scheduling, and progress tracking to keep your aquarium healthy."
+                icon="📊"
+                imageUrl="/img/marketing/features-realtime-stats.webp"
               />
             </div>
             <div
@@ -178,7 +178,7 @@ export default function Index() {
                 : "opacity-0 -translate-x-8"
             }`}
           >
-            Get an In-depth Analysis
+            Connect with Fellow Aquarists
           </h2>
           <p
             className={`mx-auto max-w-2xl text-xl mb-20 transition-all duration-700 delay-200 ${
@@ -187,8 +187,8 @@ export default function Index() {
                 : "opacity-0 -translate-x-8"
             }`}
           >
-            Simply snap a photo of your aquarium and let our AI generate
-            detailed insights about your fish, plants, and water conditions
+            Share photos of your aquarium with our community and get feedback,
+            tips, and inspiration from fellow hobbyists around the world
           </p>
           <img
             src="/img/marketing/prototype-example.png"
@@ -224,8 +224,7 @@ export default function Index() {
                 : "opacity-0 translate-y-8"
             }`}
           >
-            Join the aquarium enthusiasts who are using AI to revolutionize
-            their tank care.
+            Join the aquarium enthusiasts who are using modern tools and community knowledge to transform their tank care.
           </p>
           <Link
             to="/signup"
