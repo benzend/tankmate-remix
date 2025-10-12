@@ -46,6 +46,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     select: {
       id: true,
       name: true,
+      isGalleryPublished: true,
     }
   });
 
@@ -143,6 +144,43 @@ export async function action({ request }: ActionFunctionArgs) {
       return json({ error: null, success: true, intent: "update" });
     } catch {
       return json({ error: "Failed to update image", success: false });
+    }
+  }
+
+  if (intent === "toggle-publish") {
+    const tankIdToToggle = data.get("tankId");
+
+    if (typeof tankIdToToggle !== "string") {
+      return json({ error: "Tank ID is required", success: false });
+    }
+
+    try {
+      // First get the current publication status
+      const currentTank = await prisma.fishTank.findFirst({
+        where: { id: tankIdToToggle, userId },
+        select: { isGalleryPublished: true },
+      });
+
+      if (!currentTank) {
+        return json({ error: "Tank not found", success: false });
+      }
+
+      // Toggle the publication status
+      await prisma.fishTank.update({
+        where: { id: tankIdToToggle, userId },
+        data: {
+          isGalleryPublished: !currentTank.isGalleryPublished,
+        },
+      });
+
+      return json({
+        error: null,
+        success: true,
+        intent: "toggle-publish",
+        isPublished: !currentTank.isGalleryPublished
+      });
+    } catch {
+      return json({ error: "Failed to update gallery publication status", success: false });
     }
   }
 
@@ -244,6 +282,13 @@ export default function DashboardGalleriesPage() {
     setDeletingImage(null);
     setFormData({ title: "", description: "", altText: "", tankId: "" });
     setTempImages([]);
+  };
+
+  const handleTogglePublish = (tankId: string) => {
+    const data = new FormData();
+    data.append("intent", "toggle-publish");
+    data.append("tankId", tankId);
+    submit(data, { method: "POST" });
   };
 
   const tanksWithGalleries = tanks.filter(tank => {
@@ -402,7 +447,34 @@ export default function DashboardGalleriesPage() {
 
               return (
                 <div key={tank.id} className="mb-8">
-                  <h3 className="text-xl mb-4 font-semibold text-foreground">{tank.name}</h3>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-xl font-semibold text-foreground">{tank.name}</h3>
+                      <div className="flex items-center gap-2">
+                        {tank.isGalleryPublished ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                            <Icon name="check" className="h-3 w-3" />
+                            Published
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">
+                            <Icon name="lock-closed" className="h-3 w-3" />
+                            Private
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant={tank.isGalleryPublished ? "outline" : "default"}
+                      onClick={() => handleTogglePublish(tank.id)}
+                      disabled={isPending}
+                      className="flex items-center gap-2"
+                    >
+                      <Icon name={tank.isGalleryPublished ? "lock-open-1" : "lock-closed"} className="h-4 w-4" />
+                      {tank.isGalleryPublished ? "Unpublish Gallery" : "Publish Gallery"}
+                    </Button>
+                  </div>
                   <div className="grid grid-cols-4 gap-2 p-2 bg-card rounded-lg border ">
                   {tankGalleries.map((image) => (
                     <div key={image.id} className="group relative overflow-hidden rounded-lg border">

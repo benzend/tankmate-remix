@@ -20,24 +20,51 @@ export const MarketingNav = () => {
           <header className="flex h-20 justify-between"></header>
 
           <div className="flex h-[calc(100vh-100px)] flex-col justify-between">
-            <div className="text-center">
+            <div className="space-y-4 text-center">
               <Button variant="outline" size="wide">
-                <Link to="/dashboard">Dashboard</Link>
+                <Link to="/galleries">Community Galleries</Link>
               </Button>
+              <Button variant="outline" size="wide">
+                <Link to="/about">About</Link>
+              </Button>
+              <Button variant="outline" size="wide">
+                <Link to="/support">Support</Link>
+              </Button>
+              {user && (
+                <Button variant="outline" size="wide">
+                  <Link to="/dashboard">Dashboard</Link>
+                </Button>
+              )}
             </div>
 
-            <div>
-              <Form method="POST" action="/logout" className="text-center">
-                <Button variant="default" size="full" type="submit">
-                  Logout
-                </Button>
-              </Form>
-            </div>
+            {user && (
+              <div>
+                <Form method="POST" action="/logout" className="text-center">
+                  <Button variant="default" size="full" type="submit">
+                    Logout
+                  </Button>
+                </Form>
+              </div>
+            )}
           </div>
         </nav>
       )}
       <nav className="flex flex-wrap items-center justify-between gap-4 sm:flex-nowrap md:gap-8">
         <Logo />
+
+        {/* Navigation Links */}
+        <div className="hidden md:flex items-center gap-6">
+          <Link to="/galleries" className="text-white hover:text-blue-200 transition-colors font-medium">
+            Community Galleries
+          </Link>
+          <Link to="/about" className="text-white hover:text-blue-200 transition-colors font-medium">
+            About
+          </Link>
+          <Link to="/support" className="text-white hover:text-blue-200 transition-colors font-medium">
+            Support
+          </Link>
+        </div>
+
         <Actions user={user} />
       </nav>
     </header>
