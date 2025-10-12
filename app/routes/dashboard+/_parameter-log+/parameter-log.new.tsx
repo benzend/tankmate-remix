@@ -165,8 +165,7 @@ const ParameterInput = ({ parameter }: { parameter: Parameter }) => {
     case 'phosphate':
       return <Input id="phosphate" name="phosphate" type="number" step="0.01" placeholder="0.12" />
     case 'temp':
-      return <Input id="temp" name="temp" type="number" placeholder="80.0" step="0.1
-      " />
+      return <Input id="temp" name="temp" type="number" placeholder="80.0" step="0.1" />
   }
 }
 
@@ -195,7 +194,7 @@ export default function NewParameterLog() {
         )}
         <div className="mt-10">
           <Form method="POST">
-            <div className="mb-5 w-60">
+            <div className="mb-5 md:w-[800px]">
               {tankId ? (
                 <>
                   <input type="hidden" name="tankId" value={tankId} />
@@ -220,26 +219,24 @@ export default function NewParameterLog() {
                   <ParameterField parameter={parameter as Parameter} />
                 </div>
               ) : (
-                <>
-                {PARAMETERS.map((parameter) => (
-                  <>
+                <div className="grid grid-cols-2 gap-6 w-full">
+                  {PARAMETERS.map((parameter) => (
                     <ParameterField key={parameter} parameter={parameter} />
-                    <br />
-                  </>
-                ))}
-
-                </>
+                  ))}
+                </div>
               )}
-              <label htmlFor="createdAt" className="text-foreground">
-                Date
-              </label>
-              <Input
-                id="createdAt"
-                name="createdAt"
-                type="datetime-local"
-                defaultValue={toLocalISOString(new Date())}
-                placeholder="2023-01-01"
-              />
+              <div className="mt-5">
+                <label htmlFor="createdAt" className="text-foreground">
+                  Date
+                </label>
+                <Input
+                  id="createdAt"
+                  name="createdAt"
+                  type="datetime-local"
+                  defaultValue={toLocalISOString(new Date())}
+                  placeholder="2023-01-01"
+                />
+              </div>
             </div>
 
             {redirectTo && (

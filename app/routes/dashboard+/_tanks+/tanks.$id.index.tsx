@@ -241,7 +241,7 @@ export default function TankOverviewPage() {
               }}
               endpoint='imageUploader'
               onClientUploadComplete={(data) => {
-                updateImageUrl(data[0]?.url || '');
+                updateImageUrl(data[0]?.ufsUrl || '');
               }}
               onUploadError={(error) => {
                 console.log("onUploadError", error);
@@ -259,7 +259,7 @@ export default function TankOverviewPage() {
               }}
               endpoint='imageUploader'
               onClientUploadComplete={(data) => {
-                updateImageUrl(data[0]?.url || '');
+                updateImageUrl(data[0]?.ufsUrl || '');
               }}
               onUploadError={(error) => {
                 console.log("onUploadError", error);
@@ -357,23 +357,22 @@ type TankWithLogs = {
 
 const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
   const location = useLocation();
-  const [isOpen, setIsOpen] = useState(true);
   return (
-    <div className="sm:w-120 w-full">
+    <div className="w-full sm:w-120">
       <header className="flex justify-between rounded-t border p-4 text-foreground">
         Parameter Log
-        {tank.parameterLogs.length ? (
-          <button onClick={() => setIsOpen((prev) => !prev)}>
-            {isOpen ? "Collapse" : "Expand"}
-          </button>
-        ) : null}
+
+        <Link to={`/dashboard/parameter-log/new?redirectTo=${location.pathname}&tankId=${tank.id}`}>
+          <span className="text-xs text-muted-foreground">
+            + Log Parameters
+          </span>
+        </Link>
       </header>
       <div className="rounded-b border-b border-l border-r">
         {tank.parameterLogs.length ? (
           <div
             className={cn(
-              "grid grid-cols-1 sm:grid-cols-2 gap-4",
-              !isOpen && "invisible h-0",
+              "grid grid-cols-2 gap-4",
             )}
           >
             <ParameterChart tank={tank} parameter="temp" />
@@ -395,7 +394,7 @@ const ParameterLogs = ({ tank }: { tank: TankWithLogs }) => {
           to={`/dashboard/parameter-log/new?redirectTo=${location.pathname}&tankId=${tank.id}`}
         >
           <div className="w-40 rounded-b border border-t-0 p-2 text-xs text-foreground">
-            + Add Parameters
+            + Log Parameters
           </div>
         </Link>
       </div>
@@ -730,15 +729,17 @@ const ParameterChart = ({
   return (
     <div className="rounded border p-4 text-foreground">
       <h3 className="mb-2 text-lg font-bold">
-        {humanizeParameter(parameter)}
+        <span className="mr-2">{humanizeParameter(parameter)}</span>
         <Link
           to={`/dashboard/parameter-log/new?redirectTo=${location.pathname}&tankId=${tank.id}&parameter=${parameter}`}
         >
-          +
+          <span className="ml-2 text-xs text-muted-foreground">
+            + Add Log
+          </span>
         </Link>
         <div className="flex gap-2 items-center">
           <div className="text-xs text-muted-foreground">
-            Success Range: {successRange.lower} - {successRange.upper}{" "}
+            Target Range: {successRange.lower} - {successRange.upper}{" "}
             {getMeasurementFromParameter(parameter)}
           </div>
         </div>

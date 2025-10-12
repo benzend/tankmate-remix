@@ -37,7 +37,7 @@ export default function DashboardLayout() {
   return (
     <main className="bg-background text-gray-100">
       <Nav />
-      <div className="flex min-h-[calc(100vh-98px)] pt-28">
+      <div className="flex min-h-[calc(100vh-98px)] pt-28 md:pt-0">
         <SideNav />
         <div className="w-full overflow-y-auto px-6 pt-4">
           <div className="pb-10">
@@ -164,7 +164,7 @@ const Nav = () => {
         </nav>
       )}
 
-      <nav className="flex fixed top-0 left-0 justify-between px-10 py-6 z-10 w-full bg-background">
+      <nav className="flex fixed top-0 left-0 md:relative justify-between px-10 py-6 z-10 w-full bg-background">
         <div className="flex items-center gap-20">
           <Logo to="/dashboard" mode="follow-theme" />
           <div className="ml-2">
