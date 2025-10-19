@@ -731,24 +731,33 @@ const ParameterChart = ({
   const location = useLocation();
   const successRange = getSuccessRangeFromParameter(parameter);
   return (
-    <div className="rounded border p-4 text-foreground">
-      <h3 className="mb-2 text-lg font-bold">
-        <span className="mr-2">{humanizeParameter(parameter)}</span>
+    <Link 
+      to={`/dashboard/tanks/${tank.id}/parameters/${parameter}`}
+      className="block rounded border p-4 text-foreground hover:border-primary hover:shadow-md transition-all duration-200 cursor-pointer group"
+    >
+      <div className="flex justify-between items-start mb-2">
+        <h3 className="text-lg font-bold group-hover:text-primary transition-colors">
+          {humanizeParameter(parameter)}
+        </h3>
+        <span className="text-xs text-muted-foreground group-hover:text-primary/70 transition-colors">
+          → View Details
+        </span>
+      </div>
+      <div className="flex gap-2 items-center mb-2">
+        <div className="text-xs text-muted-foreground">
+          Target Range: {successRange.lower} - {successRange.upper}{" "}
+          {getMeasurementFromParameter(parameter)}
+        </div>
         <Link
           to={`/dashboard/parameter-log/new?redirectTo=${location.pathname}&tankId=${tank.id}&parameter=${parameter}`}
+          onClick={(e) => e.stopPropagation()}
+          className="text-xs text-primary hover:underline"
         >
-          <span className="ml-2 text-xs text-muted-foreground">
-            + Track
-          </span>
+          + Track
         </Link>
-        <div className="flex gap-2 items-center">
-          <div className="text-xs text-muted-foreground">
-            Target Range: {successRange.lower} - {successRange.upper}{" "}
-            {getMeasurementFromParameter(parameter)}
-          </div>
-        </div>
-      </h3>
-      <LineChart
+      </div>
+      <div className="opacity-90 group-hover:opacity-100 transition-opacity">
+        <LineChart
         data={{
           labels: tank.parameterLogs
             .filter((l) => l[parameter])
@@ -788,7 +797,8 @@ const ParameterChart = ({
         }}
         plugins={[successRangePlugin]}
       />
-    </div>
+      </div>
+    </Link>
   );
 };
 
