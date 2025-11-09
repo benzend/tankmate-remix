@@ -238,7 +238,7 @@ app.all(
   }),
 )
 
-const desiredPort = Number(process.env.PORT || 8080)
+const desiredPort = Number(process.env.PORT || 3000)
 const portToUse = await getPort({
   port: portNumbers(desiredPort, desiredPort + 100),
 })
@@ -257,7 +257,7 @@ const server = app.listen(portToUse, () => {
     )
   }
   console.log(`🚀  We have liftoff!`)
-  const localUrl = `http://0.0.0.0:${portToUse}`
+  const localUrl = `http://localhost:${portToUse}`
   let lanUrl: string | null = null
   const localIp = ipAddress() ?? 'Unknown'
   // Check if the address is a private ip
