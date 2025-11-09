@@ -16,7 +16,8 @@ dockerfile = "/other/Dockerfile"
 ignorefile = "/other/Dockerfile.dockerignore"
 
 [env]
-  PORT = "8080"
+  PORT = "8081"
+  INTERNAL_PORT = "8080"
 
 [http_service]
   internal_port = 8080
