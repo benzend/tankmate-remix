@@ -31,18 +31,18 @@ ignorefile = "/other/Dockerfile.dockerignore"
   soft_limit = 80
   hard_limit = 100
 
-  # [[http_service.checks]]
-  # type = "http"
-  # interval = "10s"
-  # grace_period = "5s"
-  # method = "GET"
-  # path = "/resources/healthcheck"
-  # timeout = "2s"
-  #
-  # [[http_service.checks]]
-  # type = "http"
-  # interval = "30s"
-  # grace_period = "10s"
-  # method = "GET"
-  # path = "/litefs/health"
-  # timeout = "5s"
+  [[http_service.checks]]
+  type = "http"
+  interval = "10s"
+  grace_period = "5s"
+  method = "GET"
+  path = "/resources/healthcheck"
+  timeout = "2s"
+
+  [[http_service.checks]]
+  type = "http"
+  interval = "30s"
+  grace_period = "10s"
+  method = "GET"
+  path = "/litefs/health"
+  timeout = "5s"
