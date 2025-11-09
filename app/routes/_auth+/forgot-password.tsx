@@ -19,6 +19,7 @@ import { sendEmail } from '#app/utils/email.server.ts'
 import { checkHoneypot } from '#app/utils/honeypot.server.ts'
 import { EmailSchema, UsernameSchema } from '#app/utils/user-validation.ts'
 import { prepareVerification } from './verify.server.ts'
+import { AuthLayout } from '#app/components/ui/auth-layout.js'
 
 export const handle: SEOHandle = {
   getSitemapEntries: () => null,
@@ -136,7 +137,7 @@ export default function ForgotPasswordRoute() {
   })
 
   return (
-    <div className="container bg-slate-950 bg-gradient-to-br from-blue-800 pb-32 pt-20">
+    <AuthLayout>
       <div className="flex flex-col justify-center">
         <div className="text-center">
           <h1 className="text-h1 text-white">Forgot Password</h1>
@@ -188,7 +189,7 @@ export default function ForgotPasswordRoute() {
           </div>
         </div>
       </div>
-    </div>
+    </AuthLayout>
   )
 }
 

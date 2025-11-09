@@ -16,6 +16,7 @@ import { requireAnonymous, resetUserPassword } from '#app/utils/auth.server.ts'
 import { useIsPending } from '#app/utils/misc.tsx'
 import { PasswordAndConfirmPasswordSchema } from '#app/utils/user-validation.ts'
 import { verifySessionStorage } from '#app/utils/verification.server.ts'
+import { AuthLayout } from '#app/components/ui/auth-layout.js'
 
 export const handle: SEOHandle = {
   getSitemapEntries: () => null,
@@ -87,7 +88,7 @@ export default function ResetPasswordPage() {
   })
 
   return (
-    <div className="bg-slate-950 bg-gradient-to-br from-blue-800  flex flex-col justify-center pb-32 pt-20">
+    <AuthLayout>
       <div className="container">
         <div className="text-center">
           <h1 className="text-h1 text-white">Password Reset</h1>
@@ -136,7 +137,7 @@ export default function ResetPasswordPage() {
           </Form>
         </div>
       </div>
-    </div>
+    </AuthLayout>
   )
 }
 

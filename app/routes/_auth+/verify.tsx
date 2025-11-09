@@ -12,9 +12,10 @@ import { StatusButton } from '#app/components/ui/status-button.tsx'
 import { checkHoneypot } from '#app/utils/honeypot.server.ts'
 import { useIsPending } from '#app/utils/misc.tsx'
 import { validateRequest } from './verify.server.ts'
+import { AuthLayout } from '#app/components/ui/auth-layout.js'
 
 export const handle: SEOHandle = {
-	getSitemapEntries: () => null,
+  getSitemapEntries: () => null,
 }
 
 export const codeQueryParam = 'code'
@@ -26,67 +27,67 @@ const VerificationTypeSchema = z.enum(types)
 export type VerificationTypes = z.infer<typeof VerificationTypeSchema>
 
 export const VerifySchema = z.object({
-	[codeQueryParam]: z.string().min(6).max(6),
-	[typeQueryParam]: VerificationTypeSchema,
-	[targetQueryParam]: z.string(),
-	[redirectToQueryParam]: z.string().optional(),
+  [codeQueryParam]: z.string().min(6).max(6),
+  [typeQueryParam]: VerificationTypeSchema,
+  [targetQueryParam]: z.string(),
+  [redirectToQueryParam]: z.string().optional(),
 })
 
 export async function action({ request }: ActionFunctionArgs) {
-	const formData = await request.formData()
-	checkHoneypot(formData)
-	return validateRequest(request, formData)
+  const formData = await request.formData()
+  checkHoneypot(formData)
+  return validateRequest(request, formData)
 }
 
 export default function VerifyRoute() {
-	const [searchParams] = useSearchParams()
-	const isPending = useIsPending()
-	const actionData = useActionData<typeof action>()
-	const parseWithZoddType = VerificationTypeSchema.safeParse(
-		searchParams.get(typeQueryParam),
-	)
-	const type = parseWithZoddType.success ? parseWithZoddType.data : null
+  const [searchParams] = useSearchParams()
+  const isPending = useIsPending()
+  const actionData = useActionData<typeof action>()
+  const parseWithZoddType = VerificationTypeSchema.safeParse(
+    searchParams.get(typeQueryParam),
+  )
+  const type = parseWithZoddType.success ? parseWithZoddType.data : null
 
-	const checkEmail = (
-		<>
-			<h1 className="text-h1 text-white">Check your email</h1>
-			<p className="mt-3 text-body-md text-gray-300">
-				We've sent you a code to verify your email address.
-			</p>
-		</>
-	)
+  const checkEmail = (
+    <>
+      <h1 className="text-h1 text-white">Check your email</h1>
+      <p className="mt-3 text-body-md text-gray-300">
+        We've sent you a code to verify your email address.
+      </p>
+    </>
+  )
 
-	const headings: Record<VerificationTypes, React.ReactNode> = {
-		onboarding: checkEmail,
-		'reset-password': checkEmail,
-		'change-email': checkEmail,
-		'2fa': (
-			<>
-				<h1 className="text-h1 text-white">Check your 2FA app</h1>
-				<p className="mt-3 text-body-md text-gray-300">
-					Please enter your 2FA code to verify your identity.
-				</p>
-			</>
-		),
-	}
+  const headings: Record<VerificationTypes, React.ReactNode> = {
+    onboarding: checkEmail,
+    'reset-password': checkEmail,
+    'change-email': checkEmail,
+    '2fa': (
+      <>
+        <h1 className="text-h1 text-white">Check your 2FA app</h1>
+        <p className="mt-3 text-body-md text-gray-300">
+          Please enter your 2FA code to verify your identity.
+        </p>
+      </>
+    ),
+  }
 
-	const [form, fields] = useForm({
-		id: 'verify-form',
-		constraint: getZodConstraint(VerifySchema),
-		lastResult: actionData?.result,
-		onValidate({ formData }) {
-			return parseWithZod(formData, { schema: VerifySchema })
-		},
-		defaultValue: {
-			code: searchParams.get(codeQueryParam),
-			type: type,
-			target: searchParams.get(targetQueryParam),
-			redirectTo: searchParams.get(redirectToQueryParam),
-		},
-	})
+  const [form, fields] = useForm({
+    id: 'verify-form',
+    constraint: getZodConstraint(VerifySchema),
+    lastResult: actionData?.result,
+    onValidate({ formData }) {
+      return parseWithZod(formData, { schema: VerifySchema })
+    },
+    defaultValue: {
+      code: searchParams.get(codeQueryParam),
+      type: type,
+      target: searchParams.get(targetQueryParam),
+      redirectTo: searchParams.get(redirectToQueryParam),
+    },
+  })
 
-	return (
-		<main className="bg-slate-950 bg-gradient-to-br from-blue-800 flex flex-col justify-center pb-32 pt-20">
+  return (
+    <AuthLayout>
       <div className="container">
         <div className="text-center">
           {type ? headings[type] : 'Invalid Verification Type'}
@@ -139,10 +140,10 @@ export default function VerifyRoute() {
           </div>
         </div>
       </div>
-		</main>
-	)
+    </AuthLayout>
+  )
 }
 
 export function ErrorBoundary() {
-	return <GeneralErrorBoundary />
+  return <GeneralErrorBoundary />
 }
