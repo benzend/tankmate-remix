@@ -1,14 +1,14 @@
 import { z } from 'zod'
 
 const schema = z.object({
-	NODE_ENV: z.enum(['production', 'development', 'test'] as const),
-	DATABASE_PATH: z.string(),
-	DATABASE_URL: z.string(),
-	SESSION_SECRET: z.string(),
-	INTERNAL_COMMAND_TOKEN: z.string(),
-	HONEYPOT_SECRET: z.string(),
+  NODE_ENV: z.enum(['production', 'development', 'test'] as const),
+  DATABASE_PATH: z.string(),
+  DATABASE_URL: z.string(),
+  SESSION_SECRET: z.string(),
+  INTERNAL_COMMAND_TOKEN: z.string(),
+  HONEYPOT_SECRET: z.string(),
   OPENAI_API_KEY: z.string().optional(),
-	CACHE_DATABASE_PATH: z.string(),
+  CACHE_DATABASE_PATH: z.string(),
 
   // images
   CLOUDINARY_CLOUD_NAME: z.string().optional(),
@@ -16,34 +16,36 @@ const schema = z.object({
   CLOUDINARY_API_SECRET: z.string().optional(),
   UPLOADTHING_TOKEN: z.string().optional(),
 
-	// If you plan on using Sentry, uncomment this line
-	// SENTRY_DSN: z.string(),
-	// If you plan to use Resend, uncomment this line
-	RESEND_API_KEY: z.string().default('MOCK_RESEND_API_KEY'),
-	// If you plan to use GitHub auth, remove the default:
-	GITHUB_CLIENT_ID: z.string().default('MOCK_GITHUB_CLIENT_ID'),
-	GITHUB_CLIENT_SECRET: z.string().default('MOCK_GITHUB_CLIENT_SECRET'),
-	GITHUB_TOKEN: z.string().default('MOCK_GITHUB_TOKEN'),
-	ALLOW_INDEXING: z.enum(['true', 'false']).optional(),
+  VEMETRIC_TOKEN: z.string().optional(),
+
+  // If you plan on using Sentry, uncomment this line
+  // SENTRY_DSN: z.string(),
+  // If you plan to use Resend, uncomment this line
+  RESEND_API_KEY: z.string().default('MOCK_RESEND_API_KEY'),
+  // If you plan to use GitHub auth, remove the default:
+  GITHUB_CLIENT_ID: z.string().default('MOCK_GITHUB_CLIENT_ID'),
+  GITHUB_CLIENT_SECRET: z.string().default('MOCK_GITHUB_CLIENT_SECRET'),
+  GITHUB_TOKEN: z.string().default('MOCK_GITHUB_TOKEN'),
+  ALLOW_INDEXING: z.enum(['true', 'false']).optional(),
 })
 
 declare global {
-	namespace NodeJS {
-		interface ProcessEnv extends z.infer<typeof schema> {}
-	}
+  namespace NodeJS {
+    interface ProcessEnv extends z.infer<typeof schema> { }
+  }
 }
 
 export function init() {
-	const parsed = schema.safeParse(process.env)
+  const parsed = schema.safeParse(process.env)
 
-	if (parsed.success === false) {
-		console.error(
-			'❌ Invalid environment variables:',
-			parsed.error.flatten().fieldErrors,
-		)
+  if (parsed.success === false) {
+    console.error(
+      '❌ Invalid environment variables:',
+      parsed.error.flatten().fieldErrors,
+    )
 
-		throw new Error('Invalid environment variables')
-	}
+    throw new Error('Invalid environment variables')
+  }
 }
 
 /**
@@ -56,18 +58,18 @@ export function init() {
  * @returns all public ENV variables
  */
 export function getEnv() {
-	return {
-		MODE: process.env.NODE_ENV,
-		SENTRY_DSN: process.env.SENTRY_DSN,
-		ALLOW_INDEXING: process.env.ALLOW_INDEXING,
-	}
+  return {
+    MODE: process.env.NODE_ENV,
+    SENTRY_DSN: process.env.SENTRY_DSN,
+    ALLOW_INDEXING: process.env.ALLOW_INDEXING,
+  }
 }
 
 type ENV = ReturnType<typeof getEnv>
 
 declare global {
-	var ENV: ENV
-	interface Window {
-		ENV: ENV
-	}
+  var ENV: ENV
+  interface Window {
+    ENV: ENV
+  }
 }
