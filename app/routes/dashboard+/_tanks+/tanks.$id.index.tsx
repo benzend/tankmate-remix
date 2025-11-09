@@ -254,9 +254,9 @@ export default function TankOverviewPage() {
         )}
         {latestImage ? (
           <div className="mb-10">
-            <img 
-              src={latestImage} 
-              className="h-40 w-auto object-cover my-4 cursor-pointer hover:opacity-80 transition-opacity" 
+            <img
+              src={latestImage}
+              className="h-40 w-auto object-cover my-4 cursor-pointer hover:opacity-80 transition-opacity"
               onClick={handleImageClick}
               alt="Tank image"
             />
@@ -331,13 +331,13 @@ export default function TankOverviewPage() {
             >
               <Icon name="cross-1" className="h-4 w-4" />
             </button>
-            
+
             <img
               src={latestImage}
               alt="Tank image"
               className="max-w-full max-h-[80vh] object-contain rounded-lg"
             />
-            
+
             <div className="mt-4 flex justify-center">
               <UploadButton
                 className="w-40"
@@ -731,7 +731,7 @@ const ParameterChart = ({
   const location = useLocation();
   const successRange = getSuccessRangeFromParameter(parameter);
   return (
-    <Link 
+    <Link
       to={`/dashboard/tanks/${tank.id}/parameters/${parameter}`}
       className="block rounded border p-4 text-foreground hover:border-primary hover:shadow-md transition-all duration-200 cursor-pointer group"
     >
@@ -739,15 +739,7 @@ const ParameterChart = ({
         <h3 className="text-lg font-bold group-hover:text-primary transition-colors">
           {humanizeParameter(parameter)}
         </h3>
-        <span className="text-xs text-muted-foreground group-hover:text-primary/70 transition-colors">
-          → View Details
-        </span>
-      </div>
-      <div className="flex gap-2 items-center mb-2">
-        <div className="text-xs text-muted-foreground">
-          Target Range: {successRange.lower} - {successRange.upper}{" "}
-          {getMeasurementFromParameter(parameter)}
-        </div>
+
         <Link
           to={`/dashboard/parameter-log/new?redirectTo=${location.pathname}&tankId=${tank.id}&parameter=${parameter}`}
           onClick={(e) => e.stopPropagation()}
@@ -756,47 +748,53 @@ const ParameterChart = ({
           + Track
         </Link>
       </div>
+      <div className="flex gap-2 items-center mb-2">
+        <div className="text-xs text-muted-foreground">
+          Target Range: {successRange.lower} - {successRange.upper}{" "}
+          {getMeasurementFromParameter(parameter)}
+        </div>
+      </div>
       <div className="opacity-90 group-hover:opacity-100 transition-opacity">
         <LineChart
-        data={{
-          labels: tank.parameterLogs
-            .filter((l) => l[parameter])
-            .map((l) =>
-              formatDateBasedOnRecency(
-                DateFrom(l.createdAt).toLocaleDateString(),
+          data={{
+            labels: tank.parameterLogs
+              .filter((l) => l[parameter])
+              .map((l) =>
+                formatDateBasedOnRecency(
+                  DateFrom(l.createdAt).toLocaleDateString(),
+                ),
               ),
-            ),
-          datasets: [
-            {
-              label: humanizeParameter(parameter),
-              data: tank.parameterLogs
-                .filter((l) => l[parameter])
-                .map((l) => l[parameter] || null),
-              backgroundColor: getChartColorFromParameter(parameter),
-              borderColor: getChartColorFromParameter(parameter),
+            datasets: [
+              {
+                label: humanizeParameter(parameter),
+                data: tank.parameterLogs
+                  .filter((l) => l[parameter])
+                  .map((l) => l[parameter] || null),
+                backgroundColor: getChartColorFromParameter(parameter),
+                borderColor: getChartColorFromParameter(parameter),
+              },
+            ],
+          }}
+          options={{
+            plugins: {
+              // @ts-ignore
+              successRange: {
+                enabled: true,
+                range: getSuccessRangeFromParameter(parameter),
+                backgroundColor: "rgba(0, 204, 0, 0.1)",
+                borderColor: "rgba(255, 255, 255, 0.2)",
+                borderWidth: 1,
+              },
             },
-          ],
-        }}
-        options={{
-          plugins: {
-            // @ts-ignore
-            successRange: {
-              enabled: true,
-              range: getSuccessRangeFromParameter(parameter),
-              backgroundColor: "rgba(0, 204, 0, 0.1)",
-              borderColor: "rgba(255, 255, 255, 0.2)",
-              borderWidth: 1,
+            scales: {
+              y: {
+                min: getMinFromParameter(parameter),
+                max: getMaxFromParameter(parameter),
+              },
             },
-          },
-          scales: {
-            y: {
-              min: getMinFromParameter(parameter),
-              max: getMaxFromParameter(parameter),
-            },
-          },
-        }}
-        plugins={[successRangePlugin]}
-      />
+          }}
+          plugins={[successRangePlugin]}
+        />
       </div>
     </Link>
   );
