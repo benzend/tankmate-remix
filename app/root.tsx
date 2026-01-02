@@ -163,7 +163,7 @@ function Document({
         <Links />
       </head>
       <body className="bg-background text-foreground">
-        <VemetricScript token={process.env.VEMETRIC_TOKEN || 'nada'}></VemetricScript>
+        {data.ENV.VEMETRIC_TOKEN ? <VemetricScript token={data.ENV.VEMETRIC_TOKEN} /> : null}
         {children}
         <script
           nonce={nonce}
