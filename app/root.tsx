@@ -5,7 +5,7 @@ import {
   type LinksFunction,
   type MetaFunction,
 } from '@remix-run/node'
-import { VemetricScript } from '@vemetric/react';
+import { VemetricScript } from '@vemetric/react'
 import {
   Links,
   Meta,
@@ -62,7 +62,10 @@ export const links: LinksFunction = () => {
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
     { title: data ? 'TankMate' : 'Error | TankMate' },
-    { name: 'description', content: `Monitor and maintain your aquarium's health with AI-powered coral analysis, water quality tracking, and smart alerts. TankMate helps reef enthusiasts keep their marine ecosystems thriving.` },
+    {
+      name: 'description',
+      content: `Monitor and maintain your aquarium's health with AI-powered coral analysis, water quality tracking, and smart alerts. TankMate helps reef enthusiasts keep their marine ecosystems thriving.`,
+    },
   ]
 }
 
@@ -150,6 +153,12 @@ function Document({
   env?: Record<string, string>
   allowIndexing?: boolean
 }) {
+  if (!env.VEMETRIC_TOKEN) {
+    console.warn('Vemetric token not set')
+  } else {
+    console.debug('Vemetric token set')
+  }
+
   return (
     <html lang="en" className={`${theme} h-full overflow-x-hidden`}>
       <head>
@@ -163,7 +172,9 @@ function Document({
         <Links />
       </head>
       <body className="bg-background text-foreground">
-        {data.ENV.VEMETRIC_TOKEN ? <VemetricScript token={data.ENV.VEMETRIC_TOKEN} /> : null}
+        {env.VEMETRIC_TOKEN ? (
+          <VemetricScript token={env.VEMETRIC_TOKEN} />
+        ) : null}
         {children}
         <script
           nonce={nonce}
