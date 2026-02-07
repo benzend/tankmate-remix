@@ -10,6 +10,7 @@ import rateLimit from 'express-rate-limit'
 import getPort, { portNumbers } from 'get-port'
 import helmet from 'helmet'
 import morgan from 'morgan'
+import apiRouter from './api/index.ts'
 
 const MODE = process.env.NODE_ENV ?? 'development'
 const IS_PROD = MODE === 'production'
@@ -179,6 +180,7 @@ app.use((req, res, next) => {
     '/settings/profile',
     '/resources/login',
     '/resources/verify',
+    '/api/v1/auth',
   ]
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     if (strongPaths.some((p) => req.path.includes(p))) {
@@ -218,6 +220,9 @@ if (!ALLOW_INDEXING) {
     next()
   })
 }
+
+// Mobile API routes — JSON body parsing + /api/v1 prefix
+app.use('/api/v1', express.json(), apiRouter)
 
 app.all(
   '*',
