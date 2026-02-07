@@ -133,6 +133,19 @@ export default function TankDetailScreen() {
 								) : null}
 							</View>
 						</View>
+						<Pressable
+							onPress={() => router.push(`/tank/${id}/edit`)}
+							style={{
+								width: 36,
+								height: 36,
+								borderRadius: 18,
+								backgroundColor: colors.accent,
+								alignItems: 'center',
+								justifyContent: 'center',
+							}}
+						>
+							<Ionicons name="pencil" size={16} color={colors.mutedForeground} />
+						</Pressable>
 					</View>
 
 					{/* Quick Actions */}
@@ -165,9 +178,14 @@ export default function TankDetailScreen() {
 					{latestLog ? (
 						<Card style={{ marginBottom: 16 }}>
 							<CardContent>
-								<Text style={{ color: colors.foreground, fontSize: 18, fontWeight: '600', marginBottom: 12 }}>
-									Latest Parameters
-								</Text>
+								<View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+									<Text style={{ color: colors.foreground, fontSize: 18, fontWeight: '600' }}>
+										Latest Parameters
+									</Text>
+									<Pressable onPress={() => router.push(`/tank/${id}/parameters`)}>
+										<Text style={{ color: colors.chart.pH, fontSize: 13, fontWeight: '500' }}>View History</Text>
+									</Pressable>
+								</View>
 								<View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
 									{Object.entries(PARAMETER_LABELS).map(([key, label]) => {
 										const value = latestLog[key as keyof typeof latestLog]
@@ -207,9 +225,11 @@ export default function TankDetailScreen() {
 								<Text style={{ color: colors.foreground, fontSize: 18, fontWeight: '600' }}>
 									Maintenance
 								</Text>
-								<Text style={{ color: colors.mutedForeground, fontSize: 12 }}>
-									{tank.fishTankMaintenances?.length || 0} logs
-								</Text>
+								<Pressable onPress={() => router.push(`/tank/${id}/maintenance`)}>
+									<Text style={{ color: colors.chart.pH, fontSize: 13, fontWeight: '500' }}>
+										{tank.fishTankMaintenances?.length || 0} logs — View All
+									</Text>
+								</Pressable>
 							</View>
 							{tank.fishTankMaintenances?.length ? (
 								tank.fishTankMaintenances.slice(0, 5).map((log) => (

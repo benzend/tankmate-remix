@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { useAuth } from '../../hooks/useAuth'
+import { useExportData } from '../../hooks/useUser'
 import { colors } from '../../theme/colors'
 
 type SettingsRowProps = {
@@ -78,6 +79,14 @@ function SettingsSection({ title, children }: { title: string; children: React.R
 export default function SettingsScreen() {
 	const router = useRouter()
 	const { user, logout } = useAuth()
+	const exportData = useExportData()
+
+	const handleExport = () => {
+		exportData.mutate(undefined, {
+			onSuccess: () => Alert.alert('Export', 'Your data export has been prepared.'),
+			onError: () => Alert.alert('Error', 'Failed to export data. Please try again.'),
+		})
+	}
 
 	const handleLogout = () => {
 		Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
@@ -140,7 +149,7 @@ export default function SettingsScreen() {
 					<SettingsRow
 						icon="download-outline"
 						label="Export My Data"
-						onPress={() => Alert.alert('Export', 'Data export will be downloaded.')}
+						onPress={handleExport}
 					/>
 				</SettingsSection>
 
