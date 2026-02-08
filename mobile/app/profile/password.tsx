@@ -6,11 +6,13 @@ import { Ionicons } from '@expo/vector-icons'
 import { useChangePassword } from '../../hooks/useUser'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
+import { useToast } from '../../components/ui/Toast'
 import { colors } from '../../theme/colors'
 
 export default function ChangePasswordScreen() {
 	const router = useRouter()
 	const changePassword = useChangePassword()
+	const toast = useToast()
 
 	const [currentPassword, setCurrentPassword] = useState('')
 	const [newPassword, setNewPassword] = useState('')
@@ -35,12 +37,10 @@ export default function ChangePasswordScreen() {
 				currentPassword,
 				newPassword,
 			})
-			Alert.alert('Success', 'Password changed successfully.', [
-				{ text: 'OK', onPress: () => router.back() },
-			])
+			toast.success('Password changed successfully')
+			router.back()
 		} catch (error: any) {
-			const msg = error?.data?.error || 'Failed to change password'
-			Alert.alert('Error', msg)
+			toast.error(error?.data?.error || 'Failed to change password')
 		}
 	}
 

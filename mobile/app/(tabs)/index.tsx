@@ -2,6 +2,7 @@ import { View, FlatList, Pressable, Text, RefreshControl } from 'react-native'
 import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
+import * as Haptics from 'expo-haptics'
 import { useTanks } from '../../hooks/useTanks'
 import { TankCard } from '../../components/tank/TankCard'
 import { EmptyState } from '../../components/common/EmptyState'
@@ -35,7 +36,12 @@ export default function DashboardScreen() {
 						My Tanks
 					</Text>
 					<Pressable
-						onPress={() => router.push('/tank/new')}
+						onPress={() => {
+							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+							router.push('/tank/new')
+						}}
+						accessibilityRole="button"
+						accessibilityLabel="Add new tank"
 						style={({ pressed }) => ({
 							width: 44,
 							height: 44,
@@ -43,7 +49,7 @@ export default function DashboardScreen() {
 							backgroundColor: colors.primary,
 							alignItems: 'center',
 							justifyContent: 'center',
-							opacity: pressed ? 0.8 : 1,
+							transform: [{ scale: pressed ? 0.92 : 1 }],
 						})}
 					>
 						<Ionicons name="add" size={24} color={colors.primaryForeground} />
@@ -52,7 +58,11 @@ export default function DashboardScreen() {
 
 				{/* Loading state */}
 				{isLoading ? (
-					<View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 16 }}>
+					<View
+						style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 16 }}
+						accessibilityLabel="Loading tanks"
+						accessibilityRole="progressbar"
+					>
 						{[1, 2, 3, 4].map((i) => (
 							<View key={i} style={{ width: '47%' }}>
 								<Skeleton width="100%" height={180} borderRadius={12} />

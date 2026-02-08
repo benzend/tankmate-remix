@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { useAuth } from '../../hooks/useAuth'
 import { useExportData } from '../../hooks/useUser'
+import { useToast } from '../../components/ui/Toast'
 import { colors } from '../../theme/colors'
 
 type SettingsRowProps = {
@@ -80,11 +81,12 @@ export default function SettingsScreen() {
 	const router = useRouter()
 	const { user, logout } = useAuth()
 	const exportData = useExportData()
+	const toast = useToast()
 
 	const handleExport = () => {
 		exportData.mutate(undefined, {
-			onSuccess: () => Alert.alert('Export', 'Your data export has been prepared.'),
-			onError: () => Alert.alert('Error', 'Failed to export data. Please try again.'),
+			onSuccess: () => toast.success('Data export prepared'),
+			onError: () => toast.error('Failed to export data'),
 		})
 	}
 

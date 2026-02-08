@@ -3,9 +3,11 @@ import { View, Text, ScrollView, Alert, Pressable } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
+import * as Haptics from 'expo-haptics'
 import { useCreateMaintenanceLog } from '../../../hooks/useMaintenance'
 import { Button } from '../../../components/ui/Button'
 import { Input } from '../../../components/ui/Input'
+import { useToast } from '../../../components/ui/Toast'
 import { colors } from '../../../theme/colors'
 
 const MAINTENANCE_TYPES = [
@@ -20,6 +22,7 @@ export default function LogMaintenanceScreen() {
 	const { id } = useLocalSearchParams<{ id: string }>()
 	const router = useRouter()
 	const createLog = useCreateMaintenanceLog(id)
+	const toast = useToast()
 	const [selectedType, setSelectedType] = useState<string | null>(null)
 	const [extraDetails, setExtraDetails] = useState('')
 
@@ -34,9 +37,10 @@ export default function LogMaintenanceScreen() {
 				maintenanceType: selectedType,
 				extraDetails: extraDetails.trim() || undefined,
 			})
+			toast.success('Maintenance logged')
 			router.back()
 		} catch (error: any) {
-			Alert.alert('Error', error?.data?.error || 'Failed to log maintenance')
+			toast.error(error?.data?.error || 'Failed to log maintenance')
 		}
 	}
 
@@ -87,7 +91,10 @@ export default function LogMaintenanceScreen() {
 						return (
 							<Pressable
 								key={type.key}
-								onPress={() => setSelectedType(type.key)}
+								onPress={() => {
+									Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+									setSelectedType(type.key)
+								}}
 								style={{
 									width: '47%',
 									paddingVertical: 20,

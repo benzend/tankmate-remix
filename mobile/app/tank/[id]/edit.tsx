@@ -7,6 +7,7 @@ import { useTank, useUpdateTank, useDeleteTank } from '../../../hooks/useTanks'
 import { Button } from '../../../components/ui/Button'
 import { Input } from '../../../components/ui/Input'
 import { Skeleton } from '../../../components/ui/Skeleton'
+import { useToast } from '../../../components/ui/Toast'
 import { colors } from '../../../theme/colors'
 
 export default function EditTankScreen() {
@@ -15,6 +16,7 @@ export default function EditTankScreen() {
 	const { data: tank, isLoading } = useTank(id)
 	const updateTank = useUpdateTank(id)
 	const deleteTank = useDeleteTank()
+	const toast = useToast()
 
 	const [name, setName] = useState('')
 	const [volume, setVolume] = useState('')
@@ -35,9 +37,10 @@ export default function EditTankScreen() {
 				waterType,
 				volume: volume ? Number(volume) : undefined,
 			})
+			toast.success('Tank updated')
 			router.back()
 		} catch (error: any) {
-			Alert.alert('Error', error?.data?.error || 'Failed to update tank')
+			toast.error(error?.data?.error || 'Failed to update tank')
 		}
 	}
 
@@ -53,9 +56,10 @@ export default function EditTankScreen() {
 					onPress: async () => {
 						try {
 							await deleteTank.mutateAsync(id)
+							toast.success('Tank deleted')
 							router.replace('/(tabs)')
 						} catch (error: any) {
-							Alert.alert('Error', error?.data?.error || 'Failed to delete tank')
+							toast.error(error?.data?.error || 'Failed to delete tank')
 						}
 					},
 				},

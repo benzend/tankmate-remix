@@ -7,6 +7,7 @@ import { useCreateParameterLog } from '../../../hooks/useParameters'
 import { useTank } from '../../../hooks/useTanks'
 import { Button } from '../../../components/ui/Button'
 import { Input } from '../../../components/ui/Input'
+import { useToast } from '../../../components/ui/Toast'
 import { colors } from '../../../theme/colors'
 
 const PARAMETERS = [
@@ -27,6 +28,7 @@ export default function LogParametersScreen() {
 	const router = useRouter()
 	const { data: tank } = useTank(id)
 	const createLog = useCreateParameterLog(id)
+	const toast = useToast()
 	const [values, setValues] = useState<Record<string, string>>({})
 
 	const setValue = (key: string, value: string) => {
@@ -59,9 +61,10 @@ export default function LogParametersScreen() {
 
 		try {
 			await createLog.mutateAsync(data)
+			toast.success('Parameters logged')
 			router.back()
 		} catch (error: any) {
-			Alert.alert('Error', error?.data?.error || 'Failed to log parameters')
+			toast.error(error?.data?.error || 'Failed to log parameters')
 		}
 	}
 

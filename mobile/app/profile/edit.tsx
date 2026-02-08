@@ -8,6 +8,7 @@ import { useAuth } from '../../hooks/useAuth'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { Skeleton } from '../../components/ui/Skeleton'
+import { useToast } from '../../components/ui/Toast'
 import { colors } from '../../theme/colors'
 
 export default function EditProfileScreen() {
@@ -15,6 +16,7 @@ export default function EditProfileScreen() {
 	const { data: profile, isLoading } = useUserProfile()
 	const updateProfile = useUpdateProfile()
 	const { restore } = useAuth()
+	const toast = useToast()
 
 	const [name, setName] = useState('')
 	const [username, setUsername] = useState('')
@@ -37,12 +39,11 @@ export default function EditProfileScreen() {
 				name: name.trim() || undefined,
 				username: username.trim(),
 			})
-			// Refresh the auth store user data
 			await restore()
+			toast.success('Profile updated')
 			router.back()
 		} catch (error: any) {
-			const msg = error?.data?.error || 'Failed to update profile'
-			Alert.alert('Error', msg)
+			toast.error(error?.data?.error || 'Failed to update profile')
 		}
 	}
 

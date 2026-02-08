@@ -7,6 +7,8 @@ import * as SplashScreen from 'expo-splash-screen'
 import { useFonts } from 'expo-font'
 import { queryClient } from '../lib/queryClient'
 import { useAuth } from '../hooks/useAuth'
+import { ToastProvider } from '../components/ui/Toast'
+import { ErrorBoundary } from '../components/ui/ErrorBoundary'
 
 // Keep splash screen visible while loading
 SplashScreen.preventAutoHideAsync()
@@ -43,10 +45,14 @@ export default function RootLayout() {
 
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
-			<QueryClientProvider client={queryClient}>
-				<StatusBar style="light" />
-				<AuthGate user={user} />
-			</QueryClientProvider>
+			<ErrorBoundary>
+				<QueryClientProvider client={queryClient}>
+					<ToastProvider>
+						<StatusBar style="light" />
+						<AuthGate user={user} />
+					</ToastProvider>
+				</QueryClientProvider>
+			</ErrorBoundary>
 		</GestureHandlerRootView>
 	)
 }

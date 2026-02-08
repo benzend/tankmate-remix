@@ -1,6 +1,7 @@
 import { View, Text } from 'react-native'
 import { colors } from '../../theme/colors'
 import { Button } from '../ui/Button'
+import { FadeIn } from '../ui/Animated'
 
 type EmptyStateProps = {
 	icon?: string
@@ -12,43 +13,51 @@ type EmptyStateProps = {
 
 export function EmptyState({ icon, title, description, actionLabel, onAction }: EmptyStateProps) {
 	return (
-		<View
-			style={{
-				alignItems: 'center',
-				justifyContent: 'center',
-				paddingVertical: 48,
-				paddingHorizontal: 32,
-			}}
-		>
-			{icon ? (
-				<Text style={{ fontSize: 48, marginBottom: 16 }}>{icon}</Text>
-			) : null}
-			<Text
+		<FadeIn delay={100}>
+			<View
 				style={{
-					color: colors.foreground,
-					fontSize: 20,
-					fontWeight: '600',
-					textAlign: 'center',
-					marginBottom: 8,
+					alignItems: 'center',
+					justifyContent: 'center',
+					paddingVertical: 48,
+					paddingHorizontal: 32,
 				}}
+				accessibilityRole="summary"
 			>
-				{title}
-			</Text>
-			{description ? (
+				{icon ? (
+					<Text
+						style={{ fontSize: 48, marginBottom: 16 }}
+						accessibilityLabel={`${title} icon`}
+					>
+						{icon}
+					</Text>
+				) : null}
 				<Text
 					style={{
-						color: colors.mutedForeground,
-						fontSize: 14,
+						color: colors.foreground,
+						fontSize: 20,
+						fontWeight: '600',
 						textAlign: 'center',
-						marginBottom: 24,
+						marginBottom: 8,
 					}}
 				>
-					{description}
+					{title}
 				</Text>
-			) : null}
-			{actionLabel && onAction ? (
-				<Button onPress={onAction}>{actionLabel}</Button>
-			) : null}
-		</View>
+				{description ? (
+					<Text
+						style={{
+							color: colors.mutedForeground,
+							fontSize: 14,
+							textAlign: 'center',
+							marginBottom: 24,
+						}}
+					>
+						{description}
+					</Text>
+				) : null}
+				{actionLabel && onAction ? (
+					<Button onPress={onAction}>{actionLabel}</Button>
+				) : null}
+			</View>
+		</FadeIn>
 	)
 }

@@ -46,6 +46,8 @@ export function TankCard({ tank }: TankCardProps) {
 	return (
 		<Pressable
 			onPress={() => router.push(`/tank/${tank.id}`)}
+			accessibilityRole="button"
+			accessibilityLabel={`${tank.name}, ${tank.waterType}${tank.volume ? `, ${tank.volume} gallons` : ''}`}
 			style={({ pressed }) => ({
 				width: CARD_WIDTH,
 				borderRadius: 12,
@@ -53,7 +55,7 @@ export function TankCard({ tank }: TankCardProps) {
 				borderWidth: 1,
 				borderColor: colors.border,
 				backgroundColor: colors.card,
-				opacity: pressed ? 0.9 : 1,
+				transform: [{ scale: pressed ? 0.97 : 1 }],
 			})}
 		>
 			{/* Image */}

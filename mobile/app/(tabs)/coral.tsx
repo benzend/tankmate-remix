@@ -3,10 +3,12 @@ import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
+import * as Haptics from 'expo-haptics'
 import { useCoralAnalyses } from '../../hooks/useCorals'
 import { HealthRing } from '../../components/tank/HealthRing'
 import { EmptyState } from '../../components/common/EmptyState'
 import { Skeleton } from '../../components/ui/Skeleton'
+import { FadeIn } from '../../components/ui/Animated'
 import { colors } from '../../theme/colors'
 import { type CoralAnalysis } from '../../lib/api'
 
@@ -14,19 +16,22 @@ export default function CoralScreen() {
 	const router = useRouter()
 	const { data: analyses, isLoading, refetch, isRefetching } = useCoralAnalyses()
 
-	const renderItem = ({ item }: { item: CoralAnalysis }) => (
-		<Pressable
-			onPress={() => router.push(`/coral/${item.id}`)}
-			style={({ pressed }) => ({
-				borderRadius: 12,
-				overflow: 'hidden',
-				borderWidth: 1,
-				borderColor: colors.border,
-				backgroundColor: colors.card,
-				marginBottom: 12,
-				opacity: pressed ? 0.9 : 1,
-			})}
-		>
+	const renderItem = ({ item, index }: { item: CoralAnalysis; index: number }) => (
+		<FadeIn delay={index * 60}>
+			<Pressable
+				onPress={() => router.push(`/coral/${item.id}`)}
+				accessibilityRole="button"
+				accessibilityLabel={`${item.friendlyName}, health score ${item.healthScore} out of 10`}
+				style={({ pressed }) => ({
+					borderRadius: 12,
+					overflow: 'hidden',
+					borderWidth: 1,
+					borderColor: colors.border,
+					backgroundColor: colors.card,
+					marginBottom: 12,
+					transform: [{ scale: pressed ? 0.98 : 1 }],
+				})}
+			>
 			{item.imageUrl ? (
 				<Image
 					source={{ uri: item.imageUrl }}
@@ -50,6 +55,7 @@ export default function CoralScreen() {
 				</Text>
 			</View>
 		</Pressable>
+		</FadeIn>
 	)
 
 	return (
@@ -75,7 +81,12 @@ export default function CoralScreen() {
 						Coral Analyzer
 					</Text>
 					<Pressable
-						onPress={() => router.push('/coral/new')}
+						onPress={() => {
+							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+							router.push('/coral/new')
+						}}
+						accessibilityRole="button"
+						accessibilityLabel="Analyze new coral"
 						style={({ pressed }) => ({
 							width: 44,
 							height: 44,
@@ -83,7 +94,7 @@ export default function CoralScreen() {
 							backgroundColor: colors.primary,
 							alignItems: 'center',
 							justifyContent: 'center',
-							opacity: pressed ? 0.8 : 1,
+							transform: [{ scale: pressed ? 0.92 : 1 }],
 						})}
 					>
 						<Ionicons name="camera" size={22} color={colors.primaryForeground} />

@@ -5,11 +5,13 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useCreateTank } from '../../hooks/useTanks'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
+import { useToast } from '../../components/ui/Toast'
 import { colors } from '../../theme/colors'
 
 export default function NewTankScreen() {
 	const router = useRouter()
 	const createTank = useCreateTank()
+	const toast = useToast()
 	const [name, setName] = useState('')
 	const [volume, setVolume] = useState('')
 	const [waterType, setWaterType] = useState<'saltwater' | 'freshwater'>('saltwater')
@@ -21,9 +23,10 @@ export default function NewTankScreen() {
 				waterType,
 				volume: volume ? Number(volume) : undefined,
 			})
+			toast.success('Tank created')
 			router.replace(`/tank/${result.tank.id}`)
 		} catch (error: any) {
-			Alert.alert('Error', error?.data?.error || 'Failed to create tank')
+			toast.error(error?.data?.error || 'Failed to create tank')
 		}
 	}
 
