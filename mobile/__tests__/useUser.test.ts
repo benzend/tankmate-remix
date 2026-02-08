@@ -17,6 +17,8 @@ jest.mock('../lib/api', () => ({
 		changePassword: jest.fn(),
 		getConnections: jest.fn(),
 		exportData: jest.fn(),
+		signOutOtherSessions: jest.fn(),
+		deleteAccount: jest.fn(),
 	},
 }))
 
@@ -159,5 +161,69 @@ describe('useExportData', () => {
 		await result.current.mutateAsync()
 
 		expect(userApi.exportData).toHaveBeenCalledTimes(1)
+	})
+})
+
+describe('useSignOutOtherSessions', () => {
+	beforeEach(() => {
+		jest.clearAllMocks()
+	})
+
+	it('should revoke other sessions and return count', async () => {
+		const { userApi } = require('../lib/api')
+		userApi.signOutOtherSessions.mockResolvedValue({ success: true, sessionsRevoked: 3 })
+
+		const { useSignOutOtherSessions } = require('../hooks/useUser')
+		const { result } = renderHook(() => useSignOutOtherSessions(), { wrapper: createWrapper() })
+
+		const response = await result.current.mutateAsync()
+
+		expect(userApi.signOutOtherSessions).toHaveBeenCalledTimes(1)
+		expect(response.sessionsRevoked).toBe(3)
+	})
+
+	it('should handle error when sign out fails', async () => {
+		const { userApi } = require('../lib/api')
+		userApi.signOutOtherSessions.mockRejectedValue({ status: 500, data: { error: 'Server error' } })
+
+		const { useSignOutOtherSessions } = require('../hooks/useUser')
+		const { result } = renderHook(() => useSignOutOtherSessions(), { wrapper: createWrapper() })
+
+		await expect(result.current.mutateAsync()).rejects.toEqual({
+			status: 500,
+			data: { error: 'Server error' },
+		})
+	})
+})
+
+describe('useDeleteAccount', () => {
+	beforeEach(() => {
+		jest.clearAllMocks()
+	})
+
+	it('should delete account successfully', async () => {
+		const { userApi } = require('../lib/api')
+		userApi.deleteAccount.mockResolvedValue({ success: true })
+
+		const { useDeleteAccount } = require('../hooks/useUser')
+		const { result } = renderHook(() => useDeleteAccount(), { wrapper: createWrapper() })
+
+		const response = await result.current.mutateAsync()
+
+		expect(userApi.deleteAccount).toHaveBeenCalledTimes(1)
+		expect(response.success).toBe(true)
+	})
+
+	it('should handle error when deletion fails', async () => {
+		const { userApi } = require('../lib/api')
+		userApi.deleteAccount.mockRejectedValue({ status: 500, data: { error: 'Deletion failed' } })
+
+		const { useDeleteAccount } = require('../hooks/useUser')
+		const { result } = renderHook(() => useDeleteAccount(), { wrapper: createWrapper() })
+
+		await expect(result.current.mutateAsync()).rejects.toEqual({
+			status: 500,
+			data: { error: 'Deletion failed' },
+		})
 	})
 })

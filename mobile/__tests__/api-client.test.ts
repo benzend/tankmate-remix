@@ -1,6 +1,6 @@
 /**
  * Tests for the mobile API client module.
- * Verifies request formatting, auth header injection, and error handling.
+ * Verifies request formatting, auth header injection, token refresh, and error handling.
  *
  * Run with: npx jest __tests__/api-client.test.ts
  */
@@ -26,6 +26,7 @@ global.fetch = mockFetch
 describe('API Client', () => {
 	beforeEach(() => {
 		jest.clearAllMocks()
+		jest.resetModules()
 	})
 
 	it('should include Bearer token in authenticated requests', async () => {
@@ -69,7 +70,7 @@ describe('API Client', () => {
 		expect(callHeaders?.Authorization).toBeUndefined()
 	})
 
-	it('should clear tokens on 401 response', async () => {
+	it('should attempt token refresh on 401 before clearing tokens', async () => {
 		const SecureStore = require('expo-secure-store')
 		SecureStore.getItemAsync.mockImplementation((key: string) => {
 			if (key === 'tankmate_token') return Promise.resolve('expired-token')
@@ -77,16 +78,83 @@ describe('API Client', () => {
 			return Promise.resolve(null)
 		})
 
+		// First call: original request returns 401
+		// Second call: refresh attempt returns 200
+		// Third call: retried original request succeeds
+		mockFetch
+			.mockResolvedValueOnce({
+				ok: false,
+				status: 401,
+				json: () => Promise.resolve({ error: 'Invalid session' }),
+			} as Response)
+			.mockResolvedValueOnce({
+				ok: true,
+				status: 200,
+				json: () => Promise.resolve({
+					token: 'refreshed-token',
+					expiresAt: new Date(Date.now() + 86400000).toISOString(),
+					userId: 'user-1',
+				}),
+			} as Response)
+			.mockResolvedValueOnce({
+				ok: true,
+				status: 200,
+				json: () => Promise.resolve({ tanks: [] }),
+			} as Response)
+
+		const { api } = require('../lib/api')
+		const result = await api('/tanks')
+
+		expect(result).toEqual({ tanks: [] })
+		// Should have made 3 fetch calls: original, refresh, retry
+		expect(mockFetch).toHaveBeenCalledTimes(3)
+		// Second call should be to refresh endpoint
+		expect(mockFetch.mock.calls[1]?.[0]).toBe('http://test-server:8081/api/v1/auth/refresh')
+		// New token should be stored
+		expect(SecureStore.setItemAsync).toHaveBeenCalledWith('tankmate_token', 'refreshed-token')
+	})
+
+	it('should clear tokens when refresh also fails', async () => {
+		const SecureStore = require('expo-secure-store')
+		SecureStore.getItemAsync.mockImplementation((key: string) => {
+			if (key === 'tankmate_token') return Promise.resolve('expired-token')
+			if (key === 'tankmate_token_expiry') return Promise.resolve(new Date(Date.now() + 86400000).toISOString())
+			return Promise.resolve(null)
+		})
+
+		mockFetch
+			.mockResolvedValueOnce({
+				ok: false,
+				status: 401,
+				json: () => Promise.resolve({ error: 'Invalid session' }),
+			} as Response)
+			.mockResolvedValueOnce({
+				ok: false,
+				status: 401,
+				json: () => Promise.resolve({ error: 'Session expired' }),
+			} as Response)
+
+		const { api } = require('../lib/api')
+		await expect(api('/tanks')).rejects.toThrow()
+		expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('tankmate_token')
+	})
+
+	it('should not attempt refresh for noAuth 401 responses', async () => {
 		mockFetch.mockResolvedValueOnce({
 			ok: false,
 			status: 401,
-			json: () => Promise.resolve({ error: 'Invalid or expired session' }),
+			json: () => Promise.resolve({ error: 'Bad credentials' }),
 		} as Response)
 
 		const { api } = require('../lib/api')
 
-		await expect(api('/tanks')).rejects.toThrow()
-		expect(SecureStore.deleteItemAsync).toHaveBeenCalled()
+		try {
+			await api('/auth/login', { method: 'POST', body: {}, noAuth: true })
+		} catch (err: any) {
+			expect(err.status).toBe(401)
+		}
+		// No refresh attempt for noAuth requests
+		expect(mockFetch).toHaveBeenCalledTimes(1)
 	})
 
 	it('should throw ApiError with status and data for non-OK responses', async () => {
@@ -100,7 +168,7 @@ describe('API Client', () => {
 
 		try {
 			await api('/tanks', { method: 'POST', body: {}, noAuth: true })
-			expect(true).toBe(false) // Should not reach here
+			expect(true).toBe(false)
 		} catch (err: any) {
 			expect(err.status).toBe(400)
 			expect(err.data.error).toBe('Invalid data')
@@ -109,6 +177,11 @@ describe('API Client', () => {
 })
 
 describe('Auth Token Storage', () => {
+	beforeEach(() => {
+		jest.clearAllMocks()
+		jest.resetModules()
+	})
+
 	it('should store tokens in secure storage', async () => {
 		const SecureStore = require('expo-secure-store')
 		const { storeTokens } = require('../lib/auth')
@@ -124,7 +197,7 @@ describe('Auth Token Storage', () => {
 		const SecureStore = require('expo-secure-store')
 		SecureStore.getItemAsync.mockImplementation((key: string) => {
 			if (key === 'tankmate_token') return Promise.resolve('expired-token')
-			if (key === 'tankmate_token_expiry') return Promise.resolve('2020-01-01T00:00:00Z') // expired
+			if (key === 'tankmate_token_expiry') return Promise.resolve('2020-01-01T00:00:00Z')
 			return Promise.resolve(null)
 		})
 
@@ -132,7 +205,6 @@ describe('Auth Token Storage', () => {
 		const token = await getToken()
 
 		expect(token).toBeNull()
-		// Should also clear the expired tokens
 		expect(SecureStore.deleteItemAsync).toHaveBeenCalled()
 	})
 
