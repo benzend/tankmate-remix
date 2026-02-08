@@ -3,7 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { useAuth } from '../../hooks/useAuth'
-import { useExportData } from '../../hooks/useUser'
+import { useExportData, useSignOutOtherSessions, useDeleteAccount } from '../../hooks/useUser'
 import { useToast } from '../../components/ui/Toast'
 import { colors } from '../../theme/colors'
 
@@ -81,6 +81,8 @@ export default function SettingsScreen() {
 	const router = useRouter()
 	const { user, logout } = useAuth()
 	const exportData = useExportData()
+	const signOutOthers = useSignOutOtherSessions()
+	const deleteAccount = useDeleteAccount()
 	const toast = useToast()
 
 	const handleExport = () => {
@@ -88,6 +90,64 @@ export default function SettingsScreen() {
 			onSuccess: () => toast.success('Data export prepared'),
 			onError: () => toast.error('Failed to export data'),
 		})
+	}
+
+	const handleSignOutOthers = () => {
+		Alert.alert(
+			'Sign Out Other Sessions',
+			'This will sign out all other devices and browsers. Your current session will remain active.',
+			[
+				{ text: 'Cancel', style: 'cancel' },
+				{
+					text: 'Sign Out Others',
+					style: 'destructive',
+					onPress: () => {
+						signOutOthers.mutate(undefined, {
+							onSuccess: (data) => {
+								toast.success(`Signed out ${data.sessionsRevoked} other session(s)`)
+							},
+							onError: () => toast.error('Failed to sign out other sessions'),
+						})
+					},
+				},
+			],
+		)
+	}
+
+	const handleDeleteAccount = () => {
+		Alert.alert(
+			'Delete Account',
+			'This action is permanent and cannot be undone. All your tanks, parameters, coral analyses, and photos will be permanently deleted.',
+			[
+				{ text: 'Cancel', style: 'cancel' },
+				{
+					text: 'Delete My Account',
+					style: 'destructive',
+					onPress: () => {
+						Alert.alert(
+							'Are you absolutely sure?',
+							'Type your username to confirm is not supported. Tap "Delete Forever" to proceed.',
+							[
+								{ text: 'Cancel', style: 'cancel' },
+								{
+									text: 'Delete Forever',
+									style: 'destructive',
+									onPress: () => {
+										deleteAccount.mutate(undefined, {
+											onSuccess: () => {
+												toast.success('Account deleted')
+												logout()
+											},
+											onError: () => toast.error('Failed to delete account'),
+										})
+									},
+								},
+							],
+						)
+					},
+				},
+			],
+		)
 	}
 
 	const handleLogout = () => {
@@ -145,6 +205,11 @@ export default function SettingsScreen() {
 						label="Two-Factor Auth"
 						onPress={() => router.push('/profile/two-factor')}
 					/>
+					<SettingsRow
+						icon="link-outline"
+						label="Connected Accounts"
+						onPress={() => router.push('/profile/connections')}
+					/>
 				</SettingsSection>
 
 				<SettingsSection title="Data">
@@ -157,12 +222,28 @@ export default function SettingsScreen() {
 
 				<SettingsSection title="Session">
 					<SettingsRow
+						icon="phone-portrait-outline"
+						label="Sign Out Other Sessions"
+						onPress={handleSignOutOthers}
+					/>
+					<SettingsRow
 						icon="log-out-outline"
 						label="Sign Out"
 						onPress={handleLogout}
 						destructive
 					/>
 				</SettingsSection>
+
+				<SettingsSection title="Danger Zone">
+					<SettingsRow
+						icon="trash-outline"
+						label="Delete Account"
+						onPress={handleDeleteAccount}
+						destructive
+					/>
+				</SettingsSection>
+
+				<View style={{ height: 40 }} />
 			</ScrollView>
 		</SafeAreaView>
 	)

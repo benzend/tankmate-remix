@@ -117,3 +117,17 @@ export async function checkEmailAvailable(email: string) {
 	})
 	return !existing
 }
+
+export async function signOutOtherSessions(userId: string, currentSessionId: string) {
+	const result = await prisma.session.deleteMany({
+		where: {
+			userId,
+			id: { not: currentSessionId },
+		},
+	})
+	return result.count
+}
+
+export async function deleteAccount(userId: string) {
+	await prisma.user.delete({ where: { id: userId } })
+}

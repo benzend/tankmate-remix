@@ -7,6 +7,7 @@ import coralRoutes from './coral.routes.ts'
 import galleryRoutes from './gallery.routes.ts'
 import userRoutes from './user.routes.ts'
 import searchRoutes from './search.routes.ts'
+import pushRoutes from './push.routes.ts'
 
 const apiRouter = Router()
 
@@ -33,5 +34,8 @@ apiRouter.use('/user', userRoutes)
 
 // Search
 apiRouter.use('/search', searchRoutes)
+
+// Push notifications
+apiRouter.use('/push', pushRoutes)
 
 export default apiRouter

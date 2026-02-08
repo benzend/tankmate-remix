@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
 import { authenticateAPI, getUserId } from './middleware.ts'
-import { getUserProfile, checkUsernameAvailable } from '../services/auth.service.ts'
+import { getUserProfile, checkUsernameAvailable, signOutOtherSessions, deleteAccount } from '../services/auth.service.ts'
 import { prisma } from '../../app/utils/db.server.ts'
 
 const router = Router()
@@ -176,6 +176,31 @@ router.get('/me/data-export', async (req, res) => {
 	} catch (error) {
 		console.error('Data export error:', error)
 		return res.status(500).json({ error: 'Failed to export data' })
+	}
+})
+
+// POST /api/v1/user/me/sign-out-others
+router.post('/me/sign-out-others', async (req, res) => {
+	try {
+		const userId = getUserId(req)
+		const currentSessionId = req.headers.authorization!.slice(7)
+		const count = await signOutOtherSessions(userId, currentSessionId)
+		return res.json({ success: true, sessionsRevoked: count })
+	} catch (error) {
+		console.error('Sign out others error:', error)
+		return res.status(500).json({ error: 'Failed to sign out other sessions' })
+	}
+})
+
+// DELETE /api/v1/user/me
+router.delete('/me', async (req, res) => {
+	try {
+		const userId = getUserId(req)
+		await deleteAccount(userId)
+		return res.json({ success: true })
+	} catch (error) {
+		console.error('Delete account error:', error)
+		return res.status(500).json({ error: 'Failed to delete account' })
 	}
 })
 

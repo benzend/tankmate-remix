@@ -49,3 +49,15 @@ export function useExportData() {
 		mutationFn: () => userApi.exportData(),
 	})
 }
+
+export function useSignOutOtherSessions() {
+	return useMutation({
+		mutationFn: () => userApi.signOutOtherSessions(),
+	})
+}
+
+export function useDeleteAccount() {
+	return useMutation({
+		mutationFn: () => userApi.deleteAccount(),
+	})
+}

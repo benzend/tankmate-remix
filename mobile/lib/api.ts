@@ -209,6 +209,14 @@ export const userApi = {
 		api<{ connections: OAuthConnection[] }>('/user/me/connections'),
 
 	exportData: () => api<unknown>('/user/me/data-export'),
+
+	signOutOtherSessions: () =>
+		api<{ success: boolean; sessionsRevoked: number }>('/user/me/sign-out-others', {
+			method: 'POST',
+		}),
+
+	deleteAccount: () =>
+		api<{ success: boolean }>('/user/me', { method: 'DELETE' }),
 }
 
 // ─── Search ────────────────────────────────────────
@@ -216,6 +224,19 @@ export const userApi = {
 export const searchApi = {
 	search: (query: string) =>
 		api<{ results: SearchResult[] }>(`/search?q=${encodeURIComponent(query)}`),
+}
+
+// ─── Push Notifications ────────────────────────────
+
+export const pushApi = {
+	register: (body: { token: string; platform: 'ios' | 'android' }) =>
+		api<{ success: boolean }>('/push/register', { method: 'POST', body }),
+
+	unregister: (token: string) =>
+		api<{ success: boolean }>('/push/unregister', {
+			method: 'DELETE',
+			body: { token },
+		}),
 }
 
 // ─── Types ─────────────────────────────────────────

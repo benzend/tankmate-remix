@@ -31,29 +31,51 @@ export default function DashboardScreen() {
 							fontWeight: '700',
 							color: colors.foreground,
 							fontFamily: 'Jost-Bold',
+							flex: 1,
 						}}
 					>
 						My Tanks
 					</Text>
-					<Pressable
-						onPress={() => {
-							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-							router.push('/tank/new')
-						}}
-						accessibilityRole="button"
-						accessibilityLabel="Add new tank"
-						style={({ pressed }) => ({
-							width: 44,
-							height: 44,
-							borderRadius: 22,
-							backgroundColor: colors.primary,
-							alignItems: 'center',
-							justifyContent: 'center',
-							transform: [{ scale: pressed ? 0.92 : 1 }],
-						})}
-					>
-						<Ionicons name="add" size={24} color={colors.primaryForeground} />
-					</Pressable>
+					<View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+						<Pressable
+							onPress={() => {
+								Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+								router.push('/search')
+							}}
+							accessibilityRole="button"
+							accessibilityLabel="Search"
+							style={({ pressed }) => ({
+								width: 44,
+								height: 44,
+								borderRadius: 22,
+								backgroundColor: colors.accent,
+								alignItems: 'center',
+								justifyContent: 'center',
+								transform: [{ scale: pressed ? 0.92 : 1 }],
+							})}
+						>
+							<Ionicons name="search" size={20} color={colors.foreground} />
+						</Pressable>
+						<Pressable
+							onPress={() => {
+								Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+								router.push('/tank/new')
+							}}
+							accessibilityRole="button"
+							accessibilityLabel="Add new tank"
+							style={({ pressed }) => ({
+								width: 44,
+								height: 44,
+								borderRadius: 22,
+								backgroundColor: colors.primary,
+								alignItems: 'center',
+								justifyContent: 'center',
+								transform: [{ scale: pressed ? 0.92 : 1 }],
+							})}
+						>
+							<Ionicons name="add" size={24} color={colors.primaryForeground} />
+						</Pressable>
+					</View>
 				</View>
 
 				{/* Loading state */}

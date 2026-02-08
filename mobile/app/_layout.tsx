@@ -9,6 +9,7 @@ import { queryClient } from '../lib/queryClient'
 import { useAuth } from '../hooks/useAuth'
 import { ToastProvider } from '../components/ui/Toast'
 import { ErrorBoundary } from '../components/ui/ErrorBoundary'
+import { usePushNotifications } from '../hooks/usePushNotifications'
 
 // Keep splash screen visible while loading
 SplashScreen.preventAutoHideAsync()
@@ -26,6 +27,9 @@ export default function RootLayout() {
 	})
 
 	const { user, isLoading, restore } = useAuth()
+
+	// Register push notifications when authenticated
+	usePushNotifications(!!user)
 
 	// Restore auth state on app launch
 	useEffect(() => {
