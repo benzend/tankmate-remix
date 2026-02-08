@@ -8,6 +8,7 @@ import galleryRoutes from './gallery.routes.ts'
 import userRoutes from './user.routes.ts'
 import searchRoutes from './search.routes.ts'
 import pushRoutes from './push.routes.ts'
+import uploadRoutes from './upload.routes.ts'
 
 const apiRouter = Router()
 
@@ -37,5 +38,8 @@ apiRouter.use('/search', searchRoutes)
 
 // Push notifications
 apiRouter.use('/push', pushRoutes)
+
+// Image uploads (mobile — base64 → UploadThing CDN)
+apiRouter.use('/upload', uploadRoutes)
 
 export default apiRouter

@@ -1,5 +1,5 @@
 import Constants from 'expo-constants'
-import { getToken, clearTokens } from './auth'
+import { getToken, storeTokens, clearTokens } from './auth'
 
 const API_URL = Constants.expoConfig?.extra?.apiUrl || 'http://localhost:8081'
 const BASE = `${API_URL}/api/v1`
@@ -10,6 +10,8 @@ type RequestOptions = {
 	headers?: Record<string, string>
 	/** Skip auth header (for login/signup) */
 	noAuth?: boolean
+	/** Internal: skip refresh retry to prevent infinite loops */
+	_skipRefresh?: boolean
 }
 
 class ApiError extends Error {
@@ -22,18 +24,52 @@ class ApiError extends Error {
 	}
 }
 
+/** Track whether a refresh is already in flight to avoid concurrent refreshes */
+let refreshPromise: Promise<boolean> | null = null
+
+async function attemptTokenRefresh(): Promise<boolean> {
+	if (refreshPromise) return refreshPromise
+
+	refreshPromise = (async () => {
+		try {
+			const token = await getToken()
+			if (!token) return false
+
+			const response = await fetch(`${BASE}/auth/refresh`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+			})
+
+			if (!response.ok) return false
+
+			const data = await response.json()
+			await storeTokens(data.token, data.expiresAt, data.userId)
+			return true
+		} catch {
+			return false
+		} finally {
+			refreshPromise = null
+		}
+	})()
+
+	return refreshPromise
+}
+
 /**
  * Core fetch wrapper that handles:
  * - Bearer token injection from secure storage
  * - JSON serialization
  * - Error normalization
- * - 401 → clear tokens (session expired)
+ * - 401 → attempt token refresh, then retry once; clear tokens on failure
  */
 export async function api<T = unknown>(
 	path: string,
 	options: RequestOptions = {},
 ): Promise<T> {
-	const { method = 'GET', body, headers = {}, noAuth = false } = options
+	const { method = 'GET', body, headers = {}, noAuth = false, _skipRefresh = false } = options
 
 	const requestHeaders: Record<string, string> = {
 		'Content-Type': 'application/json',
@@ -53,8 +89,14 @@ export async function api<T = unknown>(
 		body: body ? JSON.stringify(body) : undefined,
 	})
 
-	// Handle 401 — session expired, clear stored tokens
-	if (response.status === 401 && !noAuth) {
+	// Handle 401 — try refreshing the token once before giving up
+	if (response.status === 401 && !noAuth && !_skipRefresh) {
+		const refreshed = await attemptTokenRefresh()
+		if (refreshed) {
+			// Retry the original request with the new token
+			return api<T>(path, { ...options, _skipRefresh: true })
+		}
+
 		await clearTokens()
 		throw new ApiError(401, { error: 'Session expired' })
 	}

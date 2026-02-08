@@ -1,9 +1,10 @@
-import { View, Text, ScrollView, Pressable, Alert } from 'react-native'
+import { View, Text, ScrollView, Pressable, Alert, Switch } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { useAuth } from '../../hooks/useAuth'
 import { useExportData, useSignOutOtherSessions, useDeleteAccount } from '../../hooks/useUser'
+import { useBiometrics } from '../../hooks/useBiometrics'
 import { useToast } from '../../components/ui/Toast'
 import { colors } from '../../theme/colors'
 
@@ -83,6 +84,7 @@ export default function SettingsScreen() {
 	const exportData = useExportData()
 	const signOutOthers = useSignOutOtherSessions()
 	const deleteAccount = useDeleteAccount()
+	const biometrics = useBiometrics()
 	const toast = useToast()
 
 	const handleExport = () => {
@@ -211,6 +213,40 @@ export default function SettingsScreen() {
 						onPress={() => router.push('/profile/connections')}
 					/>
 				</SettingsSection>
+
+				{biometrics.isAvailable ? (
+					<SettingsSection title="Security">
+						<View
+							style={{
+								flexDirection: 'row',
+								alignItems: 'center',
+								paddingVertical: 14,
+								paddingHorizontal: 16,
+							}}
+						>
+							<Ionicons
+								name="finger-print-outline"
+								size={20}
+								color={colors.mutedForeground}
+								style={{ marginRight: 14 }}
+							/>
+							<Text style={{ flex: 1, color: colors.foreground, fontSize: 16 }}>
+								{biometrics.biometricType || 'Biometric'} Unlock
+							</Text>
+							<Switch
+								value={biometrics.isEnabled}
+								onValueChange={(value) => {
+									if (value) {
+										biometrics.enable()
+									} else {
+										biometrics.disable()
+									}
+								}}
+								trackColor={{ false: colors.border, true: colors.primary }}
+							/>
+						</View>
+					</SettingsSection>
+				) : null}
 
 				<SettingsSection title="Data">
 					<SettingsRow

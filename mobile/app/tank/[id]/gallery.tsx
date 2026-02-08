@@ -8,6 +8,7 @@ import {
 	Modal,
 	Dimensions,
 	RefreshControl,
+	ActivityIndicator,
 } from 'react-native'
 import { Image } from 'expo-image'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -17,6 +18,7 @@ import * as Haptics from 'expo-haptics'
 import * as ImagePicker from 'expo-image-picker'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { galleryApi, type GalleryImage } from '../../../lib/api'
+import { uploadImages } from '../../../lib/upload'
 import { Button } from '../../../components/ui/Button'
 import { Skeleton } from '../../../components/ui/Skeleton'
 import { EmptyState } from '../../../components/common/EmptyState'
@@ -49,6 +51,7 @@ export default function TankGalleryScreen() {
 	})
 
 	const [viewerImage, setViewerImage] = useState<GalleryImage | null>(null)
+	const [uploading, setUploading] = useState(false)
 
 	const handleAddPhotos = async () => {
 		const permission = await ImagePicker.requestMediaLibraryPermissionsAsync()
@@ -64,9 +67,32 @@ export default function TankGalleryScreen() {
 		})
 
 		if (!result.canceled && result.assets.length > 0) {
-			// In a production app, you'd upload via UploadThing here
-			// then call galleryApi.addImages with the returned URLs
-			toast.info(`${result.assets.length} photo(s) selected — upload integration needed`)
+			setUploading(true)
+			try {
+				const uris = result.assets.map((a) => a.uri)
+				const uploaded = await uploadImages(uris)
+
+				// Filter successful uploads
+				const successfulUrls = uploaded
+					.filter((r): r is { url: string; key: string; name: string; size: number } => 'url' in r)
+					.map((r) => ({ imageUrl: r.url }))
+
+				if (successfulUrls.length > 0) {
+					await galleryApi.addImages(tankId, successfulUrls)
+					queryClient.invalidateQueries({ queryKey: ['gallery', tankId] })
+					queryClient.invalidateQueries({ queryKey: ['galleries'] })
+					toast.success(`${successfulUrls.length} photo(s) added`)
+				}
+
+				const failedCount = uploaded.length - successfulUrls.length
+				if (failedCount > 0) {
+					toast.error(`${failedCount} photo(s) failed to upload`)
+				}
+			} catch (error) {
+				toast.error('Failed to upload photos')
+			} finally {
+				setUploading(false)
+			}
 		}
 	}
 
@@ -115,12 +141,16 @@ export default function TankGalleryScreen() {
 				<Text style={{ color: colors.foreground, fontSize: 20, fontWeight: '600', flex: 1 }}>
 					Gallery
 				</Text>
-				<Button variant="outline" size="sm" onPress={handleAddPhotos}>
-					<View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-						<Ionicons name="add" size={16} color={colors.foreground} />
-						<Text style={{ color: colors.foreground, fontSize: 14 }}>Add</Text>
-					</View>
-				</Button>
+				{uploading ? (
+					<ActivityIndicator size="small" color={colors.primary} />
+				) : (
+					<Button variant="outline" size="sm" onPress={handleAddPhotos}>
+						<View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+							<Ionicons name="add" size={16} color={colors.foreground} />
+							<Text style={{ color: colors.foreground, fontSize: 14 }}>Add</Text>
+						</View>
+					</Button>
+				)}
 			</View>
 
 			{!images?.length ? (

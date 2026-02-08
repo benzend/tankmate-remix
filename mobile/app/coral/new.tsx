@@ -11,6 +11,7 @@ import { Button } from '../../components/ui/Button'
 import { HealthRing } from '../../components/tank/HealthRing'
 import { colors, getHealthColor } from '../../theme/colors'
 import { type CoralAnalysis } from '../../lib/api'
+import { uploadImage } from '../../lib/upload'
 
 type Step = 'capture' | 'analyzing' | 'result'
 
@@ -65,10 +66,11 @@ export default function NewCoralAnalysisScreen() {
 
 		setStep('analyzing')
 		try {
-			// In a real app, you'd upload the image first via UploadThing or similar
-			// For now, we pass the local URI — the server API expects an imageUrl
+			// Upload the image to UploadThing CDN via our server proxy
+			const uploaded = await uploadImage(imageUri, `coral-${Date.now()}.jpg`)
+
 			const { coralAnalysis } = await analyzeCoral.mutateAsync({
-				imageUrl: imageUri,
+				imageUrl: uploaded.url,
 			})
 			setResult(coralAnalysis)
 			setStep('result')
