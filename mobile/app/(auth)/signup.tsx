@@ -2,8 +2,6 @@ import { useState } from 'react'
 import {
 	View,
 	Text,
-	KeyboardAvoidingView,
-	Platform,
 	ScrollView,
 	Alert,
 } from 'react-native'
@@ -58,10 +56,6 @@ export default function SignupScreen() {
 
 	return (
 		<SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-			<KeyboardAvoidingView
-				style={{ flex: 1 }}
-				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-			>
 				<ScrollView
 					contentContainerStyle={{
 						flexGrow: 1,
@@ -69,6 +63,7 @@ export default function SignupScreen() {
 						paddingHorizontal: 24,
 					}}
 					keyboardShouldPersistTaps="handled"
+					automaticallyAdjustKeyboardInsets
 				>
 					<View style={{ alignItems: 'center', marginBottom: 40 }}>
 						<Text
@@ -155,7 +150,6 @@ export default function SignupScreen() {
 						</Link>
 					</View>
 				</ScrollView>
-			</KeyboardAvoidingView>
 		</SafeAreaView>
 	)
 }

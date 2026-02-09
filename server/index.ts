@@ -222,7 +222,8 @@ if (!ALLOW_INDEXING) {
 }
 
 // Mobile API routes — JSON body parsing + /api/v1 prefix
-app.use('/api/v1', express.json(), apiRouter)
+// Increase limit for base64 image uploads
+app.use('/api/v1', express.json({ limit: '50mb' }), apiRouter)
 
 app.all(
   '*',

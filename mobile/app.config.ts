@@ -18,6 +18,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 	ios: {
 		supportsTablet: true,
 		bundleIdentifier: 'com.tankmate.app',
+		infoPlist: {
+			NSCameraUsageDescription:
+				'TankMate uses your camera to take photos of your aquarium and coral.',
+			NSPhotoLibraryUsageDescription:
+				'TankMate accesses your photo library to upload aquarium images to your tank gallery.',
+			NSFaceIDUsageDescription:
+				'TankMate uses Face ID to securely unlock the app.',
+		},
 	},
 	android: {
 		adaptiveIcon: {
@@ -31,6 +39,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 		'expo-secure-store',
 		'expo-camera',
 		'expo-image-picker',
+		'expo-font',
 		[
 			'expo-notifications',
 			{
@@ -43,7 +52,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 		typedRoutes: true,
 	},
 	extra: {
-		apiUrl: process.env.API_URL || 'http://localhost:8081',
+		apiUrl: process.env.API_URL || 'http://192.168.0.198:3002',
 		eas: {
 			projectId: process.env.EAS_PROJECT_ID,
 		},

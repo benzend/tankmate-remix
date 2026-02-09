@@ -33,7 +33,7 @@ const UpdateImageSchema = z.object({
 })
 
 // GET /api/v1/galleries — all galleries for the user
-router.get('/', async (req, res) => {
+router.get('/galleries', async (req, res) => {
 	try {
 		const userId = getUserId(req)
 		const galleries = await getAllGalleries(userId)

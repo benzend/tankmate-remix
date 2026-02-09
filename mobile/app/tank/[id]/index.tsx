@@ -44,6 +44,8 @@ const PARAMETER_COLORS: Record<string, string> = {
 	salinity: '#F87171',
 }
 
+const GALLERY_THUMB_SIZE = 72
+
 export default function TankDetailScreen() {
 	const { id } = useLocalSearchParams<{ id: string }>()
 	const router = useRouter()
@@ -172,6 +174,17 @@ export default function TankDetailScreen() {
 								<Text style={{ color: colors.foreground, fontSize: 14, fontWeight: '500' }}>Log Maint</Text>
 							</View>
 						</Button>
+						<Button
+							variant="outline"
+							size="sm"
+							onPress={() => router.push(`/tank/${id}/gallery`)}
+							style={{ flex: 1 }}
+						>
+							<View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+								<Ionicons name="camera-outline" size={16} color={colors.foreground} />
+								<Text style={{ color: colors.foreground, fontSize: 14, fontWeight: '500' }}>Photos</Text>
+							</View>
+						</Button>
 					</View>
 
 					{/* Latest Parameters Grid */}
@@ -255,6 +268,68 @@ export default function TankDetailScreen() {
 								<Text style={{ color: colors.mutedForeground, fontSize: 14 }}>
 									No maintenance logs yet
 								</Text>
+							)}
+						</CardContent>
+					</Card>
+
+					{/* Gallery Preview */}
+					<Card style={{ marginBottom: 16 }}>
+						<CardContent>
+							<View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+								<Text style={{ color: colors.foreground, fontSize: 18, fontWeight: '600' }}>
+									Photos
+								</Text>
+								<Pressable onPress={() => router.push(`/tank/${id}/gallery`)}>
+									<Text style={{ color: colors.chart.pH, fontSize: 13, fontWeight: '500' }}>
+										{tank.gallery?.length || 0} photos — View All
+									</Text>
+								</Pressable>
+							</View>
+							{tank.gallery?.length ? (
+								<ScrollView horizontal showsHorizontalScrollIndicator={false}>
+									<View style={{ flexDirection: 'row', gap: 8 }}>
+										{tank.gallery.slice(0, 6).map((image) => (
+											<Pressable
+												key={image.id}
+												onPress={() => router.push(`/tank/${id}/gallery`)}
+												style={({ pressed }) => ({
+													width: GALLERY_THUMB_SIZE,
+													height: GALLERY_THUMB_SIZE,
+													borderRadius: 8,
+													overflow: 'hidden',
+													transform: [{ scale: pressed ? 0.95 : 1 }],
+												})}
+											>
+												<Image
+													source={{ uri: image.imageUrl }}
+													style={{ width: '100%', height: '100%' }}
+													contentFit="cover"
+													transition={200}
+												/>
+											</Pressable>
+										))}
+									</View>
+								</ScrollView>
+							) : (
+								<Pressable
+									onPress={() => router.push(`/tank/${id}/gallery`)}
+									style={{
+										flexDirection: 'row',
+										alignItems: 'center',
+										justifyContent: 'center',
+										gap: 8,
+										paddingVertical: 20,
+										borderWidth: 1,
+										borderColor: colors.border,
+										borderStyle: 'dashed',
+										borderRadius: 8,
+									}}
+								>
+									<Ionicons name="camera-outline" size={20} color={colors.mutedForeground} />
+									<Text style={{ color: colors.mutedForeground, fontSize: 14 }}>
+										Add Photos
+									</Text>
+								</Pressable>
 							)}
 						</CardContent>
 					</Card>

@@ -7,6 +7,9 @@
 
 import { describe, it, expect, jest, beforeEach } from '@jest/globals'
 import { renderHook, act, waitFor } from '@testing-library/react-native'
+import * as LocalAuth from 'expo-local-authentication'
+import * as SecureStore from 'expo-secure-store'
+import { useBiometrics } from '../hooks/useBiometrics'
 
 // Mock expo-local-authentication
 jest.mock('expo-local-authentication', () => ({
@@ -28,22 +31,20 @@ jest.mock('expo-secure-store', () => ({
 	deleteItemAsync: jest.fn(),
 }))
 
+const mockedLocalAuth = jest.mocked(LocalAuth)
+const mockedSecureStore = jest.mocked(SecureStore)
+
 describe('useBiometrics', () => {
 	beforeEach(() => {
 		jest.clearAllMocks()
-		jest.resetModules()
 	})
 
 	it('should detect Face ID availability', async () => {
-		const LocalAuth = require('expo-local-authentication')
-		const SecureStore = require('expo-secure-store')
+		mockedLocalAuth.hasHardwareAsync.mockResolvedValue(true)
+		mockedLocalAuth.isEnrolledAsync.mockResolvedValue(true)
+		mockedLocalAuth.supportedAuthenticationTypesAsync.mockResolvedValue([1]) // FACIAL_RECOGNITION
+		mockedSecureStore.getItemAsync.mockResolvedValue(null)
 
-		LocalAuth.hasHardwareAsync.mockResolvedValue(true)
-		LocalAuth.isEnrolledAsync.mockResolvedValue(true)
-		LocalAuth.supportedAuthenticationTypesAsync.mockResolvedValue([1]) // FACIAL_RECOGNITION
-		SecureStore.getItemAsync.mockResolvedValue(null)
-
-		const { useBiometrics } = require('../hooks/useBiometrics')
 		const { result } = renderHook(() => useBiometrics())
 
 		await waitFor(() => {
@@ -55,15 +56,11 @@ describe('useBiometrics', () => {
 	})
 
 	it('should detect fingerprint availability', async () => {
-		const LocalAuth = require('expo-local-authentication')
-		const SecureStore = require('expo-secure-store')
+		mockedLocalAuth.hasHardwareAsync.mockResolvedValue(true)
+		mockedLocalAuth.isEnrolledAsync.mockResolvedValue(true)
+		mockedLocalAuth.supportedAuthenticationTypesAsync.mockResolvedValue([2]) // FINGERPRINT
+		mockedSecureStore.getItemAsync.mockResolvedValue(null)
 
-		LocalAuth.hasHardwareAsync.mockResolvedValue(true)
-		LocalAuth.isEnrolledAsync.mockResolvedValue(true)
-		LocalAuth.supportedAuthenticationTypesAsync.mockResolvedValue([2]) // FINGERPRINT
-		SecureStore.getItemAsync.mockResolvedValue(null)
-
-		const { useBiometrics } = require('../hooks/useBiometrics')
 		const { result } = renderHook(() => useBiometrics())
 
 		await waitFor(() => {
@@ -74,14 +71,10 @@ describe('useBiometrics', () => {
 	})
 
 	it('should report unavailable when no hardware', async () => {
-		const LocalAuth = require('expo-local-authentication')
-		const SecureStore = require('expo-secure-store')
+		mockedLocalAuth.hasHardwareAsync.mockResolvedValue(false)
+		mockedLocalAuth.isEnrolledAsync.mockResolvedValue(false)
+		mockedSecureStore.getItemAsync.mockResolvedValue(null)
 
-		LocalAuth.hasHardwareAsync.mockResolvedValue(false)
-		LocalAuth.isEnrolledAsync.mockResolvedValue(false)
-		SecureStore.getItemAsync.mockResolvedValue(null)
-
-		const { useBiometrics } = require('../hooks/useBiometrics')
 		const { result } = renderHook(() => useBiometrics())
 
 		await waitFor(() => {
@@ -90,15 +83,11 @@ describe('useBiometrics', () => {
 	})
 
 	it('should read enabled state from secure store', async () => {
-		const LocalAuth = require('expo-local-authentication')
-		const SecureStore = require('expo-secure-store')
+		mockedLocalAuth.hasHardwareAsync.mockResolvedValue(true)
+		mockedLocalAuth.isEnrolledAsync.mockResolvedValue(true)
+		mockedLocalAuth.supportedAuthenticationTypesAsync.mockResolvedValue([1])
+		mockedSecureStore.getItemAsync.mockResolvedValue('true')
 
-		LocalAuth.hasHardwareAsync.mockResolvedValue(true)
-		LocalAuth.isEnrolledAsync.mockResolvedValue(true)
-		LocalAuth.supportedAuthenticationTypesAsync.mockResolvedValue([1])
-		SecureStore.getItemAsync.mockResolvedValue('true')
-
-		const { useBiometrics } = require('../hooks/useBiometrics')
 		const { result } = renderHook(() => useBiometrics())
 
 		await waitFor(() => {
@@ -107,16 +96,12 @@ describe('useBiometrics', () => {
 	})
 
 	it('should enable biometric after successful verification', async () => {
-		const LocalAuth = require('expo-local-authentication')
-		const SecureStore = require('expo-secure-store')
+		mockedLocalAuth.hasHardwareAsync.mockResolvedValue(true)
+		mockedLocalAuth.isEnrolledAsync.mockResolvedValue(true)
+		mockedLocalAuth.supportedAuthenticationTypesAsync.mockResolvedValue([1])
+		mockedLocalAuth.authenticateAsync.mockResolvedValue({ success: true })
+		mockedSecureStore.getItemAsync.mockResolvedValue(null)
 
-		LocalAuth.hasHardwareAsync.mockResolvedValue(true)
-		LocalAuth.isEnrolledAsync.mockResolvedValue(true)
-		LocalAuth.supportedAuthenticationTypesAsync.mockResolvedValue([1])
-		LocalAuth.authenticateAsync.mockResolvedValue({ success: true })
-		SecureStore.getItemAsync.mockResolvedValue(null)
-
-		const { useBiometrics } = require('../hooks/useBiometrics')
 		const { result } = renderHook(() => useBiometrics())
 
 		await waitFor(() => expect(result.current.isAvailable).toBe(true))
@@ -125,20 +110,16 @@ describe('useBiometrics', () => {
 			await result.current.enable()
 		})
 
-		expect(SecureStore.setItemAsync).toHaveBeenCalledWith('tankmate_biometric_enabled', 'true')
+		expect(mockedSecureStore.setItemAsync).toHaveBeenCalledWith('tankmate_biometric_enabled', 'true')
 		expect(result.current.isEnabled).toBe(true)
 	})
 
 	it('should disable biometric', async () => {
-		const LocalAuth = require('expo-local-authentication')
-		const SecureStore = require('expo-secure-store')
+		mockedLocalAuth.hasHardwareAsync.mockResolvedValue(true)
+		mockedLocalAuth.isEnrolledAsync.mockResolvedValue(true)
+		mockedLocalAuth.supportedAuthenticationTypesAsync.mockResolvedValue([1])
+		mockedSecureStore.getItemAsync.mockResolvedValue('true')
 
-		LocalAuth.hasHardwareAsync.mockResolvedValue(true)
-		LocalAuth.isEnrolledAsync.mockResolvedValue(true)
-		LocalAuth.supportedAuthenticationTypesAsync.mockResolvedValue([1])
-		SecureStore.getItemAsync.mockResolvedValue('true')
-
-		const { useBiometrics } = require('../hooks/useBiometrics')
 		const { result } = renderHook(() => useBiometrics())
 
 		await waitFor(() => expect(result.current.isEnabled).toBe(true))
@@ -147,20 +128,16 @@ describe('useBiometrics', () => {
 			await result.current.disable()
 		})
 
-		expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('tankmate_biometric_enabled')
+		expect(mockedSecureStore.deleteItemAsync).toHaveBeenCalledWith('tankmate_biometric_enabled')
 		expect(result.current.isEnabled).toBe(false)
 	})
 
 	it('should return true from authenticate when biometric not enabled', async () => {
-		const LocalAuth = require('expo-local-authentication')
-		const SecureStore = require('expo-secure-store')
+		mockedLocalAuth.hasHardwareAsync.mockResolvedValue(true)
+		mockedLocalAuth.isEnrolledAsync.mockResolvedValue(true)
+		mockedLocalAuth.supportedAuthenticationTypesAsync.mockResolvedValue([1])
+		mockedSecureStore.getItemAsync.mockResolvedValue(null) // not enabled
 
-		LocalAuth.hasHardwareAsync.mockResolvedValue(true)
-		LocalAuth.isEnrolledAsync.mockResolvedValue(true)
-		LocalAuth.supportedAuthenticationTypesAsync.mockResolvedValue([1])
-		SecureStore.getItemAsync.mockResolvedValue(null) // not enabled
-
-		const { useBiometrics } = require('../hooks/useBiometrics')
 		const { result } = renderHook(() => useBiometrics())
 
 		await waitFor(() => expect(result.current.isAvailable).toBe(true))
@@ -168,6 +145,6 @@ describe('useBiometrics', () => {
 		const passed = await result.current.authenticate()
 		expect(passed).toBe(true)
 		// Should not prompt since biometric is not enabled
-		expect(LocalAuth.authenticateAsync).not.toHaveBeenCalled()
+		expect(mockedLocalAuth.authenticateAsync).not.toHaveBeenCalled()
 	})
 })

@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { View, Text, ScrollView, Alert, KeyboardAvoidingView, Platform } from 'react-native'
+import { useRef, useState } from 'react'
+import { View, Text, ScrollView, Alert, TextInput } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
@@ -30,6 +30,7 @@ export default function LogParametersScreen() {
 	const createLog = useCreateParameterLog(id)
 	const toast = useToast()
 	const [values, setValues] = useState<Record<string, string>>({})
+	const inputRefs = useRef<Record<string, TextInput | null>>({})
 
 	const setValue = (key: string, value: string) => {
 		setValues((prev) => ({ ...prev, [key]: value }))
@@ -70,10 +71,6 @@ export default function LogParametersScreen() {
 
 	return (
 		<SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-			<KeyboardAvoidingView
-				style={{ flex: 1 }}
-				behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-			>
 				{/* Header */}
 				<View
 					style={{
@@ -107,6 +104,7 @@ export default function LogParametersScreen() {
 				<ScrollView
 					contentContainerStyle={{ padding: 16 }}
 					keyboardShouldPersistTaps="handled"
+					automaticallyAdjustKeyboardInsets
 				>
 					{/* Same as last button */}
 					{tank?.parameterLogs?.length ? (
@@ -125,21 +123,31 @@ export default function LogParametersScreen() {
 
 					{/* Parameter grid — 2 columns */}
 					<View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
-						{PARAMETERS.map((param) => (
+						{PARAMETERS.map((param, index) => {
+						const isLast = index === PARAMETERS.length - 1
+						return (
 							<View key={param.key} style={{ width: '47%' }}>
 								<Input
+									ref={(el) => { inputRefs.current[param.key] = el }}
 									label={`${param.label}${param.unit ? ` (${param.unit})` : ''}`}
 									value={values[param.key] || ''}
 									onChangeText={(v) => setValue(param.key, v)}
 									placeholder={param.placeholder}
 									keyboardType="decimal-pad"
-									returnKeyType="next"
+									returnKeyType={isLast ? 'done' : 'next'}
+									onSubmitEditing={() => {
+										if (!isLast) {
+											const nextKey = PARAMETERS[index + 1].key
+											inputRefs.current[nextKey]?.focus()
+										}
+									}}
+									blurOnSubmit={isLast}
 								/>
 							</View>
-						))}
+						)
+					})}
 					</View>
 				</ScrollView>
-			</KeyboardAvoidingView>
 		</SafeAreaView>
 	)
 }

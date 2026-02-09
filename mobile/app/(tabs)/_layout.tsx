@@ -5,7 +5,8 @@ import { colors } from '../../theme/colors'
 
 /**
  * Main app tab bar — replaces the web app's sidebar navigation.
- * 4 tabs: Dashboard, Coral Analyzer, Galleries, Settings.
+ * 3 tabs: Dashboard, Galleries, Settings.
+ * Coral Analyzer is temporarily hidden until the backend API is wired up.
  */
 export default function TabLayout() {
 	return (
@@ -46,14 +47,11 @@ export default function TabLayout() {
 					),
 				}}
 			/>
+			{/* Coral analyzer — temporarily hidden until backend API is wired up */}
 			<Tabs.Screen
 				name="coral"
 				options={{
-					title: 'Coral',
-					tabBarAccessibilityLabel: 'Coral analyzer tab — analyze coral health',
-					tabBarIcon: ({ color, size }) => (
-						<Ionicons name="scan-outline" size={size} color={color} />
-					),
+					href: null,
 				}}
 			/>
 			<Tabs.Screen

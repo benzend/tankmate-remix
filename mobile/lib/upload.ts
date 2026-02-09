@@ -1,4 +1,5 @@
 import * as FileSystem from 'expo-file-system'
+import * as ImageManipulator from 'expo-image-manipulator'
 import { api } from './api'
 
 type UploadResult = {
@@ -8,31 +9,37 @@ type UploadResult = {
 	size: number
 }
 
+const MAX_DIMENSION = 1920
+const COMPRESS_QUALITY = 0.8
+
+/**
+ * Resize and compress an image to JPEG before upload.
+ * Returns the URI of the compressed file.
+ */
+async function compressImage(uri: string): Promise<string> {
+	const result = await ImageManipulator.manipulateAsync(
+		uri,
+		[{ resize: { width: MAX_DIMENSION } }],
+		{ compress: COMPRESS_QUALITY, format: ImageManipulator.SaveFormat.JPEG },
+	)
+	return result.uri
+}
+
 /**
  * Upload a local image file to the server (which proxies to UploadThing CDN).
- * Reads the file as base64 and sends it to the upload endpoint.
+ * Compresses the image, reads as base64, and sends to the upload endpoint.
  */
 export async function uploadImage(uri: string, filename?: string): Promise<UploadResult> {
-	const base64 = await FileSystem.readAsStringAsync(uri, {
+	const compressed = await compressImage(uri)
+	const base64 = await FileSystem.readAsStringAsync(compressed, {
 		encoding: FileSystem.EncodingType.Base64,
 	})
 
-	// Infer content type from extension
-	const ext = uri.split('.').pop()?.toLowerCase() || 'jpg'
-	const contentTypeMap: Record<string, string> = {
-		jpg: 'image/jpeg',
-		jpeg: 'image/jpeg',
-		png: 'image/png',
-		gif: 'image/gif',
-		webp: 'image/webp',
-		heic: 'image/heic',
-	}
-	const contentType = contentTypeMap[ext] || 'image/jpeg'
-	const name = filename || `photo-${Date.now()}.${ext}`
+	const name = filename || `photo-${Date.now()}.jpg`
 
 	return api<UploadResult>('/upload', {
 		method: 'POST',
-		body: { base64, filename: name, contentType },
+		body: { base64, filename: name, contentType: 'image/jpeg' },
 	})
 }
 
@@ -44,22 +51,14 @@ export async function uploadImages(
 ): Promise<Array<UploadResult | { error: string }>> {
 	const files = await Promise.all(
 		uris.map(async (uri) => {
-			const base64 = await FileSystem.readAsStringAsync(uri, {
+			const compressed = await compressImage(uri)
+			const base64 = await FileSystem.readAsStringAsync(compressed, {
 				encoding: FileSystem.EncodingType.Base64,
 			})
-			const ext = uri.split('.').pop()?.toLowerCase() || 'jpg'
-			const contentTypeMap: Record<string, string> = {
-				jpg: 'image/jpeg',
-				jpeg: 'image/jpeg',
-				png: 'image/png',
-				gif: 'image/gif',
-				webp: 'image/webp',
-				heic: 'image/heic',
-			}
 			return {
 				base64,
-				filename: `photo-${Date.now()}-${Math.random().toString(36).slice(2, 6)}.${ext}`,
-				contentType: contentTypeMap[ext] || 'image/jpeg',
+				filename: `photo-${Date.now()}-${Math.random().toString(36).slice(2, 6)}.jpg`,
+				contentType: 'image/jpeg',
 			}
 		}),
 	)

@@ -7,28 +7,23 @@ import { useParameterLogs } from '../../../hooks/useParameters'
 import { Skeleton } from '../../../components/ui/Skeleton'
 import { Button } from '../../../components/ui/Button'
 import { Card, CardContent } from '../../../components/ui/Card'
+import { ParameterLineChart } from '../../../components/charts/ParameterLineChart'
 import { colors } from '../../../theme/colors'
-import { type ParameterLog } from '../../../lib/api'
+import { PARAMETER_CONFIG, PARAM_KEYS, type ParamKey } from '../../../lib/parameterConfig'
 
-const PARAMETER_CONFIG = {
-	pH: { label: 'pH', unit: '', color: colors.chart.pH },
-	alk: { label: 'Alkalinity', unit: 'dKH', color: colors.chart.alk },
-	calcium: { label: 'Calcium', unit: 'ppm', color: colors.chart.calcium },
-	magnesium: { label: 'Magnesium', unit: 'ppm', color: colors.chart.magnesium },
-	nitrate: { label: 'Nitrate', unit: 'ppm', color: colors.chart.nitrate },
-	phosphate: { label: 'Phosphate', unit: 'ppm', color: colors.chart.phosphate },
-	temp: { label: 'Temperature', unit: '°F', color: colors.chart.temp },
-	salinity: { label: 'Salinity', unit: 'sg', color: colors.chart.salinity },
-} as const
-
-type ParamKey = keyof typeof PARAMETER_CONFIG
 type TimeRange = '7d' | '30d' | '90d' | 'all'
+type ActiveTab = 'charts' | 'stats'
 
 const TIME_RANGES: { key: TimeRange; label: string }[] = [
 	{ key: '7d', label: '7D' },
 	{ key: '30d', label: '30D' },
 	{ key: '90d', label: '90D' },
 	{ key: 'all', label: 'All' },
+]
+
+const TABS: { key: ActiveTab; label: string }[] = [
+	{ key: 'charts', label: 'Charts' },
+	{ key: 'stats', label: 'Stats' },
 ]
 
 function getTimeRangeStart(range: TimeRange): Date | null {
@@ -51,14 +46,7 @@ function MiniChart({ values, color }: { values: number[]; color: string }) {
 	const max = Math.max(...values)
 	const range = max - min || 1
 	const height = 60
-	const width = 280
-	const step = width / (values.length - 1)
 
-	const points = values
-		.map((v, i) => `${i * step},${height - ((v - min) / range) * height}`)
-		.join(' ')
-
-	// Simple SVG-like visual using View positions
 	return (
 		<View style={{ height, width: '100%', flexDirection: 'row', alignItems: 'flex-end', gap: 1 }}>
 			{values.map((v, i) => {
@@ -85,6 +73,7 @@ export default function ParameterHistoryScreen() {
 	const router = useRouter()
 	const { data: logs, isLoading } = useParameterLogs(id)
 	const [timeRange, setTimeRange] = useState<TimeRange>('30d')
+	const [activeTab, setActiveTab] = useState<ActiveTab>('charts')
 
 	const filteredLogs = useMemo(() => {
 		if (!logs) return []
@@ -97,7 +86,7 @@ export default function ParameterHistoryScreen() {
 	}, [logs, timeRange])
 
 	const parameterSections = useMemo(() => {
-		return (Object.keys(PARAMETER_CONFIG) as ParamKey[]).map((key) => {
+		return (PARAM_KEYS as readonly ParamKey[]).map((key) => {
 			const config = PARAMETER_CONFIG[key]
 			const values = filteredLogs
 				.map((log) => log[key])
@@ -108,6 +97,23 @@ export default function ParameterHistoryScreen() {
 			const avg = values.length ? values.reduce((a, b) => a + b, 0) / values.length : null
 			return { key, ...config, values, latest, min, max, avg }
 		}).filter((s) => s.values.length > 0)
+	}, [filteredLogs])
+
+	const chartDataByParam = useMemo(() => {
+		const result: Partial<Record<ParamKey, { timestamp: number; value: number }[]>> = {}
+		for (const key of PARAM_KEYS) {
+			const points: { timestamp: number; value: number }[] = []
+			for (const log of filteredLogs) {
+				const val = log[key]
+				if (val != null) {
+					points.push({ timestamp: new Date(log.createdAt).getTime(), value: val })
+				}
+			}
+			if (points.length > 0) {
+				result[key] = points
+			}
+		}
+		return result
 	}, [filteredLogs])
 
 	if (isLoading) {
@@ -188,6 +194,40 @@ export default function ParameterHistoryScreen() {
 				))}
 			</View>
 
+			{/* Tab selector */}
+			<View
+				style={{
+					flexDirection: 'row',
+					paddingHorizontal: 16,
+					paddingBottom: 12,
+					gap: 8,
+				}}
+			>
+				{TABS.map((tab) => (
+					<Pressable
+						key={tab.key}
+						onPress={() => setActiveTab(tab.key)}
+						style={{
+							flex: 1,
+							paddingVertical: 8,
+							borderRadius: 8,
+							backgroundColor: activeTab === tab.key ? colors.primary : colors.accent,
+							alignItems: 'center',
+						}}
+					>
+						<Text
+							style={{
+								color: activeTab === tab.key ? colors.primaryForeground : colors.mutedForeground,
+								fontSize: 14,
+								fontWeight: '600',
+							}}
+						>
+							{tab.label}
+						</Text>
+					</Pressable>
+				))}
+			</View>
+
 			<ScrollView contentContainerStyle={{ padding: 16, gap: 12 }}>
 				{parameterSections.length === 0 ? (
 					<View style={{ alignItems: 'center', paddingVertical: 40 }}>
@@ -195,7 +235,23 @@ export default function ParameterHistoryScreen() {
 							No parameter data for this time range
 						</Text>
 					</View>
+				) : activeTab === 'charts' ? (
+					/* Charts tab */
+					(PARAM_KEYS as readonly ParamKey[]).map((key) => {
+						const data = chartDataByParam[key]
+						if (!data) return null
+						const latest = data[data.length - 1]?.value ?? null
+						return (
+							<ParameterLineChart
+								key={key}
+								paramKey={key}
+								data={data}
+								latestValue={latest}
+							/>
+						)
+					})
 				) : (
+					/* Stats tab */
 					parameterSections.map((section) => (
 						<Card key={section.key} style={{ marginBottom: 4 }}>
 							<CardContent>
@@ -248,7 +304,7 @@ export default function ParameterHistoryScreen() {
 					))
 				)}
 
-				{/* Log table */}
+				{/* Log table — always visible below both tabs */}
 				{filteredLogs.length > 0 ? (
 					<Card style={{ marginTop: 8 }}>
 						<CardContent>
@@ -275,7 +331,7 @@ export default function ParameterHistoryScreen() {
 											{new Date(log.createdAt).toLocaleDateString()} {new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
 										</Text>
 										<View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-											{(Object.keys(PARAMETER_CONFIG) as ParamKey[]).map((key) => {
+											{(PARAM_KEYS as readonly ParamKey[]).map((key) => {
 												const val = log[key]
 												if (val == null) return null
 												return (

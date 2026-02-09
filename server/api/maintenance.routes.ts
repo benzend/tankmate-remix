@@ -13,7 +13,7 @@ const router = Router()
 router.use(authenticateAPI)
 
 const CreateMaintenanceSchema = z.object({
-	maintenanceType: z.enum(['water_change', 'filter_change', 'sand_change', 'custom']),
+	maintenanceType: z.enum(['water_change', 'filter_change', 'sand_change', 'general', 'custom']),
 	extraDetails: z.string().optional().default(''),
 })
 
