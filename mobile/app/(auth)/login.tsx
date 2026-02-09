@@ -59,7 +59,7 @@ export default function LoginScreen() {
 								fontFamily: 'Jost-Bold',
 							}}
 						>
-							TankMate
+							ReefChronicles
 						</Text>
 						<Text style={{ color: colors.mutedForeground, fontSize: 16, marginTop: 8 }}>
 							Sign in to your account

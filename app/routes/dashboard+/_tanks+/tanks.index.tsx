@@ -9,7 +9,7 @@ import { prisma } from '#app/utils/db.server.js'
 import { cn, getLatestTankScoreAverage, useDoubleCheck, useIsPending } from '#app/utils/misc.js'
 
 
-export const meta: MetaFunction = () => [{ title: 'TankMate | Tanks' }]
+export const meta: MetaFunction = () => [{ title: 'ReefChronicles | Tanks' }]
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await requireUserId(request, { redirectTo: '/' })

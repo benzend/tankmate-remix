@@ -29,7 +29,7 @@ export default function AboutRoute() {
                 : "opacity-0 translate-y-8"
             }`}
           >
-            About TankMate
+            About ReefChronicles
           </h1>
           <p
             className={`mx-auto max-w-2xl text-xl drop-shadow-lg transition-all duration-1000 delay-300 ${
@@ -66,7 +66,7 @@ export default function AboutRoute() {
             }`}
           >
             <p className="mb-6">
-              At TankMate, we believe that every aquarium deserves the best care possible. Our mission is to empower aquarium enthusiasts—from beginners to experts—with modern software tools and a supportive community that makes tank maintenance effortless, enjoyable, and more effective.
+              At ReefChronicles, we believe that every aquarium deserves the best care possible. Our mission is to empower aquarium enthusiasts—from beginners to experts—with modern software tools and a supportive community that makes tank maintenance effortless, enjoyable, and more effective.
             </p>
             <p className="mb-6">
               We're passionate about creating intuitive tools that not only simplify aquarium care but also connect you with fellow aquarists who share your passion. By combining smart tracking capabilities with community knowledge, we help you create thriving underwater worlds while building lasting friendships.
@@ -178,7 +178,7 @@ export default function AboutRoute() {
             Ready to Transform Your Aquarium Care?
           </h2>
           <p className="mb-8 text-xl">
-            Be the first of aquarium enthusiasts who trust TankMate to keep their tanks healthy and thriving.
+            Be the first of aquarium enthusiasts who trust ReefChronicles to keep their tanks healthy and thriving.
           </p>
           <a
             href="/signup"

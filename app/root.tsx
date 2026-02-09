@@ -61,10 +61,10 @@ export const links: LinksFunction = () => {
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
-    { title: data ? 'TankMate' : 'Error | TankMate' },
+    { title: data ? 'ReefChronicles' : 'Error | ReefChronicles' },
     {
       name: 'description',
-      content: `Monitor and maintain your aquarium's health with AI-powered coral analysis, water quality tracking, and smart alerts. TankMate helps reef enthusiasts keep their marine ecosystems thriving.`,
+      content: `Monitor and maintain your aquarium's health with AI-powered coral analysis, water quality tracking, and smart alerts. ReefChronicles helps reef enthusiasts keep their marine ecosystems thriving.`,
     },
   ]
 }

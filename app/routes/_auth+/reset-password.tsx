@@ -69,7 +69,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export const meta: MetaFunction = () => {
-  return [{ title: 'Reset Password | TankMate' }]
+  return [{ title: 'Reset Password | ReefChronicles' }]
 }
 
 export default function ResetPasswordPage() {

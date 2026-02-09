@@ -1,8 +1,8 @@
 import * as SecureStore from 'expo-secure-store'
 
-const TOKEN_KEY = 'tankmate_token'
-const EXPIRY_KEY = 'tankmate_token_expiry'
-const USER_ID_KEY = 'tankmate_user_id'
+const TOKEN_KEY = 'reefchronicles_token'
+const EXPIRY_KEY = 'reefchronicles_token_expiry'
+const USER_ID_KEY = 'reefchronicles_user_id'
 
 /**
  * Store auth credentials in the device's secure enclave.

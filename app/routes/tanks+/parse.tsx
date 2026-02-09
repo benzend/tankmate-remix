@@ -1,6 +1,6 @@
 import { Form } from '@remix-run/react'
 import { Tooltip } from 'react-tooltip'
-export const meta: MetaFunction = () => [{ title: 'TankMate | Tanks' }]
+export const meta: MetaFunction = () => [{ title: 'ReefChronicles | Tanks' }]
 import {
 	type ActionFunctionArgs,
 	type MetaFunction,

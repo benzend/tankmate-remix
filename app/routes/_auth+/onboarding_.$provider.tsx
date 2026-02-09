@@ -175,7 +175,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 }
 
 export const meta: MetaFunction = () => {
-	return [{ title: 'Setup TankMate Account' }]
+	return [{ title: 'Setup ReefChronicles Account' }]
 }
 
 export default function OnboardingProviderRoute() {

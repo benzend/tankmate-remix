@@ -1,4 +1,4 @@
-# Agent Guidelines for Tankmate Remix Project
+# Agent Guidelines for ReefChronicles Remix Project
 
 ## Commands
 - **Build**: `npm run build` (runs build:icons, build:remix, build:server)

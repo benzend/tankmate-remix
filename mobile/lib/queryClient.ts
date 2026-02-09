@@ -27,6 +27,6 @@ export const queryClient = new QueryClient({
  */
 export const asyncStoragePersister = createAsyncStoragePersister({
 	storage: AsyncStorage,
-	key: 'tankmate-query-cache',
+	key: 'reefchronicles-query-cache',
 	throttleTime: 1000,
 })

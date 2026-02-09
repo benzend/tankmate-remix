@@ -78,7 +78,7 @@ export default function SupportRoute() {
                 : "opacity-0 translate-y-8"
             }`}
           >
-            We're here to help you get the most out of TankMate
+            We're here to help you get the most out of ReefChronicles
           </p>
         </div>
       </section>
@@ -122,7 +122,7 @@ export default function SupportRoute() {
                 <ContactInfo
                   icon="📧"
                   title="Email Support"
-                  info="support@tankmate.tech"
+                  info="support@reefchronicles.com"
                   description="We typically respond within 24 hours"
                 />
               </div>

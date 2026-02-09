@@ -12,7 +12,7 @@ export const MarketingFooter = () => {
           <Logo />
 
           <p className="mx-10 text-sm text-gray-400">
-            © 2024 - {new Date().getFullYear()} TankMate. All Rights Reserved.
+            © 2024 - {new Date().getFullYear()} ReefChronicles. All Rights Reserved.
           </p>
         </div>
       ) : null}

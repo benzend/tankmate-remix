@@ -6,7 +6,7 @@ import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
 import { getLatestTankScoreAverage } from '#app/utils/misc.js'
 
-export const meta: MetaFunction = () => [{ title: 'TankMate | Dashboard' }]
+export const meta: MetaFunction = () => [{ title: 'ReefChronicles | Dashboard' }]
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	const userId = await requireUserId(request, { redirectTo: '/' })

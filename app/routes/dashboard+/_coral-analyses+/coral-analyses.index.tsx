@@ -3,7 +3,7 @@ import { Link, useLoaderData } from '@remix-run/react'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
 
-export const meta: MetaFunction = () => [{ title: 'TankMate | Coral Analyzer' }]
+export const meta: MetaFunction = () => [{ title: 'ReefChronicles | Coral Analyzer' }]
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	const userId = await requireUserId(request, { redirectTo: '/' })

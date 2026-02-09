@@ -77,7 +77,7 @@ export default function TwoFactorScreen() {
 								</View>
 								<View style={{ flex: 1 }}>
 									<Text style={{ color: colors.foreground, fontSize: 15, fontWeight: '500' }}>
-										Open TankMate on your browser
+										Open ReefChronicles on your browser
 									</Text>
 									<Text style={{ color: colors.mutedForeground, fontSize: 13, marginTop: 2 }}>
 										Go to Settings → Two-Factor Auth

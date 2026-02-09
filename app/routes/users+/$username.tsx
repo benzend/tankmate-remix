@@ -101,10 +101,10 @@ export default function ProfileRoute() {
 export const meta: MetaFunction<typeof loader> = ({ data, params }) => {
 	const displayName = data?.user.name ?? params.username
 	return [
-		{ title: `${displayName} | TankMate` },
+		{ title: `${displayName} | ReefChronicles` },
 		{
 			name: 'description',
-			content: `Profile of ${displayName} on TankMate`,
+			content: `Profile of ${displayName} on ReefChronicles`,
 		},
 	]
 }

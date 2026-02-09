@@ -171,7 +171,7 @@ router.get('/me/data-export', async (req, res) => {
 		}
 
 		res.setHeader('Content-Type', 'application/json')
-		res.setHeader('Content-Disposition', `attachment; filename="tankmate-data-${userId}.json"`)
+		res.setHeader('Content-Disposition', `attachment; filename="reefchronicles-data-${userId}.json"`)
 		return res.json(user)
 	} catch (error) {
 		console.error('Data export error:', error)

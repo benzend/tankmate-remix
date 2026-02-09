@@ -57,11 +57,11 @@ export default function PrivacyRoute() {
 
 					<PolicySection title="1. Introduction">
 						<p>
-							TankMate ("we", "our", or "us") operates the TankMate
+							ReefChronicles ("we", "our", or "us") operates the ReefChronicles
 							website and mobile application. This Privacy Policy
 							explains how we collect, use, disclose, and safeguard
 							your information when you use our service. Please read
-							this policy carefully. By using TankMate, you agree to
+							this policy carefully. By using ReefChronicles, you agree to
 							the collection and use of information in accordance with
 							this policy.
 						</p>
@@ -117,7 +117,7 @@ export default function PrivacyRoute() {
 					<PolicySection title="3. How We Use Your Information">
 						<ul className="list-inside list-disc space-y-2">
 							<li>
-								Provide, maintain, and improve the TankMate service
+								Provide, maintain, and improve the ReefChronicles service
 							</li>
 							<li>
 								Display your aquarium data, parameter trends, and
@@ -223,7 +223,7 @@ export default function PrivacyRoute() {
 
 					<PolicySection title="8. Camera and Photo Library Access">
 						<p>
-							The TankMate mobile app requests access to your
+							The ReefChronicles mobile app requests access to your
 							device's camera and photo library solely for the purpose
 							of capturing and uploading aquarium photos. We do not
 							access your camera or photos for any other purpose.
@@ -235,7 +235,7 @@ export default function PrivacyRoute() {
 
 					<PolicySection title="9. Children's Privacy">
 						<p>
-							TankMate is not directed at children under the age of
+							ReefChronicles is not directed at children under the age of
 							13. We do not knowingly collect personal information
 							from children under 13. If we become aware that we have
 							collected personal information from a child under 13, we
@@ -248,7 +248,7 @@ export default function PrivacyRoute() {
 							We may update this Privacy Policy from time to time. We
 							will notify you of any changes by posting the new policy
 							on this page and updating the "Last updated" date. Your
-							continued use of TankMate after changes are posted
+							continued use of ReefChronicles after changes are posted
 							constitutes your acceptance of the updated policy.
 						</p>
 					</PolicySection>
@@ -258,10 +258,10 @@ export default function PrivacyRoute() {
 							If you have questions about this Privacy Policy or your
 							data, please contact us at{' '}
 							<a
-								href="mailto:support@tankmate.tech"
+								href="mailto:support@reefchronicles.com"
 								className="text-blue-400 underline transition-colors hover:text-blue-300"
 							>
-								support@tankmate.tech
+								support@reefchronicles.com
 							</a>
 							.
 						</p>

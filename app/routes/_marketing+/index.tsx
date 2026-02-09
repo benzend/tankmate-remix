@@ -116,7 +116,7 @@ export default function Index() {
                 : "opacity-0 translate-y-8"
             }`}
           >
-            Why TankMate?
+            Why ReefChronicles?
           </h2>
           <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
             <div
@@ -192,7 +192,7 @@ export default function Index() {
           </p>
           <img
             src="/img/marketing/prototype-example.png"
-            alt="TankMate Prototype"
+            alt="ReefChronicles Prototype"
             className={`mx-auto mb-8 w-full max-w-lg rounded-lg shadow-lg hover:scale-105 transition-all duration-1000 delay-400 ${
               prototypeRef.isInView
                 ? "animate-in fade-in slide-in-from-right-8"
@@ -215,7 +215,7 @@ export default function Index() {
                 : "opacity-0 scale-75"
             }`}
           >
-            Keep your tank healthy with TankMate!
+            Keep your tank healthy with ReefChronicles!
           </h2>
           <p
             className={`mx-auto mb-10 max-w-lg text-2xl transition-all duration-700 delay-200 ${

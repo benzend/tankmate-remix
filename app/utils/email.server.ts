@@ -32,7 +32,7 @@ export async function sendEmail({
 	| { html: string; text: string; react?: never }
 	| { react: ReactElement; html?: never; text?: never }
 )) {
-	const from = options.from || 'hello@tankmate.tech'
+	const from = options.from || 'hello@reefchronicles.com'
 
 	const email = {
 		from,
@@ -122,8 +122,8 @@ ${message}
 	`.trim()
 
 	return sendEmail({
-		from: 'contact@tankmate.tech',
-		to: 'support@tankmate.tech',
+		from: 'contact@reefchronicles.com',
+		to: 'support@reefchronicles.com',
 		subject: `[Contact Form] New message from ${name}`,
 		html,
 		text,

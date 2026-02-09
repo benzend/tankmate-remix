@@ -84,7 +84,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 	const response = await sendEmail({
 		to: submission.value.email,
-		subject: `TankMate Email Change Verification`,
+		subject: `ReefChronicles Email Change Verification`,
 		react: <EmailChangeEmail verifyUrl={verifyUrl.toString()} otp={otp} />,
 	})
 

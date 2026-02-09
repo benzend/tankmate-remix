@@ -123,7 +123,7 @@ export default function ConnectionsScreen() {
 				)}
 
 				<Text style={{ color: colors.mutedForeground, fontSize: 13, textAlign: 'center', marginTop: 24, paddingHorizontal: 16 }}>
-					To connect or disconnect accounts, visit TankMate settings in your web browser.
+					To connect or disconnect accounts, visit ReefChronicles settings in your web browser.
 				</Text>
 			</ScrollView>
 		</SafeAreaView>

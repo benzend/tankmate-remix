@@ -1,4 +1,4 @@
-# TankMate Mobile — App Store Deployment Guide
+# ReefChronicles Mobile — App Store Deployment Guide
 
 This guide covers everything you need to do manually to get the mobile app into the iOS App Store and Google Play Store.
 
@@ -62,7 +62,7 @@ Replace these placeholder files with your actual assets:
 | `assets/splash-icon.png` | 200x200 | Splash screen logo |
 | `assets/notification-icon.png` | 96x96 | Push notification icon (Android) |
 
-Use a tool like [Figma](https://figma.com) or [Icon Kitchen](https://icon.kitchen) to generate the icons from your TankMate logo.
+Use a tool like [Figma](https://figma.com) or [Icon Kitchen](https://icon.kitchen) to generate the icons from your ReefChronicles logo.
 
 ---
 
@@ -91,7 +91,7 @@ eas credentials -p ios
 ```
 
 You'll need to:
-- Create an App Store Connect app (Bundle ID: `com.tankmate.app`)
+- Create an App Store Connect app (Bundle ID: `com.reefchronicles.app`)
 - Generate a distribution certificate
 - Create a provisioning profile
 
@@ -113,7 +113,7 @@ eas submit -p ios
 
 This uploads the build to App Store Connect. Then in [App Store Connect](https://appstoreconnect.apple.com/):
 
-1. Go to **My Apps** → **TankMate**
+1. Go to **My Apps** → **ReefChronicles**
 2. Click **+ Version** to create a new version
 3. Fill in:
    - **Screenshots**: Upload screenshots for iPhone 6.7" and 6.1" (required)
@@ -277,7 +277,7 @@ This doesn't require a new app store review. Use it for bug fixes, UI tweaks, an
 > AI-powered aquarium management. Track water, analyze coral, log maintenance.
 
 ### Full Description
-> TankMate is the all-in-one aquarium management app for reef keepers and freshwater enthusiasts.
+> ReefChronicles is the all-in-one aquarium management app for reef keepers and freshwater enthusiasts.
 >
 > **Track Water Parameters** — Log temperature, alkalinity, calcium, magnesium, pH, nitrate, phosphate, and salinity. View trends with beautiful charts and catch problems early.
 >
@@ -289,7 +289,7 @@ This doesn't require a new app store review. Use it for bug fixes, UI tweaks, an
 >
 > **Secure & Private** — Your data is encrypted and stored securely. Face ID and fingerprint unlock keep your information safe.
 >
-> TankMate syncs with the TankMate web app — manage your tanks from any device.
+> ReefChronicles syncs with the ReefChronicles web app — manage your tanks from any device.
 
 ---
 

@@ -4,7 +4,7 @@ export const Logo = ({ mode = 'stuck', to = '/' } : { mode?: 'stuck' | 'follow-t
   return (
 		<Link to={to} className="group grid leading-snug">
 			<span className={`text-2xl font-extrabold ${mode === 'stuck' ? 'text-white' : 'text-foreground' }`}>
-				TankMate
+				ReefChronicles
 			</span>
 		</Link>
   )

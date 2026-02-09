@@ -76,7 +76,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const response = await sendEmail({
     to: user.email,
-    subject: `TankMate Password Reset`,
+    subject: `ReefChronicles Password Reset`,
     react: (
       <ForgotPasswordEmail onboardingUrl={verifyUrl.toString()} otp={otp} />
     ),
@@ -103,7 +103,7 @@ function ForgotPasswordEmail({
     <E.Html lang="en" dir="ltr">
       <E.Container>
         <h1>
-          <E.Text>TankMate Password Reset</E.Text>
+          <E.Text>ReefChronicles Password Reset</E.Text>
         </h1>
         <p>
           <E.Text>
@@ -120,7 +120,7 @@ function ForgotPasswordEmail({
 }
 
 export const meta: MetaFunction = () => {
-  return [{ title: 'Password Recovery for TankMate' }]
+  return [{ title: 'Password Recovery for ReefChronicles' }]
 }
 
 export default function ForgotPasswordRoute() {

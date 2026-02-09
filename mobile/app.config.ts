@@ -2,12 +2,12 @@ import { ExpoConfig, ConfigContext } from 'expo/config'
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
 	...config,
-	name: 'TankMate',
-	slug: 'tankmate',
+	name: 'ReefChronicles',
+	slug: 'reefchronicles',
 	version: '1.0.0',
 	orientation: 'portrait',
 	icon: './assets/icon.png',
-	scheme: 'tankmate',
+	scheme: 'reefchronicles',
 	userInterfaceStyle: 'automatic',
 	newArchEnabled: true,
 	splash: {
@@ -17,14 +17,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 	},
 	ios: {
 		supportsTablet: true,
-		bundleIdentifier: 'com.tankmate.app',
+		bundleIdentifier: 'com.reefchronicles.app',
 		infoPlist: {
 			NSCameraUsageDescription:
-				'TankMate uses your camera to take photos of your aquarium and coral.',
+				'ReefChronicles uses your camera to take photos of your aquarium and coral.',
 			NSPhotoLibraryUsageDescription:
-				'TankMate accesses your photo library to upload aquarium images to your tank gallery.',
+				'ReefChronicles accesses your photo library to upload aquarium images to your tank gallery.',
 			NSFaceIDUsageDescription:
-				'TankMate uses Face ID to securely unlock the app.',
+				'ReefChronicles uses Face ID to securely unlock the app.',
 		},
 	},
 	android: {
@@ -32,7 +32,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 			foregroundImage: './assets/adaptive-icon.png',
 			backgroundColor: '#0a1628',
 		},
-		package: 'com.tankmate.app',
+		package: 'com.reefchronicles.app',
 	},
 	plugins: [
 		'expo-router',

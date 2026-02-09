@@ -14,7 +14,7 @@ const client = new OpenAI({
 	apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
 })
 
-export const meta: MetaFunction = () => [{ title: 'TankMate | Prototype' }]
+export const meta: MetaFunction = () => [{ title: 'ReefChronicles | Prototype' }]
 
 export async function action({ request }: ActionFunctionArgs) {
 	const body = await request.formData()

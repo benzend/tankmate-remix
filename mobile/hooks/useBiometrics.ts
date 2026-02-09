@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react'
 import * as LocalAuthentication from 'expo-local-authentication'
 import * as SecureStore from 'expo-secure-store'
 
-const BIOMETRIC_ENABLED_KEY = 'tankmate_biometric_enabled'
+const BIOMETRIC_ENABLED_KEY = 'reefchronicles_biometric_enabled'
 
 type BiometricState = {
 	/** Whether the device has biometric hardware */
@@ -75,7 +75,7 @@ export function useBiometrics(): BiometricState {
 		if (!isAvailable || !isEnabled) return true // Skip if not available/enabled
 
 		const result = await LocalAuthentication.authenticateAsync({
-			promptMessage: 'Unlock TankMate',
+			promptMessage: 'Unlock ReefChronicles',
 			cancelLabel: 'Use password',
 			disableDeviceFallback: false,
 		})

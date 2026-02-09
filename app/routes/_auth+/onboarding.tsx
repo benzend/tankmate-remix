@@ -126,7 +126,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export const meta: MetaFunction = () => {
-  return [{ title: 'Setup Epic TankMate' }]
+  return [{ title: 'Setup Epic ReefChronicles' }]
 }
 
 export default function OnboardingRoute() {

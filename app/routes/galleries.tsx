@@ -57,10 +57,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export const meta: MetaFunction = () => [
-  { title: 'TankMate | Community Galleries' },
+  { title: 'ReefChronicles | Community Galleries' },
   { 
     name: 'description', 
-    content: 'Explore aquarium galleries from the TankMate community. Discover inspiring tank setups and aquascaping ideas.' 
+    content: 'Explore aquarium galleries from the ReefChronicles community. Discover inspiring tank setups and aquascaping ideas.' 
   },
 ]
 
@@ -72,7 +72,7 @@ export default function PublicGalleriesPage() {
       <header className="mb-8 text-center">
         <h1 className="text-4xl font-bold text-foreground mb-4">Community Galleries</h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Discover inspiring aquarium setups from the TankMate community. Browse tank galleries and get ideas for your next aquascape.
+          Discover inspiring aquarium setups from the ReefChronicles community. Browse tank galleries and get ideas for your next aquascape.
         </p>
       </header>
 
@@ -88,7 +88,7 @@ export default function PublicGalleriesPage() {
             className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-md hover:bg-primary/90 transition-colors"
           >
             <Icon name="plus" className="h-4 w-4" />
-            Join TankMate
+            Join ReefChronicles
           </Link>
         </div>
       ) : (
@@ -156,7 +156,7 @@ export default function PublicGalleriesPage() {
         <div className="bg-muted/50 rounded-lg p-8">
           <h2 className="text-2xl font-semibold text-foreground mb-4">Share Your Aquarium</h2>
           <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-            Join the TankMate community and showcase your aquarium setup to inspire others.
+            Join the ReefChronicles community and showcase your aquarium setup to inspire others.
           </p>
           <Link
             to="/login"

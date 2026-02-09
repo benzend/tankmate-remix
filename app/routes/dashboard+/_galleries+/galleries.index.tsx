@@ -53,7 +53,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json({ user, galleries, tanks })
 }
 
-export const meta: MetaFunction = () => [{ title: "TankMate | Galleries" }];
+export const meta: MetaFunction = () => [{ title: "ReefChronicles | Galleries" }];
 
 export async function action({ request }: ActionFunctionArgs) {
   const userId = await requireUserId(request, { redirectTo: "/" });

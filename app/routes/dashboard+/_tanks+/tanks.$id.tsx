@@ -5,7 +5,7 @@ import {
   Outlet,
 } from "@remix-run/react";
 
-export const meta: MetaFunction = () => [{ title: "TankMate | Tank Details" }];
+export const meta: MetaFunction = () => [{ title: "ReefChronicles | Tank Details" }];
 
 export default function TankPage() {
   return (

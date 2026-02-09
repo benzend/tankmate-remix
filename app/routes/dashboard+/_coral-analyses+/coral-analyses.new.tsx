@@ -13,7 +13,7 @@ import { tryJsonParse } from '#app/utils/misc.js'
 import { UploadDropzone } from '#app/utils/uploadthing'
 import { UploadedFileData } from 'uploadthing/types'
 
-export const meta: MetaFunction = () => [{ title: 'TankMate | Coral Analysis' }]
+export const meta: MetaFunction = () => [{ title: 'ReefChronicles | Coral Analysis' }]
 
 const client = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted

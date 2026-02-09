@@ -1,5 +1,5 @@
 /**
- * API Integration Tests for TankMate REST API (Phase 0)
+ * API Integration Tests for ReefChronicles REST API (Phase 0)
  *
  * These tests verify the /api/v1 endpoints work correctly.
  * Run with: npx vitest run server/__tests__/api.test.ts
@@ -42,7 +42,7 @@ async function api(path: string, options: RequestInit = {}) {
 
 describe('Auth API', () => {
 	const testUser = {
-		email: `test-${Date.now()}@tankmate.test`,
+		email: `test-${Date.now()}@reefchronicles.test`,
 		username: `testuser${Date.now()}`,
 		password: 'TestPassword123!',
 		name: 'Test User',

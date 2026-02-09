@@ -1,8 +1,8 @@
-# TankMate Mobile — Architecture Guide
+# ReefChronicles Mobile — Architecture Guide
 
 ## Overview
 
-TankMate Mobile is a React Native (Expo) companion app for the TankMate aquarium management platform. It shares a backend with the existing Remix web app via a REST API layer.
+ReefChronicles Mobile is a React Native (Expo) companion app for the ReefChronicles aquarium management platform. It shares a backend with the existing Remix web app via a REST API layer.
 
 ```
 ┌───────────────────────────────────────────┐

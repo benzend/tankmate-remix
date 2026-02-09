@@ -22,7 +22,7 @@ import { Input } from "#app/components/ui/input.tsx";
 import { Label } from "#app/components/ui/label.tsx";
 import { Textarea } from "#app/components/ui/textarea.tsx";
 
-export const meta: MetaFunction = () => [{ title: "TankMate | Tank Gallery" }];
+export const meta: MetaFunction = () => [{ title: "ReefChronicles | Tank Gallery" }];
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const userId = await requireUserId(request, { redirectTo: "/" });

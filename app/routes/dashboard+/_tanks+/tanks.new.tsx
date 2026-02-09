@@ -15,7 +15,7 @@ import { prisma } from '#app/utils/db.server.js'
 import { Button } from '#app/components/ui/button.js'
 import { UploadButton } from '#app/utils/uploadthing.js'
 
-export const meta: MetaFunction = () => [{ title: 'TankMate | New Tank' }]
+export const meta: MetaFunction = () => [{ title: 'ReefChronicles | New Tank' }]
 
 const WaterEnum = z.enum(['saltwater', 'freshwater'])
 

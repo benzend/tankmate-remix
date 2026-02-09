@@ -1,8 +1,8 @@
-# TankMate React Native Migration & UI Improvement Plan
+# ReefChronicles React Native Migration & UI Improvement Plan
 
 ## Overview
 
-Migrate TankMate from a Remix web app to a React Native mobile app using **Expo**, while keeping the existing Remix server as the backend by adding a REST API layer. The mobile app will ship to iOS and Android with an improved UI designed for native interaction patterns.
+Migrate ReefChronicles from a Remix web app to a React Native mobile app using **Expo**, while keeping the existing Remix server as the backend by adding a REST API layer. The mobile app will ship to iOS and Android with an improved UI designed for native interaction patterns.
 
 ---
 
