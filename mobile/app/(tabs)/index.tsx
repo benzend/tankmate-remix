@@ -58,6 +58,25 @@ export default function DashboardScreen() {
 						</Pressable>
 						<Pressable
 							onPress={() => {
+								Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+								router.push('/dosing')
+							}}
+							accessibilityRole="button"
+							accessibilityLabel="Dosing calculator"
+							style={({ pressed }) => ({
+								width: 44,
+								height: 44,
+								borderRadius: 22,
+								backgroundColor: colors.accent,
+								alignItems: 'center',
+								justifyContent: 'center',
+								transform: [{ scale: pressed ? 0.92 : 1 }],
+							})}
+						>
+							<Ionicons name="calculator-outline" size={20} color={colors.foreground} />
+						</Pressable>
+						<Pressable
+							onPress={() => {
 								Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 								router.push('/tank/new')
 							}}

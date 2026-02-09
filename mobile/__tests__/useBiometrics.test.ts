@@ -110,7 +110,7 @@ describe('useBiometrics', () => {
 			await result.current.enable()
 		})
 
-		expect(mockedSecureStore.setItemAsync).toHaveBeenCalledWith('tankmate_biometric_enabled', 'true')
+		expect(mockedSecureStore.setItemAsync).toHaveBeenCalledWith('reefchronicles_biometric_enabled', 'true')
 		expect(result.current.isEnabled).toBe(true)
 	})
 
@@ -128,7 +128,7 @@ describe('useBiometrics', () => {
 			await result.current.disable()
 		})
 
-		expect(mockedSecureStore.deleteItemAsync).toHaveBeenCalledWith('tankmate_biometric_enabled')
+		expect(mockedSecureStore.deleteItemAsync).toHaveBeenCalledWith('reefchronicles_biometric_enabled')
 		expect(result.current.isEnabled).toBe(false)
 	})
 

@@ -35,8 +35,8 @@ describe('uploadImage', () => {
 
 		const SecureStore = require('expo-secure-store')
 		SecureStore.getItemAsync.mockImplementation((key: string) => {
-			if (key === 'tankmate_token') return Promise.resolve('test-token')
-			if (key === 'tankmate_token_expiry') return Promise.resolve(new Date(Date.now() + 86400000).toISOString())
+			if (key === 'reefchronicles_token') return Promise.resolve('test-token')
+			if (key === 'reefchronicles_token_expiry') return Promise.resolve(new Date(Date.now() + 86400000).toISOString())
 			return Promise.resolve(null)
 		})
 	})
@@ -115,8 +115,8 @@ describe('uploadImages', () => {
 
 		const SecureStore = require('expo-secure-store')
 		SecureStore.getItemAsync.mockImplementation((key: string) => {
-			if (key === 'tankmate_token') return Promise.resolve('test-token')
-			if (key === 'tankmate_token_expiry') return Promise.resolve(new Date(Date.now() + 86400000).toISOString())
+			if (key === 'reefchronicles_token') return Promise.resolve('test-token')
+			if (key === 'reefchronicles_token_expiry') return Promise.resolve(new Date(Date.now() + 86400000).toISOString())
 			return Promise.resolve(null)
 		})
 	})

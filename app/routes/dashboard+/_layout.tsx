@@ -79,6 +79,19 @@ const SideNav = () => {
             Coral Analyzer
           </Button>
         </Link>
+        <Link to="/dashboard/dosing-calculator">
+          <Button
+            variant={
+              location.pathname === "/dashboard/dosing-calculator"
+                ? "sidenav-active"
+                : "sidenav"
+            }
+            size="full"
+            className="mb-4"
+          >
+            Dosing Calculator
+          </Button>
+        </Link>
         <Link to="/dashboard/galleries">
           <Button
             variant={
@@ -136,6 +149,11 @@ const Nav = () => {
               <Link to="/dashboard/coral-analyses">
                 <Button variant="outline" size="full">
                   Coral Analyzer
+                </Button>
+              </Link>
+              <Link to="/dashboard/dosing-calculator">
+                <Button variant="outline" size="full">
+                  Dosing Calculator
                 </Button>
               </Link>
               <Link to="/dashboard/galleries">
@@ -219,6 +237,7 @@ function Breadcrumbs() {
     ["maintenance"],
     ["parameter-log"],
     ["coral-analyses", "Coral Analyzer"],
+    ["dosing-calculator", "Dosing Calculator"],
     ["galleries"],
     ["new"],
   ];

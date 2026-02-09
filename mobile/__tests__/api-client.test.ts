@@ -32,8 +32,8 @@ describe('API Client', () => {
 	it('should include Bearer token in authenticated requests', async () => {
 		const SecureStore = require('expo-secure-store')
 		SecureStore.getItemAsync.mockImplementation((key: string) => {
-			if (key === 'tankmate_token') return Promise.resolve('test-session-id')
-			if (key === 'tankmate_token_expiry') return Promise.resolve(new Date(Date.now() + 86400000).toISOString())
+			if (key === 'reefchronicles_token') return Promise.resolve('test-session-id')
+			if (key === 'reefchronicles_token_expiry') return Promise.resolve(new Date(Date.now() + 86400000).toISOString())
 			return Promise.resolve(null)
 		})
 
@@ -73,8 +73,8 @@ describe('API Client', () => {
 	it('should attempt token refresh on 401 before clearing tokens', async () => {
 		const SecureStore = require('expo-secure-store')
 		SecureStore.getItemAsync.mockImplementation((key: string) => {
-			if (key === 'tankmate_token') return Promise.resolve('expired-token')
-			if (key === 'tankmate_token_expiry') return Promise.resolve(new Date(Date.now() + 86400000).toISOString())
+			if (key === 'reefchronicles_token') return Promise.resolve('expired-token')
+			if (key === 'reefchronicles_token_expiry') return Promise.resolve(new Date(Date.now() + 86400000).toISOString())
 			return Promise.resolve(null)
 		})
 
@@ -111,14 +111,14 @@ describe('API Client', () => {
 		// Second call should be to refresh endpoint
 		expect(mockFetch.mock.calls[1]?.[0]).toBe('http://test-server:8081/api/v1/auth/refresh')
 		// New token should be stored
-		expect(SecureStore.setItemAsync).toHaveBeenCalledWith('tankmate_token', 'refreshed-token')
+		expect(SecureStore.setItemAsync).toHaveBeenCalledWith('reefchronicles_token', 'refreshed-token')
 	})
 
 	it('should clear tokens when refresh also fails', async () => {
 		const SecureStore = require('expo-secure-store')
 		SecureStore.getItemAsync.mockImplementation((key: string) => {
-			if (key === 'tankmate_token') return Promise.resolve('expired-token')
-			if (key === 'tankmate_token_expiry') return Promise.resolve(new Date(Date.now() + 86400000).toISOString())
+			if (key === 'reefchronicles_token') return Promise.resolve('expired-token')
+			if (key === 'reefchronicles_token_expiry') return Promise.resolve(new Date(Date.now() + 86400000).toISOString())
 			return Promise.resolve(null)
 		})
 
@@ -136,7 +136,7 @@ describe('API Client', () => {
 
 		const { api } = require('../lib/api')
 		await expect(api('/tanks')).rejects.toThrow()
-		expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('tankmate_token')
+		expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('reefchronicles_token')
 	})
 
 	it('should not attempt refresh for noAuth 401 responses', async () => {
@@ -188,16 +188,16 @@ describe('Auth Token Storage', () => {
 
 		await storeTokens('session-123', '2025-12-31T00:00:00Z', 'user-456')
 
-		expect(SecureStore.setItemAsync).toHaveBeenCalledWith('tankmate_token', 'session-123')
-		expect(SecureStore.setItemAsync).toHaveBeenCalledWith('tankmate_token_expiry', '2025-12-31T00:00:00Z')
-		expect(SecureStore.setItemAsync).toHaveBeenCalledWith('tankmate_user_id', 'user-456')
+		expect(SecureStore.setItemAsync).toHaveBeenCalledWith('reefchronicles_token', 'session-123')
+		expect(SecureStore.setItemAsync).toHaveBeenCalledWith('reefchronicles_token_expiry', '2025-12-31T00:00:00Z')
+		expect(SecureStore.setItemAsync).toHaveBeenCalledWith('reefchronicles_user_id', 'user-456')
 	})
 
 	it('should return null for expired tokens', async () => {
 		const SecureStore = require('expo-secure-store')
 		SecureStore.getItemAsync.mockImplementation((key: string) => {
-			if (key === 'tankmate_token') return Promise.resolve('expired-token')
-			if (key === 'tankmate_token_expiry') return Promise.resolve('2020-01-01T00:00:00Z')
+			if (key === 'reefchronicles_token') return Promise.resolve('expired-token')
+			if (key === 'reefchronicles_token_expiry') return Promise.resolve('2020-01-01T00:00:00Z')
 			return Promise.resolve(null)
 		})
 
@@ -214,8 +214,8 @@ describe('Auth Token Storage', () => {
 
 		await clearTokens()
 
-		expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('tankmate_token')
-		expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('tankmate_token_expiry')
-		expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('tankmate_user_id')
+		expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('reefchronicles_token')
+		expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('reefchronicles_token_expiry')
+		expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('reefchronicles_user_id')
 	})
 })
