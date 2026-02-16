@@ -17,7 +17,7 @@ Every coefficient in this calculator is derived from publicly available manufact
 | Brightwell ReefCode Part A | 16 | ppm/ml/gal | Manufacturer | [brightwellaquatics.com](https://www.brightwellaquatics.com/products/reefcodeat.php) |
 | Brightwell ReefCode Part A (Powder) | 87 | ppm/g/gal | Manufacturer | [brightwellaquatics.com](https://www.brightwellaquatics.com/products/reefcodeapt.php) |
 | Brightwell NanoCode A | 11.9 | ppm/ml/gal | Manufacturer | [brightwellaquatics.com](https://www.brightwellaquatics.com/products/nanocodeat.php) |
-| Seachem Reef Advantage Calcium | 9.6 | ppm/g/gal | Manufacturer | [seachem.com](https://www.seachem.com/reef-adv-calcium.php) |
+| Seachem Reef Advantage Calcium | 96 | ppm/g/gal | Manufacturer | [seachem.com](https://www.seachem.com/reef-adv-calcium.php) |
 | Seachem Reef Complete | 42.3 | ppm/ml/gal | Manufacturer | [seachem.com](https://www.seachem.com/reef-complete.php) |
 | Seachem Reef Calcium | 12 | ppm/ml/gal | Manufacturer | [seachem.com](https://www.seachem.com/reef-calcium.php) |
 | Seachem Fusion Part 1 | 26.42 | ppm/ml/gal | Manufacturer | [seachem.com](https://www.seachem.com/reef-fusion.php) |
@@ -143,6 +143,7 @@ Coefficients corrected from reef.diesyst.com values to manufacturer-verified val
 
 | Product | Old Value | New Value | Reason |
 |---------|----------|-----------|--------|
+| Seachem Reef Advantage Calcium | 9.6 | 96 | Was 10x too low. Seachem label: 5 g/40 gal raises 12 ppm (12*40/5=96) |
 | Seachem Reef Calcium | 1.2 | 12 | Was 10x too low. Seachem label: 5 ml/20 gal = 3 ppm |
 | Aquaforest Ca Plus | 26.42 | 39.63 | Aquaforest: 10 ml raises 15 ppm in 100 L |
 | Aquaforest KH Plus | 0.66 | 1.321 | Aquaforest: 10 ml raises 0.5 dKH in 100 L |

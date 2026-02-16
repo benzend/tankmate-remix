@@ -33,23 +33,25 @@ export const alkalinityProducts: DosingProduct[] = [
 		code: 'brightwell-reefcode-b',
 		name: 'Brightwell ReefCode Part B',
 		formulaType: 'liquid',
-		coefficient: 2.21,
+		coefficient: 2.22,
 		primaryUnit: 'ml',
 		phEffect: 'somewhat-higher',
 		warning: 'Dose equal parts A and B. Do not mix A and B before adding to tank',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises alk by 0.79 meq/L (2.21 dKH)',
+		sourceUrl: 'https://www.brightwellaquatics.com/products/reefcodebt.php',
+		sourceNote:
+			'Manufacturer states: "Each ml will increase alkalinity in 1 US-gallon by approximately 2.22 dKH (0.79 meq/L)"',
 	},
 	{
 		code: 'brightwell-reefcode-b-p',
 		name: 'Brightwell ReefCode Part B (Powder)',
 		formulaType: 'powder',
-		coefficient: 8.29,
+		coefficient: 8.3,
 		primaryUnit: 'grams',
 		phEffect: 'somewhat-higher',
 		warning: 'Dissolve in RO/DI water before adding. Dose equal parts A and B',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 g per 1 gal raises alk by 2.96 meq/L (8.29 dKH)',
+		sourceUrl: 'https://www.brightwellaquatics.com/products/reefcodebpt.php',
+		sourceNote:
+			'Manufacturer states: "Each g will increase alkalinity in 1 US-gallon by ~8.3 dKH (3 meq/L)"',
 	},
 	{
 		code: 'brightwell-nanocode-b',
@@ -59,8 +61,9 @@ export const alkalinityProducts: DosingProduct[] = [
 		primaryUnit: 'ml',
 		phEffect: 'somewhat-higher',
 		warning: 'Dose equal parts A and B',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises alk by 0.596 meq/L (1.67 dKH)',
+		sourceUrl: 'https://www.brightwellaquatics.com/products/nanocodebt.php',
+		sourceNote:
+			'Manufacturer states: "Each ml will increase alkalinity in 1 US-gallon by approximately 1.67 dKH (0.60 meq/L)"',
 	},
 
 	// ── Seachem ─────────────────────────────────────────────────
@@ -104,23 +107,25 @@ export const alkalinityProducts: DosingProduct[] = [
 		code: 'seachem-reef-carbonate',
 		name: 'Seachem Reef Carbonate',
 		formulaType: 'liquid',
-		coefficient: 2.8,
+		coefficient: 2.96,
 		primaryUnit: 'ml',
 		phEffect: 'somewhat-higher',
 		warning: 'Do not mix with Ca/Mg/Sr supplements directly',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises alk by 1 meq/L (2.8 dKH)',
+		sourceUrl: 'https://www.seachem.com/reef-carbonate.php',
+		sourceNote:
+			'Concentration 4,000 meq/L. 5 ml per 80 L raises alk by 0.25 meq/L. 4 / 3.785 = 1.057 meq/L = 2.96 dKH per ml per gal',
 	},
 	{
 		code: 'seachem-fusion-2',
 		name: 'Seachem Fusion Part 2',
 		formulaType: 'liquid',
-		coefficient: 3.28,
+		coefficient: 3.25,
 		primaryUnit: 'ml',
 		phEffect: 'somewhat-higher',
 		warning: 'Max 4 ml per 25 liters. Dose equal parts 1 and 2',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises alk by 1.17 meq/L (3.28 dKH)',
+		sourceUrl: 'https://www.seachem.com/reef-fusion.php',
+		sourceNote:
+			'Concentration 4,400 meq/L. 1 ml per 25 L = 0.176 meq/L. 0.176 * 6.604 gal = 1.162 meq/L/ml/gal = 3.25 dKH',
 	},
 
 	// ── ESV ──────────────────────────────────────────────────────
@@ -144,8 +149,9 @@ export const alkalinityProducts: DosingProduct[] = [
 		primaryUnit: 'ml',
 		phEffect: 'somewhat-lower',
 		warning: 'Dose equal parts 1 and 2',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises alk by 0.185 meq/L (0.52 dKH)',
+		sourceUrl: 'https://www.esvaquarium.com/',
+		sourceNote:
+			'1/4 strength of standard B-Ionic (2.07 dKH/ml/gal). No direct manufacturer coefficient published',
 	},
 
 	// ── Red Sea ──────────────────────────────────────────────────
@@ -177,12 +183,13 @@ export const alkalinityProducts: DosingProduct[] = [
 		code: 'kent-tech-cb-b',
 		name: 'Kent Tech-CB Part B',
 		formulaType: 'liquid',
-		coefficient: 2.06,
+		coefficient: 2.07,
 		primaryUnit: 'ml',
 		phEffect: 'somewhat-higher',
 		warning: 'Dose equal parts A and B',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises alk by 0.735 meq/L (2.06 dKH)',
+		sourceUrl: 'https://www.kentmarine.com/products/kent-tech-cb-part-b.htm',
+		sourceNote:
+			'Label states 7840 dKH concentration. 7.84 / 3.785 = 2.07 dKH per ml per gal',
 	},
 
 	// ── Two Little Fishies ───────────────────────────────────────
@@ -207,18 +214,20 @@ export const alkalinityProducts: DosingProduct[] = [
 		coefficient: 2.8,
 		primaryUnit: 'ml',
 		phEffect: 'somewhat-higher',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises alk by 1 meq/L (2.8 dKH)',
+		sourceUrl: 'https://www.continuumaquatics.com/marine_ph/reefbasis_khbuffer.php',
+		sourceNote:
+			'Manufacturer multiplier 0.357: ml = gal * dKH * 0.357. Coefficient = 1/0.357 = 2.80',
 	},
 	{
 		code: 'continuum-reef-basis-kh-p',
 		name: 'Continuum Reef Basis KH Buffer (Powder)',
 		formulaType: 'powder',
-		coefficient: 8.75,
+		coefficient: 8.77,
 		primaryUnit: 'grams',
 		phEffect: 'somewhat-higher',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 g per 1 gal raises alk by 3.125 meq/L (8.75 dKH)',
+		sourceUrl: 'https://www.continuumaquatics.com/marine_ph/reefbasis_khbuffer_d.php',
+		sourceNote:
+			'Manufacturer multiplier 0.114: g = gal * dKH * 0.114. Coefficient = 1/0.114 = 8.77',
 	},
 	{
 		code: 'continuum-reef-sculpture-b',
@@ -228,8 +237,9 @@ export const alkalinityProducts: DosingProduct[] = [
 		primaryUnit: 'ml',
 		phEffect: 'somewhat-higher',
 		warning: 'Dose equal parts A and B',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises alk by 0.79 meq/L (2.21 dKH)',
+		sourceUrl: 'https://www.continuumaquatics.com/marine_ca/reef_sculpture.php',
+		sourceNote:
+			'No separate manufacturer coefficient found for Part B. Value from reef.diesyst.com. May be diluted vs standalone KH Buffer',
 	},
 
 	// ── Tropic Marin ─────────────────────────────────────────────
@@ -242,8 +252,9 @@ export const alkalinityProducts: DosingProduct[] = [
 		phEffect: 'somewhat-higher',
 		warning:
 			'Balanced additive — also raises Ca. Do not use for alkalinity-only corrections',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises alk by 1.4 meq/L (3.92 dKH). Also raises Ca',
+		sourceUrl: 'https://www.tropic-marin-smartinfo.com/bio-calcium?lang=en',
+		sourceNote:
+			'1 scoop per 10 gal raises alk by 4 dKH. Coefficient depends on scoop weight (~10.2 g implied). Also raises Ca',
 	},
 
 	// ── Salifert ─────────────────────────────────────────────────
@@ -255,8 +266,9 @@ export const alkalinityProducts: DosingProduct[] = [
 		primaryUnit: 'ml',
 		phEffect: 'minimal',
 		warning: 'Maintenance only — not for large corrections',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises alk by 0.66 meq/L (1.85 dKH)',
+		sourceUrl: 'http://www.salifert.com/sup/ca.htm',
+		sourceNote:
+			'No direct manufacturer dKH/ml coefficient published. Value from reef.diesyst.com calculator',
 	},
 
 	// ── Warner Marine ────────────────────────────────────────────
@@ -268,8 +280,9 @@ export const alkalinityProducts: DosingProduct[] = [
 		primaryUnit: 'ml',
 		phEffect: 'somewhat-higher',
 		warning: 'Dose equal parts A and B',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises alk by 0.75 meq/L (2.1 dKH)',
+		sourceUrl: 'http://www.warnermarine.com/products/c-max-a/',
+		sourceNote:
+			'No manufacturer coefficient published. Value from reef.diesyst.com calculator',
 	},
 
 	// ── Aquaforest ───────────────────────────────────────────────
@@ -277,11 +290,12 @@ export const alkalinityProducts: DosingProduct[] = [
 		code: 'aquaforest-kh-plus',
 		name: 'Aquaforest KH Plus',
 		formulaType: 'liquid',
-		coefficient: 0.66,
+		coefficient: 1.321,
 		primaryUnit: 'ml',
 		phEffect: 'somewhat-higher',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises alk by 0.236 meq/L (0.66 dKH)',
+		sourceUrl: 'https://aquaforest.eu/en/products/seawater/water-treatment/kh-plus-2/',
+		sourceNote:
+			'10 ml raises KH by 0.5 dKH in 100 L. 0.5 / 10 * 26.42 = 1.321',
 	},
 	{
 		code: 'aquaforest-kh-buffer',
@@ -291,8 +305,9 @@ export const alkalinityProducts: DosingProduct[] = [
 		primaryUnit: 'grams',
 		phEffect: 'somewhat-lower',
 		warning: 'Dissolve in RO/DI water before adding. Do not raise more than 1.4 dKH per day',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 g per 1 gal raises alk by 3.11 meq/L (8.72 dKH)',
+		sourceUrl: 'https://aquaforest.eu/en/products/seawater/water-treatment/kh-buffer/',
+		sourceNote:
+			'10 g in 100 L raises KH by 3.3 dKH. 3.3 / 10 * 26.42 = 8.72',
 	},
 
 	// ── MEcoral ──────────────────────────────────────────────────
@@ -303,8 +318,9 @@ export const alkalinityProducts: DosingProduct[] = [
 		coefficient: 2.0,
 		primaryUnit: 'ml',
 		phEffect: 'somewhat-higher',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises alk by 0.714 meq/L (2.0 dKH)',
+		sourceUrl: 'https://mecoral.com/product/me-alkalinity-gallon/',
+		sourceNote:
+			'Manufacturer: "5 ml per 100 gal raises KH by 0.10 dKH." 0.10 * 100 / 5 = 2.0',
 	},
 
 	// ── Oceans Blend ─────────────────────────────────────────────
@@ -315,8 +331,9 @@ export const alkalinityProducts: DosingProduct[] = [
 		coefficient: 1.4,
 		primaryUnit: 'ml',
 		phEffect: 'somewhat-higher',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises alk by 0.5 meq/L (1.4 dKH)',
+		sourceUrl: 'https://www.oceansblend.com/2_part.html',
+		sourceNote:
+			'No manufacturer coefficient published. Value from reef.diesyst.com calculator',
 	},
 
 	// ── Randy Holmes-Farley DIY ──────────────────────────────────
@@ -327,9 +344,11 @@ export const alkalinityProducts: DosingProduct[] = [
 		coefficient: 1.4,
 		primaryUnit: 'ml',
 		phEffect: 'higher',
-		warning: 'DIY soda ash solution — for normal-to-low pH aquaria',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises alk by 0.5 meq/L (1.4 dKH)',
+		warning:
+			'DIY soda ash solution — 594 g baking soda baked at 300°F for 1 hour, dissolved to 1 US gallon',
+		sourceUrl: 'https://reefkeeping.com/issues/2006-02/rhf/index.php',
+		sourceNote:
+			'Randy Holmes-Farley original recipe. Stated concentration ~5,300 dKH. 5300 / 3785 / (1/0.357) = 1.4',
 	},
 	{
 		code: 'randys-recipe-2-alk',
@@ -338,9 +357,11 @@ export const alkalinityProducts: DosingProduct[] = [
 		coefficient: 0.7,
 		primaryUnit: 'ml',
 		phEffect: 'somewhat-lower',
-		warning: 'DIY baking soda solution — for high pH (>8.3) aquaria',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises alk by 0.25 meq/L (0.7 dKH)',
+		warning:
+			'DIY baking soda solution — 297 g NaHCO3 dissolved to 1 US gallon. For high pH (>8.3) aquaria',
+		sourceUrl: 'https://reefkeeping.com/issues/2006-02/rhf/index.php',
+		sourceNote:
+			'Randy Holmes-Farley original recipe. Stated concentration ~2,660 dKH. 2660 / 3785 / (1/0.357) = 0.7',
 	},
 
 	// ── Fritz ────────────────────────────────────────────────────
@@ -352,8 +373,9 @@ export const alkalinityProducts: DosingProduct[] = [
 		primaryUnit: 'grams',
 		phEffect: 'somewhat-lower',
 		warning: 'Do not raise more than 1.4 dKH per day. Dissolve in RO/DI water first',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: 'Same as baking soda: 1 g per 1 gal raises alk by 8.8 dKH',
+		sourceUrl: 'https://fritzaquatics.com/products/fritzpro-sodium-bicarbonate',
+		sourceNote:
+			'Stoichiometric: NaHCO3 MW 84.01, 1 mol = 1 meq. 1 g/gal = 3.144 meq/L = 8.81 dKH. Fritz label: 5 g/45 gal = 1 dKH (= 9.0, rounded)',
 	},
 	{
 		code: 'fritz-sodium-carbonate',
@@ -364,8 +386,9 @@ export const alkalinityProducts: DosingProduct[] = [
 		phEffect: 'higher',
 		warning:
 			'Significantly raises pH. Do not raise more than 1.4 dKH per day',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: 'Same as soda ash: 1 g per 1 gal raises alk by 13.96 dKH',
+		sourceUrl: 'https://fritzaquatics.com/products/fritzpro-sodium-carbonate',
+		sourceNote:
+			'Stoichiometric: Na2CO3 MW 105.99, 1 mol = 2 meq. 1 g/gal = 4.984 meq/L = 13.96 dKH. Fritz label: 5 g/65 gal = 1 dKH (= 13.0, rounded)',
 	},
 
 	// ── Generic / DIY ────────────────────────────────────────────
@@ -400,13 +423,14 @@ export const alkalinityProducts: DosingProduct[] = [
 		code: 'kalkwasser-alk',
 		name: 'Kalkwasser (Saturated Ca(OH)2)',
 		formulaType: 'limewater',
-		coefficient: 0.148,
+		coefficient: 0.03,
 		primaryUnit: 'ml',
 		phEffect: 'substantially-higher',
 		warning:
 			'pH ~12.4 — add very slowly via ATO only. Also raises calcium. Not the preferred method for alkalinity',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
+		sourceUrl:
+			'https://www.bulkreefsupply.com/content/post/using-kalkwasser',
 		sourceNote:
-			'1 gal (3785 ml) saturated solution per 40 gal raises alk by ~1.4 dKH (1.4 * 40 / 3785 = 0.148)',
+			'Stoichiometric: Ca(OH)2 saturated ~1.5 g/L, MW 74.09. 1 mL in 1 gal: 0.04049 meq / 3.785 L = 0.0107 meq/L = 0.030 dKH',
 	},
 ]
