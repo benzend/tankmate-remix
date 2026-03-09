@@ -191,6 +191,14 @@ export default function SettingsScreen() {
 					</Text>
 				</View>
 
+				<SettingsSection title="Subscription">
+					<SettingsRow
+						icon="diamond-outline"
+						label="Manage Subscription"
+						onPress={() => router.push('/subscription')}
+					/>
+				</SettingsSection>
+
 				<SettingsSection title="Account">
 					<SettingsRow
 						icon="person-outline"

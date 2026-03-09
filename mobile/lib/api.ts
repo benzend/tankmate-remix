@@ -281,6 +281,43 @@ export const pushApi = {
 		}),
 }
 
+// ─── Subscription ─────────────────────────────────
+
+export const subscriptionApi = {
+	get: () => api<{ subscription: Subscription }>('/subscription'),
+
+	getPlans: () => api<{ plans: SubscriptionPlanInfo[] }>('/subscription/plans'),
+
+	validateReceipt: (body: {
+		plan: 'pro' | 'premium'
+		provider: 'apple' | 'google'
+		revenueCatUserId: string
+		entitlementId: string
+		expiresDate?: string
+	}) =>
+		api<{ subscription: Subscription }>('/subscription/validate-receipt', {
+			method: 'POST',
+			body,
+		}),
+
+	cancel: () =>
+		api<{ subscription: Subscription }>('/subscription/cancel', {
+			method: 'POST',
+		}),
+
+	restore: (body: {
+		plan: 'pro' | 'premium'
+		provider: 'apple' | 'google'
+		revenueCatUserId: string
+		entitlementId: string
+		expiresDate?: string
+	}) =>
+		api<{ subscription: Subscription }>('/subscription/restore', {
+			method: 'POST',
+			body,
+		}),
+}
+
 // ─── Types ─────────────────────────────────────────
 
 export type Tank = {
@@ -386,4 +423,23 @@ export type SearchResult = {
 	title: string
 	url: string | null
 	content: string | null
+}
+
+export type Subscription = {
+	plan: 'free' | 'pro' | 'premium'
+	status: 'active' | 'canceled' | 'past_due' | 'trialing' | 'expired'
+	provider: 'stripe' | 'apple' | 'google' | null
+	currentPeriodStart: string | null
+	currentPeriodEnd: string | null
+	cancelAtPeriodEnd: boolean
+}
+
+export type SubscriptionPlanInfo = {
+	id: string
+	name: string
+	tanks: number
+	parameterLogsPerMonth: number
+	coralAnalysesPerMonth: number
+	galleryImagesPerTank: number
+	prices: { monthly: number; yearly: number } | null
 }

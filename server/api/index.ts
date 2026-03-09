@@ -9,6 +9,7 @@ import userRoutes from './user.routes.ts'
 import searchRoutes from './search.routes.ts'
 import pushRoutes from './push.routes.ts'
 import uploadRoutes from './upload.routes.ts'
+import subscriptionRoutes from './subscription.routes.ts'
 
 const apiRouter = Router()
 
@@ -41,5 +42,8 @@ apiRouter.use('/push', pushRoutes)
 
 // Image uploads (mobile — base64 → UploadThing CDN)
 apiRouter.use('/upload', uploadRoutes)
+
+// Subscription management
+apiRouter.use('/subscription', subscriptionRoutes)
 
 export default apiRouter

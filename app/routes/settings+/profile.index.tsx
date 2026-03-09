@@ -161,6 +161,11 @@ export default function EditUserProfile() {
 					</Link>
 				</div>
 				<div>
+					<Link to="subscription">
+						<Icon name="rocket">Subscription</Icon>
+					</Link>
+				</div>
+				<div>
 					<Link
 						reloadDocument
 						download="my-epic-notes-data.json"

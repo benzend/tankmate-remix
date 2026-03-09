@@ -28,6 +28,42 @@ model User {
   fishTanks        FishTank[]
   CoralAnalysis    CoralAnalysis[]
   pushTokens       DevicePushToken[]
+  subscription     Subscription?
+}
+
+model Subscription {
+  id     String @id @default(cuid())
+
+  /// "free" | "pro" | "premium"
+  plan   String @default("free")
+
+  /// "active" | "canceled" | "past_due" | "trialing" | "expired"
+  status String @default("active")
+
+  /// "stripe" | "apple" | "google"
+  provider String @default("stripe")
+
+  /// Stripe customer ID or RevenueCat app user ID
+  providerCustomerId String?
+
+  /// Stripe subscription ID or RevenueCat entitlement ID
+  providerSubscriptionId String?
+
+  /// Current billing period
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+
+  /// Whether the subscription will cancel at period end
+  cancelAtPeriodEnd Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String @unique
+
+  @@index([providerCustomerId])
+  @@index([providerSubscriptionId])
 }
 
 model Note {
