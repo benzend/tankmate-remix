@@ -1,3 +1,6 @@
+import { Ionicons } from '@expo/vector-icons'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useRouter } from 'expo-router'
 import { useState, useMemo, useEffect } from 'react'
 import {
 	View,
@@ -7,25 +10,21 @@ import {
 	Modal,
 	FlatList,
 } from 'react-native'
-import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Ionicons } from '@expo/vector-icons'
-import { Input } from '../components/ui/Input'
-import { Card, CardContent } from '../components/ui/Card'
 import { Badge } from '../components/ui/Badge'
-import { colors } from '../theme/colors'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Card, CardContent } from '../components/ui/Card'
+import { Input } from '../components/ui/Input'
 import { useTanks } from '../hooks/useTanks'
 import { type Tank } from '../lib/api'
-import { calciumProducts } from '../lib/dosing-calculator/calcium-products'
 import { alkalinityProducts } from '../lib/dosing-calculator/alkalinity-products'
-import { magnesiumProducts } from '../lib/dosing-calculator/magnesium-products'
+import { calciumProducts } from '../lib/dosing-calculator/calcium-products'
 import {
 	calculateDose,
 	formatAmount,
 	toGallons,
 	alkToMeqL,
 } from '../lib/dosing-calculator/calculations'
+import { magnesiumProducts } from '../lib/dosing-calculator/magnesium-products'
 import {
 	type AlkUnit,
 	type DosingProduct,
@@ -33,6 +32,7 @@ import {
 	type VolumeUnit,
 	type CalculationResult,
 } from '../lib/dosing-calculator/types'
+import { colors } from '../theme/colors'
 
 const phLabels: Record<PhEffect, string> = {
 	minimal: 'pH: Minimal impact',

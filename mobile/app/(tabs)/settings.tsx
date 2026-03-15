@@ -1,11 +1,11 @@
-import { View, Text, ScrollView, Pressable, Alert, Switch } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
-import { useAuth } from '../../hooks/useAuth'
-import { useExportData, useSignOutOtherSessions, useDeleteAccount } from '../../hooks/useUser'
-import { useBiometrics } from '../../hooks/useBiometrics'
+import { View, Text, ScrollView, Pressable, Alert, Switch } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { useToast } from '../../components/ui/Toast'
+import { useAuth } from '../../hooks/useAuth'
+import { useBiometrics } from '../../hooks/useBiometrics'
+import { useExportData, useSignOutOtherSessions, useDeleteAccount } from '../../hooks/useUser'
 import { colors } from '../../theme/colors'
 
 type SettingsRowProps = {
@@ -245,9 +245,9 @@ export default function SettingsScreen() {
 								value={biometrics.isEnabled}
 								onValueChange={(value) => {
 									if (value) {
-										biometrics.enable()
+										void biometrics.enable()
 									} else {
-										biometrics.disable()
+										void biometrics.disable()
 									}
 								}}
 								trackColor={{ false: colors.border, true: colors.primary }}

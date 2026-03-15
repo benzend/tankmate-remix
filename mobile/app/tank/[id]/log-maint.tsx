@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { View, Text, ScrollView, Alert, Pressable } from 'react-native'
-import { useLocalSearchParams, useRouter } from 'expo-router'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import * as Haptics from 'expo-haptics'
-import { useCreateMaintenanceLog } from '../../../hooks/useMaintenance'
+import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useState } from 'react'
+import { View, Text, ScrollView, Alert, Pressable } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { Button } from '../../../components/ui/Button'
 import { Input } from '../../../components/ui/Input'
 import { useToast } from '../../../components/ui/Toast'
+import { useCreateMaintenanceLog } from '../../../hooks/useMaintenance'
 import { colors } from '../../../theme/colors'
 
 const MAINTENANCE_TYPES = [

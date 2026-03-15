@@ -1,3 +1,4 @@
+import { Link } from 'expo-router'
 import { useState } from 'react'
 import {
 	View,
@@ -5,11 +6,10 @@ import {
 	ScrollView,
 	Alert,
 } from 'react-native'
-import { Link } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useAuth } from '../../hooks/useAuth'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
+import { useAuth } from '../../hooks/useAuth'
 import { colors } from '../../theme/colors'
 
 export default function SignupScreen() {

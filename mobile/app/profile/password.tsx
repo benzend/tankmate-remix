@@ -1,12 +1,12 @@
+import { Ionicons } from '@expo/vector-icons'
+import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { View, Text, ScrollView, Alert } from 'react-native'
-import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Ionicons } from '@expo/vector-icons'
-import { useChangePassword } from '../../hooks/useUser'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { useToast } from '../../components/ui/Toast'
+import { useChangePassword } from '../../hooks/useUser'
 import { colors } from '../../theme/colors'
 
 export default function ChangePasswordScreen() {

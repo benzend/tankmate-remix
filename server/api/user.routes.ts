@@ -1,9 +1,9 @@
+import bcrypt from 'bcryptjs'
 import { Router } from 'express'
 import { z } from 'zod'
-import bcrypt from 'bcryptjs'
-import { authenticateAPI, getUserId } from './middleware.ts'
-import { getUserProfile, checkUsernameAvailable, signOutOtherSessions, deleteAccount } from '../services/auth.service.ts'
 import { prisma } from '../../app/utils/db.server.ts'
+import { getUserProfile, checkUsernameAvailable, signOutOtherSessions, deleteAccount } from '../services/auth.service.ts'
+import { authenticateAPI, getUserId } from './middleware.ts'
 
 const router = Router()
 

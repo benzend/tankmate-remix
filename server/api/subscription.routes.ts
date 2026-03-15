@@ -1,15 +1,13 @@
 import { Router } from 'express'
-import { authenticateAPI, getUserId } from './middleware.ts'
 import {
 	getUserSubscription,
-	getUserPlan,
 	upsertSubscription,
 	cancelSubscription,
 	PLAN_DETAILS,
-	STRIPE_PRICES,
 	type SubscriptionPlan,
 	type SubscriptionProvider,
 } from '../services/subscription.service.ts'
+import { authenticateAPI, getUserId } from './middleware.ts'
 
 const router = Router()
 

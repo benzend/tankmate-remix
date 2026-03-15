@@ -1,11 +1,11 @@
 import { Router } from 'express'
 import { z } from 'zod'
-import { authenticateAPI, getUserId } from './middleware.ts'
 import {
 	getCoralAnalyses,
 	getCoralAnalysis,
 	analyzeCoralImage,
 } from '../services/coral.service.ts'
+import { authenticateAPI, getUserId } from './middleware.ts'
 
 const router = Router()
 

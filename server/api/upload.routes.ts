@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { z } from 'zod'
 import { UTApi } from 'uploadthing/server'
+import { z } from 'zod'
 import { authenticateAPI, getUserId } from './middleware.ts'
 
 const router = Router()
@@ -24,7 +24,7 @@ const UploadBatchSchema = z.object({
 // POST /api/v1/upload — upload a single image
 router.post('/', async (req, res) => {
 	try {
-		const userId = getUserId(req)
+		getUserId(req)
 		const parsed = UploadSchema.safeParse(req.body)
 		if (!parsed.success) {
 			return res.status(400).json({ error: 'Invalid upload data', details: parsed.error.flatten() })
@@ -58,7 +58,7 @@ router.post('/', async (req, res) => {
 // POST /api/v1/upload/batch — upload multiple images
 router.post('/batch', async (req, res) => {
 	try {
-		const userId = getUserId(req)
+		getUserId(req)
 		const parsed = UploadBatchSchema.safeParse(req.body)
 		if (!parsed.success) {
 			return res.status(400).json({ error: 'Invalid upload data', details: parsed.error.flatten() })

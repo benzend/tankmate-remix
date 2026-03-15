@@ -1,6 +1,6 @@
-import { View, Text, Pressable, Dimensions } from 'react-native'
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
+import { View, Text, Pressable, Dimensions } from 'react-native'
 import { type Tank } from '../../lib/api'
 import { colors } from '../../theme/colors'
 import { Badge } from '../ui/Badge'

@@ -1,15 +1,15 @@
 import { Router } from 'express'
 import authRoutes from './auth.routes.ts'
-import tanksRoutes from './tanks.routes.ts'
-import parametersRoutes from './parameters.routes.ts'
-import maintenanceRoutes from './maintenance.routes.ts'
 import coralRoutes from './coral.routes.ts'
 import galleryRoutes from './gallery.routes.ts'
-import userRoutes from './user.routes.ts'
-import searchRoutes from './search.routes.ts'
+import maintenanceRoutes from './maintenance.routes.ts'
+import parametersRoutes from './parameters.routes.ts'
 import pushRoutes from './push.routes.ts'
-import uploadRoutes from './upload.routes.ts'
+import searchRoutes from './search.routes.ts'
 import subscriptionRoutes from './subscription.routes.ts'
+import tanksRoutes from './tanks.routes.ts'
+import uploadRoutes from './upload.routes.ts'
+import userRoutes from './user.routes.ts'
 
 const apiRouter = Router()
 

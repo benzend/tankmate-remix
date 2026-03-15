@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import { z } from 'zod'
-import { authenticateAPI, getUserId } from './middleware.ts'
 import {
 	getUserTanks,
 	getTankDetail,
@@ -8,6 +7,7 @@ import {
 	updateTank,
 	deleteTank,
 } from '../services/tank.service.ts'
+import { authenticateAPI, getUserId } from './middleware.ts'
 
 const router = Router()
 

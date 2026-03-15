@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { View, Text, type LayoutChangeEvent } from 'react-native'
 import Svg, { Path, Rect, Line, Circle, Text as SvgText } from 'react-native-svg'
-import { Card, CardContent } from '../ui/Card'
-import { colors } from '../../theme/colors'
 import { PARAMETER_CONFIG, type ParamKey } from '../../lib/parameterConfig'
+import { colors } from '../../theme/colors'
+import { Card, CardContent } from '../ui/Card'
 
 type DataPoint = { timestamp: number; value: number }
 

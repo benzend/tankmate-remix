@@ -8,7 +8,7 @@ import {
 	checkUsernameAvailable,
 	checkEmailAvailable,
 } from '../services/auth.service.ts'
-import { authenticateAPI, getUserId } from './middleware.ts'
+import { authenticateAPI } from './middleware.ts'
 
 const router = Router()
 

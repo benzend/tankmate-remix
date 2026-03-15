@@ -1,9 +1,9 @@
 import { type Config } from 'tailwindcss'
 import animatePlugin from 'tailwindcss-animate'
 import radixPlugin from 'tailwindcss-radix'
+import { withUt } from 'uploadthing/tw'
 import { marketingPreset } from './app/routes/_marketing+/tailwind-preset'
 import { extendedTheme } from './app/utils/extended-theme.ts'
-import { withUt } from 'uploadthing/tw'
 
 export default withUt({
 	content: ['./app/**/*.{ts,tsx,jsx,js}'],

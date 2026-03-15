@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics'
 import { forwardRef } from 'react'
 import {
 	Pressable,
@@ -7,7 +8,6 @@ import {
 	type ViewStyle,
 	type TextStyle,
 } from 'react-native'
-import * as Haptics from 'expo-haptics'
 import { colors } from '../../theme/colors'
 
 type ButtonVariant = 'default' | 'destructive' | 'outline' | 'ghost'

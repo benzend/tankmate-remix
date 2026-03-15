@@ -1,14 +1,13 @@
-import { View, Text, ScrollView, Pressable, RefreshControl } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 import { Image } from 'expo-image'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { View, Text, ScrollView, Pressable, RefreshControl } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Ionicons } from '@expo/vector-icons'
-import { useTank } from '../../../hooks/useTanks'
-import { HealthRing } from '../../../components/tank/HealthRing'
 import { Badge } from '../../../components/ui/Badge'
 import { Button } from '../../../components/ui/Button'
-import { Card, CardContent, CardTitle } from '../../../components/ui/Card'
+import { Card, CardContent } from '../../../components/ui/Card'
 import { Skeleton } from '../../../components/ui/Skeleton'
+import { useTank } from '../../../hooks/useTanks'
 import { colors } from '../../../theme/colors'
 
 const PARAMETER_LABELS: Record<string, string> = {

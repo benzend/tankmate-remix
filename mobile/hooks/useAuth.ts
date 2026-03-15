@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { authApi, userApi, type UserProfile } from '../lib/api'
-import { storeTokens, clearTokens, hasValidToken, getToken } from '../lib/auth'
+import { storeTokens, clearTokens, hasValidToken } from '../lib/auth'
 
 type AuthState = {
 	/** null = loading, false = unauthenticated, UserProfile = authenticated */

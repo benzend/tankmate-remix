@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { authenticateAPI } from './middleware.ts'
 import { searchReefTank } from '../services/search.service.ts'
+import { authenticateAPI } from './middleware.ts'
 
 const router = Router()
 

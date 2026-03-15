@@ -1,8 +1,8 @@
-import { createContext, useCallback, useContext, useRef, useState } from 'react'
-import { Animated, Text, View, Pressable, type ViewStyle } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import * as Haptics from 'expo-haptics'
+import { createContext, useCallback, useContext, useRef, useState } from 'react'
+import { Animated, Text, View, Pressable } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { colors } from '../../theme/colors'
 
 type ToastType = 'success' | 'error' | 'info'

@@ -1,3 +1,7 @@
+import { Ionicons } from '@expo/vector-icons'
+import { useQuery } from '@tanstack/react-query'
+import * as Haptics from 'expo-haptics'
+import { Image } from 'expo-image'
 import { useState } from 'react'
 import {
 	View,
@@ -8,15 +12,11 @@ import {
 	Modal,
 	Dimensions,
 } from 'react-native'
-import { Image } from 'expo-image'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Ionicons } from '@expo/vector-icons'
-import * as Haptics from 'expo-haptics'
-import { useQuery } from '@tanstack/react-query'
-import { galleryApi, tanksApi, type GalleryImage } from '../../lib/api'
 import { EmptyState } from '../../components/common/EmptyState'
-import { Skeleton } from '../../components/ui/Skeleton'
 import { FadeIn } from '../../components/ui/Animated'
+import { Skeleton } from '../../components/ui/Skeleton'
+import { galleryApi, tanksApi, type GalleryImage } from '../../lib/api'
 import { colors } from '../../theme/colors'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')

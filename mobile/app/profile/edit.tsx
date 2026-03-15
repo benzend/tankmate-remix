@@ -1,14 +1,14 @@
+import { Ionicons } from '@expo/vector-icons'
+import { useRouter } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { View, Text, ScrollView, Alert } from 'react-native'
-import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Ionicons } from '@expo/vector-icons'
-import { useUserProfile, useUpdateProfile } from '../../hooks/useUser'
-import { useAuth } from '../../hooks/useAuth'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { Skeleton } from '../../components/ui/Skeleton'
 import { useToast } from '../../components/ui/Toast'
+import { useAuth } from '../../hooks/useAuth'
+import { useUserProfile, useUpdateProfile } from '../../hooks/useUser'
 import { colors } from '../../theme/colors'
 
 export default function EditProfileScreen() {
