@@ -112,8 +112,9 @@ export const magnesiumProducts: DosingProduct[] = [
 		coefficient: 18.76,
 		primaryUnit: 'ml',
 		phEffect: 'largely-unchanged',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises Mg by 18.76 ppm',
+		sourceUrl: 'https://www.continuumaquatics.com/marine_mg/reefbasis_magnesium.php',
+		sourceNote:
+			'Manufacturer multiplier 0.0533: ml = gal * ppm * 0.0533. Coefficient = 1/0.0533 = 18.76',
 	},
 	{
 		code: 'continuum-reef-basis-magnesium-p',
@@ -123,43 +124,38 @@ export const magnesiumProducts: DosingProduct[] = [
 		primaryUnit: 'grams',
 		phEffect: 'largely-unchanged',
 		warning: 'May need up to 70% more product than calculated',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 g per 1 gal raises Mg by 111.1 ppm',
+		sourceUrl: 'https://www.continuumaquatics.com/marine_mg/reefbasis_magnesium_d.php',
+		sourceNote:
+			'Manufacturer multiplier 0.009: g = gal * ppm * 0.009. Coefficient = 1/0.009 = 111.11',
 	},
 
 	// ── Warner Marine ────────────────────────────────────────────
-	{
-		code: 'warner-balanced-magnesium',
-		name: 'Warner Marine Balanced Magnesium',
-		formulaType: 'liquid',
-		coefficient: 21,
-		primaryUnit: 'ml',
-		phEffect: 'largely-unchanged',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises Mg by 21 ppm',
-	},
+	// NOTE: Warner Marine "Balanced Magnesium" removed — product not found on
+	// warnermarine.com or any retailer. Possibly discontinued.
 
 	// ── Aquaforest ───────────────────────────────────────────────
 	{
 		code: 'aquaforest-magnesium-p',
 		name: 'Aquaforest Magnesium (Powder)',
 		formulaType: 'powder',
-		coefficient: 30.86,
+		coefficient: 31.7,
 		primaryUnit: 'grams',
 		phEffect: 'largely-unchanged',
 		warning: 'Dissolve in RO/DI water before adding. Max 100 ppm/day',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 g per 1 gal raises Mg by 30.86 ppm',
+		sourceUrl: 'https://aquaforest.eu/en/products/seawater/water-treatment/magnesium/',
+		sourceNote:
+			'10 g in 100 L raises Mg by 12 ppm. 12 / 10 * 26.42 = 31.70',
 	},
 	{
 		code: 'aquaforest-mg-plus',
 		name: 'Aquaforest Mg Plus',
 		formulaType: 'liquid',
-		coefficient: 19.82,
+		coefficient: 26.42,
 		primaryUnit: 'ml',
 		phEffect: 'largely-unchanged',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises Mg by 19.82 ppm',
+		sourceUrl: 'https://aquaforest.eu/en/products/lab/macroelements/mg-plus/',
+		sourceNote:
+			'10 ml raises Mg by 10 ppm in 100 L. 10 / 10 * 26.42 = 26.42',
 	},
 
 	// ── Salifert ─────────────────────────────────────────────────
@@ -170,8 +166,9 @@ export const magnesiumProducts: DosingProduct[] = [
 		coefficient: 6.6,
 		primaryUnit: 'ml',
 		phEffect: 'largely-unchanged',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises Mg by 6.6 ppm',
+		sourceUrl: 'http://www.salifert.com/sup/ml250.htm',
+		sourceNote:
+			'Manufacturer: 5 ml per 10 L raises Mg by 12.5 ppm. Concentration ~25,000 ppm. 25,000 / 3785 = 6.60',
 	},
 
 	// ── MEcoral ──────────────────────────────────────────────────
@@ -182,8 +179,9 @@ export const magnesiumProducts: DosingProduct[] = [
 		coefficient: 12.5,
 		primaryUnit: 'ml',
 		phEffect: 'largely-unchanged',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises Mg by 12.5 ppm',
+		sourceUrl: 'https://mecoral.com/product/me-magnesium-gallon/',
+		sourceNote:
+			'Manufacturer: "80 ml per 100 gal raises Mg by 10 ppm." 10 * 100 / 80 = 12.5',
 	},
 
 	// ── Oceans Blend ─────────────────────────────────────────────
@@ -194,8 +192,9 @@ export const magnesiumProducts: DosingProduct[] = [
 		coefficient: 15,
 		primaryUnit: 'ml',
 		phEffect: 'largely-unchanged',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises Mg by 15 ppm',
+		sourceUrl: 'https://www.oceansblend.com/products2.html',
+		sourceNote:
+			'No manufacturer coefficient published. Value from reef.diesyst.com calculator',
 	},
 
 	// ── Randy Holmes-Farley DIY ──────────────────────────────────
@@ -206,9 +205,11 @@ export const magnesiumProducts: DosingProduct[] = [
 		coefficient: 12.4,
 		primaryUnit: 'ml',
 		phEffect: 'largely-unchanged',
-		warning: 'DIY MgCl2/MgSO4 solution',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 ml per 1 gal raises Mg by 12.4 ppm',
+		warning:
+			'DIY MgCl2·6H2O + MgSO4·7H2O solution per Randy Holmes-Farley recipe',
+		sourceUrl: 'https://reefkeeping.com/issues/2006-07/rhf/index.php',
+		sourceNote:
+			'Randy Holmes-Farley original recipe. Value from reef.diesyst.com — cup measurements make exact stoichiometry imprecise',
 	},
 
 	// ── Fritz ────────────────────────────────────────────────────
@@ -216,23 +217,25 @@ export const magnesiumProducts: DosingProduct[] = [
 		code: 'fritz-magnesium-sulfate',
 		name: 'Fritz Magnesium Sulfate (MgSO4·7H2O)',
 		formulaType: 'powder',
-		coefficient: 26.78,
+		coefficient: 26.05,
 		primaryUnit: 'grams',
 		phEffect: 'largely-unchanged',
 		warning: 'Raises sulfate levels. Use with MgCl2 for balanced dosing. Max 100 ppm/day',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 g per 1 gal raises Mg by 26.78 ppm',
+		sourceUrl: 'https://fritzaquatics.com/products/fritzpro-magnesium-sulfate',
+		sourceNote:
+			'Stoichiometric: MgSO4·7H2O MW 246.47, Mg fraction 9.862%. 1 g/gal = 98.62 mg / 3.785 L = 26.05 ppm. Fritz label: 3.5 g/10 gal = 10 ppm (= 28.6, rounded)',
 	},
 	{
 		code: 'fritz-mag-flake',
 		name: 'Fritz Mag Flake (MgCl2·6H2O)',
 		formulaType: 'powder',
-		coefficient: 30.86,
+		coefficient: 31.59,
 		primaryUnit: 'grams',
 		phEffect: 'largely-unchanged',
 		warning: 'Raises chloride levels. Use with MgSO4 for balanced dosing. Max 100 ppm/day',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 g per 1 gal raises Mg by 30.86 ppm',
+		sourceUrl: 'https://fritzaquatics.com/products/fritzpro-magnesium-chloride',
+		sourceNote:
+			'Stoichiometric: MgCl2·6H2O MW 203.30, Mg fraction 11.956%. 1 g/gal = 119.56 mg / 3.785 L = 31.59 ppm. Fritz label: 4.4 g/10 gal = 14 ppm (= 31.8, rounded)',
 	},
 
 	// ── Generic / DIY ────────────────────────────────────────────
@@ -253,12 +256,13 @@ export const magnesiumProducts: DosingProduct[] = [
 		code: 'magnesium-chloride-anhydrous',
 		name: 'Magnesium Chloride Anhydrous (MgCl2)',
 		formulaType: 'powder',
-		coefficient: 65.87,
+		coefficient: 67.44,
 		primaryUnit: 'grams',
 		phEffect: 'largely-unchanged',
 		warning: 'Raises chloride levels. Use with MgSO4 for balanced dosing. Max 100 ppm/day',
-		sourceUrl: 'https://reef.diesyst.com/chemcalc/chemcalc.html',
-		sourceNote: '1 g per 1 gal raises Mg by 65.87 ppm (anhydrous)',
+		sourceUrl: 'https://en.wikipedia.org/wiki/Magnesium_chloride',
+		sourceNote:
+			'Stoichiometric: MW 95.211, Mg fraction 25.527%. 1 g/gal = 255.27 mg / 3.785 L = 67.44 ppm',
 	},
 	{
 		code: 'magnesium-sulfate',
