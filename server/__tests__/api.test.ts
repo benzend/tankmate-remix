@@ -25,7 +25,8 @@ let testTankId: string
 let testParameterLogId: string
 let testMaintenanceLogId: string
 
-async function api(path: string, options: RequestInit = {}) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function api(path: string, options: RequestInit = {}): Promise<{ status: number; data: any }> {
 	const headers: Record<string, string> = {
 		'Content-Type': 'application/json',
 		...((options.headers as Record<string, string>) || {}),
