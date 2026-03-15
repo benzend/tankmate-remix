@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { Animated, type ViewStyle } from 'react-native'
+import { Animated, Pressable, type ViewStyle } from 'react-native'
 
 type FadeInProps = {
 	children: React.ReactNode
@@ -109,8 +109,6 @@ export function ScalePress({ children, onPress, style, disabled }: ScalePressPro
 }
 
 // Extracted to avoid circular Animated nesting issues
-import { Pressable } from 'react-native'
-
 function PressableInner({
 	children,
 	onPress,

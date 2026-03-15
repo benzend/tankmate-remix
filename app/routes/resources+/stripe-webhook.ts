@@ -1,7 +1,7 @@
 import { type ActionFunctionArgs } from '@remix-run/node'
 import { stripe, STRIPE_WEBHOOK_SECRET, getPlanFromPriceId } from '#app/utils/stripe.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
-import type { SubscriptionPlan, SubscriptionStatus } from '../../utils/subscription.server.ts'
+import type { SubscriptionStatus } from '../../utils/subscription.server.ts'
 
 export async function action({ request }: ActionFunctionArgs) {
 	if (!stripe) {
@@ -39,10 +39,11 @@ export async function action({ request }: ActionFunctionArgs) {
 			// Fetch the subscription to get the plan from the price
 			const stripeSubscription =
 				await stripe.subscriptions.retrieve(subscriptionId)
-			const priceId = stripeSubscription.items.data[0]?.price.id
+			const firstItem = stripeSubscription.items.data[0]
+			const priceId = firstItem?.price.id
 			const plan = priceId ? getPlanFromPriceId(priceId) : null
 
-			if (!plan) break
+			if (!plan || !firstItem) break
 
 			await prisma.subscription.upsert({
 				where: { userId },
@@ -54,10 +55,10 @@ export async function action({ request }: ActionFunctionArgs) {
 					providerCustomerId: customerId,
 					providerSubscriptionId: subscriptionId,
 					currentPeriodStart: new Date(
-						stripeSubscription.current_period_start * 1000,
+						firstItem.current_period_start * 1000,
 					),
 					currentPeriodEnd: new Date(
-						stripeSubscription.current_period_end * 1000,
+						firstItem.current_period_end * 1000,
 					),
 				},
 				update: {
@@ -66,10 +67,10 @@ export async function action({ request }: ActionFunctionArgs) {
 					providerCustomerId: customerId,
 					providerSubscriptionId: subscriptionId,
 					currentPeriodStart: new Date(
-						stripeSubscription.current_period_start * 1000,
+						firstItem.current_period_start * 1000,
 					),
 					currentPeriodEnd: new Date(
-						stripeSubscription.current_period_end * 1000,
+						firstItem.current_period_end * 1000,
 					),
 					cancelAtPeriodEnd: false,
 				},
@@ -86,7 +87,8 @@ export async function action({ request }: ActionFunctionArgs) {
 			})
 			if (!existing) break
 
-			const priceId = subscription.items.data[0]?.price.id
+			const subItem = subscription.items.data[0]
+			const priceId = subItem?.price.id
 			const plan = priceId ? getPlanFromPriceId(priceId) : null
 
 			let status: SubscriptionStatus = 'active'
@@ -99,12 +101,16 @@ export async function action({ request }: ActionFunctionArgs) {
 				data: {
 					...(plan ? { plan } : {}),
 					status,
-					currentPeriodStart: new Date(
-						subscription.current_period_start * 1000,
-					),
-					currentPeriodEnd: new Date(
-						subscription.current_period_end * 1000,
-					),
+					...(subItem
+						? {
+								currentPeriodStart: new Date(
+									subItem.current_period_start * 1000,
+								),
+								currentPeriodEnd: new Date(
+									subItem.current_period_end * 1000,
+								),
+							}
+						: {}),
 					cancelAtPeriodEnd: subscription.cancel_at_period_end,
 				},
 			})

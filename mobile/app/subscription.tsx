@@ -1,17 +1,15 @@
-import { View, Text, ScrollView, Pressable, Alert, Platform, ActivityIndicator } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
-import { colors } from '../theme/colors'
+import { View, Text, ScrollView, Pressable, Alert, ActivityIndicator } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { useToast } from '../components/ui/Toast'
 import {
 	useSubscription,
 	useSubscriptionPlans,
-	useValidateReceipt,
 	useCancelSubscription,
-	useRestoreSubscription,
 	isPaidPlan,
 } from '../hooks/useSubscription'
-import { useToast } from '../components/ui/Toast'
+import { colors } from '../theme/colors'
 
 const PLAN_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
 	free: 'fish-outline',
@@ -24,9 +22,7 @@ export default function SubscriptionScreen() {
 	const toast = useToast()
 	const { data: subscription, isLoading: subLoading } = useSubscription()
 	const { data: plans, isLoading: plansLoading } = useSubscriptionPlans()
-	const validateReceipt = useValidateReceipt()
 	const cancelSubscription = useCancelSubscription()
-	const restoreSubscription = useRestoreSubscription()
 
 	const isLoading = subLoading || plansLoading
 	const currentPlan = subscription?.plan ?? 'free'

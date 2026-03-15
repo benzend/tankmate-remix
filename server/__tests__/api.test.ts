@@ -14,7 +14,7 @@
  *   - Tests use a shared token from the auth test
  */
 
-import { describe, it, expect, beforeAll } from 'vitest'
+import { describe, it, expect } from 'vitest'
 
 // Test config — point at running server or use supertest
 const BASE_URL = process.env.TEST_API_URL || 'http://localhost:8081/api/v1'
@@ -25,7 +25,8 @@ let testTankId: string
 let testParameterLogId: string
 let testMaintenanceLogId: string
 
-async function api(path: string, options: RequestInit = {}) {
+ 
+async function api(path: string, options: RequestInit = {}): Promise<{ status: number; data: any }> {
 	const headers: Record<string, string> = {
 		'Content-Type': 'application/json',
 		...((options.headers as Record<string, string>) || {}),

@@ -1,13 +1,13 @@
-import { View, Text, ScrollView, Pressable } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 import { Image } from 'expo-image'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { View, Text, ScrollView, Pressable } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Ionicons } from '@expo/vector-icons'
-import { useCoralAnalysis } from '../../hooks/useCorals'
 import { HealthRing } from '../../components/tank/HealthRing'
+import { Button } from '../../components/ui/Button'
 import { Card, CardContent } from '../../components/ui/Card'
 import { Skeleton } from '../../components/ui/Skeleton'
-import { Button } from '../../components/ui/Button'
+import { useCoralAnalysis } from '../../hooks/useCorals'
 import { colors, getHealthColor } from '../../theme/colors'
 
 export default function CoralDetailScreen() {

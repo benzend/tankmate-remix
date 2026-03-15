@@ -1,4 +1,10 @@
-import { useState, useCallback } from 'react'
+import { Ionicons } from '@expo/vector-icons'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import * as Haptics from 'expo-haptics'
+import { Image } from 'expo-image'
+import * as ImagePicker from 'expo-image-picker'
+import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useState } from 'react'
 import {
 	View,
 	Text,
@@ -10,20 +16,14 @@ import {
 	RefreshControl,
 	ActivityIndicator,
 } from 'react-native'
-import { Image } from 'expo-image'
-import { useLocalSearchParams, useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Ionicons } from '@expo/vector-icons'
-import * as Haptics from 'expo-haptics'
-import * as ImagePicker from 'expo-image-picker'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { galleryApi, type GalleryImage } from '../../../lib/api'
-import { uploadImages } from '../../../lib/upload'
+import { EmptyState } from '../../../components/common/EmptyState'
+import { FadeIn } from '../../../components/ui/Animated'
 import { Button } from '../../../components/ui/Button'
 import { Skeleton } from '../../../components/ui/Skeleton'
-import { EmptyState } from '../../../components/common/EmptyState'
 import { useToast } from '../../../components/ui/Toast'
-import { FadeIn } from '../../../components/ui/Animated'
+import { galleryApi, type GalleryImage } from '../../../lib/api'
+import { uploadImages } from '../../../lib/upload'
 import { colors } from '../../../theme/colors'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
@@ -88,7 +88,7 @@ export default function TankGalleryScreen() {
 				if (failedCount > 0) {
 					toast.error(`${failedCount} photo(s) failed to upload`)
 				}
-			} catch (error) {
+			} catch {
 				toast.error('Failed to upload photos')
 			} finally {
 				setUploading(false)

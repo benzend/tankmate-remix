@@ -1,13 +1,13 @@
-import { useRef, useState } from 'react'
-import { View, Text, ScrollView, Alert, TextInput } from 'react-native'
-import { useLocalSearchParams, useRouter } from 'expo-router'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
-import { useCreateParameterLog } from '../../../hooks/useParameters'
-import { useTank } from '../../../hooks/useTanks'
+import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useRef, useState } from 'react'
+import { View, Text, ScrollView, Alert, type TextInput } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { Button } from '../../../components/ui/Button'
 import { Input } from '../../../components/ui/Input'
 import { useToast } from '../../../components/ui/Toast'
+import { useCreateParameterLog } from '../../../hooks/useParameters'
+import { useTank } from '../../../hooks/useTanks'
 import { colors } from '../../../theme/colors'
 
 const PARAMETERS = [
@@ -21,7 +21,6 @@ const PARAMETERS = [
 	{ key: 'salinity', label: 'Salinity', placeholder: '1.025', step: '0.001', unit: 'sg' },
 ] as const
 
-type ParamKey = (typeof PARAMETERS)[number]['key']
 
 export default function LogParametersScreen() {
 	const { id } = useLocalSearchParams<{ id: string }>()

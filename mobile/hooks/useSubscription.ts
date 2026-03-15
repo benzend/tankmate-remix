@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { subscriptionApi, type Subscription, type SubscriptionPlanInfo } from '../lib/api'
+import { subscriptionApi, type Subscription } from '../lib/api'
 
 export const subscriptionKeys = {
 	current: ['subscription'] as const,

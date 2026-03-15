@@ -1,8 +1,8 @@
+import Constants from 'expo-constants'
+import * as Device from 'expo-device'
+import * as Notifications from 'expo-notifications'
 import { useEffect, useRef } from 'react'
 import { Platform } from 'react-native'
-import * as Notifications from 'expo-notifications'
-import * as Device from 'expo-device'
-import Constants from 'expo-constants'
 import { pushApi } from '../lib/api'
 
 Notifications.setNotificationHandler({
@@ -60,7 +60,7 @@ export function usePushNotifications(isAuthenticated: boolean) {
 	useEffect(() => {
 		if (!isAuthenticated) return
 
-		registerForPushNotificationsAsync().then((token) => {
+		void registerForPushNotificationsAsync().then((token) => {
 			if (token) {
 				const platform = Platform.OS === 'ios' ? 'ios' : 'android'
 				pushApi.register({ token, platform: platform as 'ios' | 'android' }).catch(console.error)

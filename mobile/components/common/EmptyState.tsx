@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native'
 import { colors } from '../../theme/colors'
-import { Button } from '../ui/Button'
 import { FadeIn } from '../ui/Animated'
+import { Button } from '../ui/Button'
 
 type EmptyStateProps = {
 	icon?: string

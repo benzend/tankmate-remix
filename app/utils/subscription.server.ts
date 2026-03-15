@@ -2,10 +2,11 @@ import { prisma } from './db.server.ts'
 import { stripe } from './stripe.server.ts'
 import {
 	type SubscriptionPlan,
+	type SubscriptionStatus,
 	PLAN_DETAILS,
 } from '../../server/services/subscription.service.ts'
 
-export { PLAN_DETAILS, type SubscriptionPlan }
+export { PLAN_DETAILS, type SubscriptionPlan, type SubscriptionStatus }
 
 export async function getUserSubscription(userId: string) {
 	const subscription = await prisma.subscription.findUnique({

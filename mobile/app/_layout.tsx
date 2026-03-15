@@ -1,16 +1,16 @@
-import { useEffect } from 'react'
-import { Slot, useRouter, useSegments } from 'expo-router'
-import { StatusBar } from 'expo-status-bar'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import * as SplashScreen from 'expo-splash-screen'
 import { useFonts } from 'expo-font'
-import { queryClient, asyncStoragePersister } from '../lib/queryClient'
-import { useAuth } from '../hooks/useAuth'
-import { ToastProvider } from '../components/ui/Toast'
+import { Slot, useRouter, useSegments } from 'expo-router'
+import * as SplashScreen from 'expo-splash-screen'
+import { StatusBar } from 'expo-status-bar'
+import { useEffect } from 'react'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { ErrorBoundary } from '../components/ui/ErrorBoundary'
-import { usePushNotifications } from '../hooks/usePushNotifications'
+import { ToastProvider } from '../components/ui/Toast'
+import { useAuth } from '../hooks/useAuth'
 import { useBiometrics } from '../hooks/useBiometrics'
+import { usePushNotifications } from '../hooks/usePushNotifications'
+import { queryClient, asyncStoragePersister } from '../lib/queryClient'
 
 // Keep splash screen visible while loading
 SplashScreen.preventAutoHideAsync()
@@ -45,7 +45,7 @@ export default function RootLayout() {
 			}
 			restore()
 		}
-		init()
+		void init()
 	}, [])
 
 	// Hide splash when ready

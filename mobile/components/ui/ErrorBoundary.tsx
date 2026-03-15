@@ -1,6 +1,6 @@
+import { Ionicons } from '@expo/vector-icons'
 import { Component, type ErrorInfo, type ReactNode } from 'react'
 import { View, Text, Pressable } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
 import { colors } from '../../theme/colors'
 
 type Props = {

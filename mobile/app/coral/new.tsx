@@ -1,24 +1,24 @@
+import { Ionicons } from '@expo/vector-icons'
+import { Image } from 'expo-image'
+import * as ImagePicker from 'expo-image-picker'
+import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { View, Text, Alert, ActivityIndicator } from 'react-native'
-import { Image } from 'expo-image'
-import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Ionicons } from '@expo/vector-icons'
-import * as ImagePicker from 'expo-image-picker'
+import { HealthRing } from '../../components/tank/HealthRing'
+import { Button } from '../../components/ui/Button'
 import { useAnalyzeCoral } from '../../hooks/useCorals'
 import { useTanks } from '../../hooks/useTanks'
-import { Button } from '../../components/ui/Button'
-import { HealthRing } from '../../components/tank/HealthRing'
-import { colors, getHealthColor } from '../../theme/colors'
 import { type CoralAnalysis } from '../../lib/api'
 import { uploadImage } from '../../lib/upload'
+import { colors, getHealthColor } from '../../theme/colors'
 
 type Step = 'capture' | 'analyzing' | 'result'
 
 export default function NewCoralAnalysisScreen() {
 	const router = useRouter()
 	const analyzeCoral = useAnalyzeCoral()
-	const { data: tanks } = useTanks()
+	useTanks()
 	const [step, setStep] = useState<Step>('capture')
 	const [imageUri, setImageUri] = useState<string | null>(null)
 	const [result, setResult] = useState<CoralAnalysis | null>(null)
@@ -56,7 +56,7 @@ export default function NewCoralAnalysisScreen() {
 			if (!pickerResult.canceled && pickerResult.assets[0]) {
 				setImageUri(pickerResult.assets[0].uri)
 			}
-		} catch (error) {
+		} catch {
 			Alert.alert('Error', 'Failed to pick image')
 		}
 	}

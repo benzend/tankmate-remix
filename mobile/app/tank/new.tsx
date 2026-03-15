@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import { View, Text, ScrollView, Alert } from 'react-native'
 import { useRouter } from 'expo-router'
+import { useState } from 'react'
+import { View, Text, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useCreateTank } from '../../hooks/useTanks'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { useToast } from '../../components/ui/Toast'
+import { useCreateTank } from '../../hooks/useTanks'
 import { colors } from '../../theme/colors'
 
 export default function NewTankScreen() {

@@ -1,3 +1,4 @@
+import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import esbuild from 'esbuild'
@@ -43,6 +44,22 @@ esbuild
 		sourcemap: true,
 		format: 'esm',
 		logLevel: 'info',
+	})
+	.then(() => {
+		// esbuild compiles .ts → .js but doesn't rewrite import specifiers.
+		// Post-process output to fix .ts/.tsx extensions in import/export paths.
+		const outputFiles = globSync(globsafe(here('../server-build/**/*.js')))
+		for (const file of outputFiles) {
+			let content = fs.readFileSync(file, 'utf-8')
+			const updated = content.replace(
+				/(from\s+["'])(\.\.?\/[^"']*?)\.tsx?(["'])/g,
+				'$1$2.js$3',
+			)
+			if (updated !== content) {
+				fs.writeFileSync(file, updated)
+			}
+		}
+		console.log(`Rewrote .ts extensions in ${outputFiles.length} output files`)
 	})
 	.catch((error: unknown) => {
 		console.error(error)

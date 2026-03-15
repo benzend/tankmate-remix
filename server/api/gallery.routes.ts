@@ -1,7 +1,5 @@
 import { Router } from 'express'
 import { z } from 'zod'
-import { authenticateAPI, getUserId } from './middleware.ts'
-import { verifyTankOwnership } from '../services/tank.service.ts'
 import {
 	getGalleriesForTank,
 	getAllGalleries,
@@ -10,6 +8,8 @@ import {
 	deleteGalleryImage,
 	toggleGalleryPublish,
 } from '../services/gallery.service.ts'
+import { verifyTankOwnership } from '../services/tank.service.ts'
+import { authenticateAPI, getUserId } from './middleware.ts'
 
 const router = Router()
 

@@ -5,7 +5,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
 }
 
 export const stripe = process.env.STRIPE_SECRET_KEY
-	? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2025-02-24.acacia' })
+	? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2026-02-25.clover' })
 	: null
 
 export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET ?? ''

@@ -1,4 +1,4 @@
-import type { Subscription } from './api'
+import { type Subscription } from './api'
 
 export const PLAN_LIMITS = {
 	free: {

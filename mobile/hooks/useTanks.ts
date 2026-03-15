@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { tanksApi, type Tank, type TankDetail, type TankUpdate } from '../lib/api'
+import { tanksApi, type TankUpdate } from '../lib/api'
 
 export const tankKeys = {
 	all: ['tanks'] as const,

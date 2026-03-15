@@ -1,3 +1,5 @@
+import { Ionicons } from '@expo/vector-icons'
+import { useRouter } from 'expo-router'
 import { useState, useCallback, useRef } from 'react'
 import {
 	View,
@@ -8,13 +10,11 @@ import {
 	ActivityIndicator,
 	Keyboard,
 } from 'react-native'
-import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Ionicons } from '@expo/vector-icons'
-import { useSearch } from '../hooks/useSearch'
 import { FadeIn } from '../components/ui/Animated'
-import { colors } from '../theme/colors'
+import { useSearch } from '../hooks/useSearch'
 import { type SearchResult } from '../lib/api'
+import { colors } from '../theme/colors'
 
 export default function SearchScreen() {
 	const router = useRouter()

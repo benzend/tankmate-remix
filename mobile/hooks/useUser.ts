@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { userApi, type UserProfile, type OAuthConnection } from '../lib/api'
+import { userApi } from '../lib/api'
 
 export const userKeys = {
 	profile: ['user', 'profile'] as const,

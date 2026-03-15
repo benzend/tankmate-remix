@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect, jest, beforeEach } from '@jest/globals'
-import { render, fireEvent, act } from '@testing-library/react-native'
+import { render, fireEvent } from '@testing-library/react-native'
 import React from 'react'
 
 // Mock dependencies
@@ -82,9 +82,7 @@ describe('ToastProvider', () => {
 			)
 		)
 
-		act(() => {
-			fireEvent.press(getByTestId('trigger'))
-		})
+		fireEvent.press(getByTestId('trigger'))
 
 		expect(getByText('Saved!')).toBeTruthy()
 	})
@@ -110,9 +108,7 @@ describe('ToastProvider', () => {
 			)
 		)
 
-		act(() => {
-			fireEvent.press(getByTestId('trigger'))
-		})
+		fireEvent.press(getByTestId('trigger'))
 
 		expect(getByText('Failed!')).toBeTruthy()
 	})
@@ -139,9 +135,7 @@ describe('ToastProvider', () => {
 			)
 		)
 
-		act(() => {
-			fireEvent.press(getByTestId('trigger'))
-		})
+		fireEvent.press(getByTestId('trigger'))
 
 		expect(Haptics.notificationAsync).toHaveBeenCalledWith('success')
 	})
@@ -168,9 +162,7 @@ describe('ToastProvider', () => {
 			)
 		)
 
-		act(() => {
-			fireEvent.press(getByTestId('trigger'))
-		})
+		fireEvent.press(getByTestId('trigger'))
 
 		expect(Haptics.notificationAsync).toHaveBeenCalledWith('error')
 	})

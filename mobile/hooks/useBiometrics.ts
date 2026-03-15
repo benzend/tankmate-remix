@@ -1,6 +1,6 @@
-import { useEffect, useState, useCallback } from 'react'
 import * as LocalAuthentication from 'expo-local-authentication'
 import * as SecureStore from 'expo-secure-store'
+import { useEffect, useState, useCallback } from 'react'
 
 const BIOMETRIC_ENABLED_KEY = 'reefchronicles_biometric_enabled'
 
@@ -29,7 +29,7 @@ export function useBiometrics(): BiometricState {
 	const [biometricType, setBiometricType] = useState<string | null>(null)
 
 	useEffect(() => {
-		checkBiometrics()
+		void checkBiometrics()
 	}, [])
 
 	const checkBiometrics = async () => {

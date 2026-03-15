@@ -1,13 +1,13 @@
+import { Ionicons } from '@expo/vector-icons'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { View, Text, ScrollView, Alert } from 'react-native'
-import { useLocalSearchParams, useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Ionicons } from '@expo/vector-icons'
-import { useTank, useUpdateTank, useDeleteTank } from '../../../hooks/useTanks'
 import { Button } from '../../../components/ui/Button'
 import { Input } from '../../../components/ui/Input'
 import { Skeleton } from '../../../components/ui/Skeleton'
 import { useToast } from '../../../components/ui/Toast'
+import { useTank, useUpdateTank, useDeleteTank } from '../../../hooks/useTanks'
 import { colors } from '../../../theme/colors'
 
 export default function EditTankScreen() {
