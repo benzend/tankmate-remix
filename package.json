@@ -1,6 +1,7 @@
 {
-  "name": "aquatrack-remix-bd44",
-  "private": true,
+  "name": "tankmate-remix",
+  "private": false,
+  "license": "AGPL-3.0-or-later",
   "sideEffects": false,
   "type": "module",
   "imports": {
