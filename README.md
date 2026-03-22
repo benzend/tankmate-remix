@@ -1,4 +1,4 @@
-# ReefChronicle
+# TankMate
 
 A full-stack aquarium management application for tracking water parameters, maintenance schedules, coral health, and more. Built on the [Epic Stack](https://www.epicweb.dev/epic-stack).
 
