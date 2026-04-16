@@ -28,9 +28,9 @@ export class GitHubProvider implements AuthProvider {
 	getAuthStrategy() {
 		return new GitHubStrategy(
 			{
-				clientID: process.env.GITHUB_CLIENT_ID,
-				clientSecret: process.env.GITHUB_CLIENT_SECRET,
-				callbackURL: '/auth/github/callback',
+				clientId: process.env.GITHUB_CLIENT_ID!,
+				clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+				redirectURI: '/auth/github/callback',
 			},
 			async ({ profile }) => {
 				const email = profile.emails[0]?.value.trim().toLowerCase()
@@ -38,7 +38,7 @@ export class GitHubProvider implements AuthProvider {
 					throw new Error('Email not found')
 				}
 				const username = profile.displayName
-				const imageUrl = profile.photos[0].value
+				const imageUrl = profile.photos[0]?.value
 				return {
 					email,
 					id: profile.id,

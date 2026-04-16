@@ -45,7 +45,7 @@ test('Users can update their password', async ({ page, login }) => {
 	expect(
 		await verifyUserPassword({ username }, oldPassword),
 		'Old password still works',
-	).toEqual(null)
+	).toBeNull()
 	expect(
 		await verifyUserPassword({ username }, newPassword),
 		'New password does not work',
@@ -56,9 +56,9 @@ test('Users can update their profile photo', async ({ page, login }) => {
 	const user = await login()
 	await page.goto('/settings/profile')
 
-	const beforeSrc = await page
-		.getByAltText(user.username ?? user.name)
-		.getAttribute('src')
+	const profileImage = page.getByAltText(user.username ?? user.name)
+	await expect(profileImage).toHaveAttribute('src')
+	const beforeSrc = await profileImage.getAttribute('src')
 
 	await page.getByRole('link', { name: /change profile photo/i }).click()
 
@@ -75,10 +75,10 @@ test('Users can update their profile photo', async ({ page, login }) => {
 		'Was not redirected after saving the profile photo',
 	).toHaveURL(`/settings/profile`)
 
-	const afterSrc = await page
-		.getByAltText(user.username ?? user.name)
-		.getAttribute('src')
+	await expect(profileImage).toHaveAttribute('src')
+	const afterSrc = await profileImage.getAttribute('src')
 
+	// eslint-disable-next-line playwright/prefer-web-first-assertions
 	expect(beforeSrc).not.toEqual(afterSrc)
 })
 
