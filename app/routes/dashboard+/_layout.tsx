@@ -7,7 +7,7 @@ import {
   useLocation,
 } from "@remix-run/react";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "#app/components/ui/button.js";
 import { Input } from "#app/components/ui/input.js";
 import { Logo } from "#app/components/ui/logo.js";
@@ -40,11 +40,12 @@ export default function DashboardLayout() {
       <div className="flex min-h-[calc(100vh-98px)] pt-28 md:pt-0">
         <SideNav />
         <div className="w-full overflow-y-auto px-6 pt-4">
-          <div className="pb-10">
+          <div className="pb-24 md:pb-10">
             <Outlet />
           </div>
         </div>
       </div>
+      <MobileBottomNav />
     </main>
   );
 }
@@ -127,61 +128,23 @@ const SideNav = () => {
 
 const Nav = () => {
   const data = useLoaderData<typeof loader>();
-  const [navOpen, setNavOpen] = useState(false);
-  const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (navOpen) setNavOpen(false);
-  }, [location.pathname]);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [menuOpen]);
 
   return (
     <div className="max-w-screen overflow-hidden">
-      {navOpen && (
-        <nav className="z-10 fixed left-0 top-0 h-screen w-screen bg-accent-background px-10">
-
-          <div className="flex h-[calc(100vh-200px)] flex-col justify-between mt-32">
-            <div className="text-center">
-              <Link to="/dashboard">
-                <Button variant="outline" size="full">
-                  Dashboard
-                </Button>
-              </Link>
-              <Link to="/dashboard/coral-analyses">
-                <Button variant="outline" size="full">
-                  Coral Analyzer
-                </Button>
-              </Link>
-              <Link to="/dashboard/dosing-calculator">
-                <Button variant="outline" size="full">
-                  Dosing Calculator
-                </Button>
-              </Link>
-              <Link to="/dashboard/galleries">
-                <Button variant="outline" size="full">
-                  Galleries
-                </Button>
-              </Link>
-            </div>
-
-            <div>
-              <ThemeSwitch
-                userPreference={data.requestInfo.userPrefs.theme}
-                buttonClasses="w-full text-foreground py-2 mb-2 border rounded"
-                after={({ mode }) => (
-                  <span className="ml-2 capitalize">{mode} Mode</span>
-                )}
-              />
-
-              <Form method="POST" action="/logout" className="text-center">
-                <Button variant="default" size="full" type="submit">
-                  Logout
-                </Button>
-              </Form>
-            </div>
-          </div>
-        </nav>
-      )}
-
       <nav className="flex fixed top-0 left-0 md:relative justify-between px-10 py-6 z-10 w-full bg-background">
         <div className="flex items-center gap-20">
           <Logo to="/dashboard" mode="follow-theme" />
@@ -192,40 +155,128 @@ const Nav = () => {
 
         <div className="flex items-center gap-3">
           <Search />
-          <button
-            className="group relative block md:hidden"
-            onClick={() => setNavOpen((prev) => !prev)}
-          >
-            <div
-              className={`relative flex h-[50px] w-[50px] transform items-center justify-center overflow-hidden rounded-full shadow-md ring-0 ring-gray-300 ring-opacity-30 transition-all duration-200`}
+          <div className="relative md:hidden" ref={menuRef}>
+            <button
+              className="flex h-10 w-10 items-center justify-center rounded-full"
+              onClick={() => setMenuOpen((prev) => !prev)}
+              aria-label="Open menu"
             >
-              <div className="flex h-[20px] w-[20px] origin-center transform flex-col justify-between overflow-hidden transition-all duration-300">
-                <div
-                  className={`h-[2px] w-7 origin-left transform bg-foreground transition-all delay-100 duration-300 ${navOpen ? "translate-y-6" : ""}`}
-                ></div>
-                <div
-                  className={`h-[2px] w-7 transform rounded bg-foreground transition-all delay-75 duration-300 ${navOpen ? "translate-y-6" : ""}`}
-                ></div>
-                <div
-                  className={`h-[2px] w-7 origin-left transform bg-foreground transition-all duration-300 ${navOpen ? "translate-y-6" : ""}`}
-                ></div>
-
-                <div
-                  className={`absolute top-2.5 flex w-0 -translate-x-10 transform items-center justify-between transition-all duration-500 ${navOpen ? "w-12 translate-x-0" : ""}`}
-                >
-                  <div
-                    className={`absolute h-[2px] w-5 rotate-0 transform bg-foreground transition-all delay-300 duration-500 ${navOpen ? "rotate-45" : ""}`}
-                  ></div>
-                  <div
-                    className={`absolute h-[2px] w-5 -rotate-0 transform bg-foreground transition-all delay-300 duration-500 ${navOpen ? "-rotate-45" : ""}`}
-                  ></div>
-                </div>
+              <svg
+                className="h-6 w-6 text-foreground"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 6v.01M12 12v.01M12 18v.01"
+                />
+              </svg>
+            </button>
+            {menuOpen && (
+              <div className="absolute right-0 top-full mt-2 w-48 rounded-md border bg-background p-2 shadow-lg">
+                <Link to="/settings/profile" onClick={() => setMenuOpen(false)}>
+                  <Button variant="ghost" size="full" className="justify-start">
+                    Settings
+                  </Button>
+                </Link>
+                <div className="my-1 border-t" />
+                <ThemeSwitch
+                  userPreference={data.requestInfo.userPrefs.theme}
+                  buttonClasses="w-full text-foreground py-2 px-4 border rounded"
+                  after={({ mode }) => (
+                    <span className="ml-2 capitalize">{mode} Mode</span>
+                  )}
+                />
+                <div className="my-1 border-t" />
+                <Form method="POST" action="/logout" className="w-full">
+                  <Button type="submit" size="full" variant="ghost" className="justify-start text-destructive">
+                    Logout
+                  </Button>
+                </Form>
               </div>
-            </div>
-          </button>
+            )}
+          </div>
         </div>
       </nav>
     </div>
+  );
+};
+
+const MobileBottomNav = () => {
+  const location = useLocation();
+
+  const tabs = [
+    {
+      to: "/dashboard",
+      label: "Dashboard",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-6 w-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+        </svg>
+      ),
+    },
+    {
+      to: "/dashboard/coral-analyses",
+      label: "Analyzer",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-6 w-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+        </svg>
+      ),
+    },
+    {
+      to: "/dashboard/dosing-calculator",
+      label: "Dosing",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-6 w-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A4.5 4.5 0 0111.8 19.5H7.5a2.25 2.25 0 01-2.25-2.25v-1.323a2.25 2.25 0 01.87-1.753L5 14.5m14.25.002v-2.25m0 2.25v3.75m0-3.75h-3.75m3.75 0h1.5" />
+        </svg>
+      ),
+    },
+    {
+      to: "/dashboard/galleries",
+      label: "Gallery",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-6 w-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a2.25 2.25 0 002.25-2.25V6a2.25 2.25 0 00-2.25-2.25H3.75A2.25 2.25 0 001.5 6v12a2.25 2.25 0 002.25 2.25zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+        </svg>
+      ),
+    },
+    {
+      to: "/settings/profile",
+      label: "Settings",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-6 w-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+        </svg>
+      ),
+    },
+  ];
+
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background md:hidden">
+      <div className="flex h-16 items-center justify-around">
+        {tabs.map((tab) => {
+          const isActive = location.pathname === tab.to;
+          return (
+            <Link
+              key={tab.to}
+              to={tab.to}
+              className={`flex flex-1 flex-col items-center justify-center gap-0.5 ${isActive ? "text-primary" : "text-muted-foreground"}`}
+              aria-current={isActive ? "page" : undefined}
+              aria-label={tab.label}
+            >
+              {tab.icon}
+              <span className="text-[10px] font-medium">{tab.label}</span>
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
   );
 };
 
