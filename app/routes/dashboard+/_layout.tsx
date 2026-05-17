@@ -106,6 +106,19 @@ const SideNav = () => {
             Galleries
           </Button>
         </Link>
+        <Link to="/dashboard/profile">
+          <Button
+            variant={
+              location.pathname === "/dashboard/profile"
+                ? "sidenav-active"
+                : "sidenav"
+            }
+            size="full"
+            className="mb-4"
+          >
+            Profile
+          </Button>
+        </Link>
       </TopOfSidenav>
 
       <BottomOfSidenav>
@@ -178,6 +191,14 @@ const Nav = () => {
             </button>
             {menuOpen && (
               <div className="absolute right-0 top-full mt-2 w-48 rounded-md border bg-background p-2 shadow-lg">
+                <Link
+                  to="/dashboard/profile"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <Button variant="ghost" size="full" className="justify-start">
+                    Profile
+                  </Button>
+                </Link>
                 <Link to="/settings/profile" onClick={() => setMenuOpen(false)}>
                   <Button variant="ghost" size="full" className="justify-start">
                     Settings
@@ -193,7 +214,12 @@ const Nav = () => {
                 />
                 <div className="my-1 border-t" />
                 <Form method="POST" action="/logout" className="w-full">
-                  <Button type="submit" size="full" variant="ghost" className="justify-start text-destructive">
+                  <Button
+                    type="submit"
+                    size="full"
+                    variant="ghost"
+                    className="justify-start text-destructive"
+                  >
                     Logout
                   </Button>
                 </Form>
@@ -247,8 +273,8 @@ const MobileBottomNav = () => {
       ),
     },
     {
-      to: "/settings/profile",
-      label: "Settings",
+      to: "/dashboard/profile",
+      label: "Profile",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-6 w-6">
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
@@ -290,6 +316,7 @@ function Breadcrumbs() {
     ["coral-analyses", "Coral Analyzer"],
     ["dosing-calculator", "Dosing Calculator"],
     ["galleries"],
+    ["profile"],
     ["new"],
   ];
   const to = (pathPart: string) => {
