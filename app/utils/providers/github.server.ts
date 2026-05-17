@@ -6,7 +6,8 @@ import { cache, cachified } from '../cache.server.ts'
 import { connectionSessionStorage } from '../connections.server.ts'
 import { type Timings } from '../timing.server.ts'
 import { MOCK_CODE_GITHUB_HEADER, MOCK_CODE_GITHUB } from './constants.ts'
-import { type AuthProvider } from './provider.ts'
+import { type AuthProvider, type ProviderUser } from './provider.ts'
+import { type Strategy } from 'remix-auth'
 
 const GitHubUserSchema = z.object({ login: z.string() })
 const GitHubUserParseResult = z
@@ -25,12 +26,12 @@ const shouldMock =
 	process.env.NODE_ENV === 'test'
 
 export class GitHubProvider implements AuthProvider {
-	getAuthStrategy() {
-		return new GitHubStrategy(
+	getAuthStrategy(): Strategy<ProviderUser, any> {
+		return new GitHubStrategy<ProviderUser>(
 			{
-				clientId: process.env.GITHUB_CLIENT_ID!,
+				clientID: process.env.GITHUB_CLIENT_ID!,
 				clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-				redirectURI: '/auth/github/callback',
+				callbackURL: '/auth/github/callback',
 			},
 			async ({ profile }) => {
 				const email = profile.emails[0]?.value.trim().toLowerCase()
