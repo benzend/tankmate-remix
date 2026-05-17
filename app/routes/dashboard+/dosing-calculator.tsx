@@ -22,6 +22,8 @@ import {
 	type CalculationResult,
 } from '#app/utils/dosing-calculator/types.js'
 
+type DosingTab = 'ca' | 'alk' | 'mg'
+
 export async function loader({ request }: LoaderFunctionArgs) {
 	const userId = await requireUserId(request, { redirectTo: '/' })
 	const tanks = await prisma.fishTank.findMany({
@@ -48,6 +50,7 @@ function saveProductPref(key: string, code: string) {
 
 export default function DosingCalculatorPage() {
 	const { tanks } = useLoaderData<typeof loader>()
+	const [activeTab, setActiveTab] = useState<DosingTab>('ca')
 	const [selectedTankId, setSelectedTankId] = useState<string | null>(null)
 	const [volume, setVolume] = useState('')
 	const [volumeUnit, setVolumeUnit] = useState<VolumeUnit>('gallons')
@@ -119,6 +122,12 @@ export default function DosingCalculatorPage() {
 	const selectedMg = magnesiumProducts.find((p) => p.code === mgProduct)!
 	const mgDelta = (Number(mgDesired) || 0) - (Number(mgCurrent) || 0)
 	const mgResult = calculateDose(selectedMg, mgDelta, volumeGal)
+
+	const tabs: Array<{ key: DosingTab; label: string }> = [
+		{ key: 'ca', label: 'Calcium' },
+		{ key: 'alk', label: 'Alkalinity' },
+		{ key: 'mg', label: 'Magnesium' },
+	]
 
 	return (
 		<div>
@@ -194,111 +203,155 @@ export default function DosingCalculatorPage() {
 				</div>
 			</div>
 
-			<div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-				<ParameterCard
-					title="Calcium"
-					unit="ppm"
-					current={caCurrent}
-					desired={caDesired}
-					onCurrentChange={setCaCurrent}
-					onDesiredChange={setCaDesired}
-					products={calciumProducts}
-					selectedProduct={caProduct}
-					onProductChange={handleCaProductChange}
-					result={caResult}
-					product={selectedCa}
-				/>
+			<div className="rounded-lg border p-4">
+				<div
+					aria-label="Dosing parameter"
+					className="mb-4 grid grid-cols-3 gap-1 rounded-md bg-muted p-1"
+					role="tablist"
+				>
+					{tabs.map((tab) => (
+						<button
+							key={tab.key}
+							type="button"
+							id={`dosing-tab-${tab.key}`}
+							aria-controls={`dosing-panel-${tab.key}`}
+							aria-selected={activeTab === tab.key}
+							role="tab"
+							onClick={() => setActiveTab(tab.key)}
+							className={`rounded px-3 py-2 text-sm font-medium transition-colors ${
+								activeTab === tab.key
+									? 'bg-background text-foreground shadow-sm'
+									: 'text-muted-foreground hover:text-foreground'
+							}`}
+						>
+							{tab.label}
+						</button>
+					))}
+				</div>
 
-				<div className="rounded-lg border p-4">
-					<h2 className="mb-4 text-lg font-semibold text-foreground">
-						Alkalinity
-					</h2>
-					<div className="space-y-3">
-						<div>
-							<label className="mb-1 block text-sm text-muted-foreground">
-								Unit
-							</label>
-							<select
-								value={alkUnit}
-								onChange={(e) =>
-									setAlkUnit(e.target.value as AlkUnit)
-								}
-								className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground"
-							>
-								<option value="dKH">dKH</option>
-								<option value="meq/L">meq/L</option>
-								<option value="ppm">ppm CaCO3</option>
-							</select>
-						</div>
-						<div>
-							<label className="mb-1 block text-sm text-muted-foreground">
-								Current ({alkUnit})
-							</label>
-							<Input
-								type="number"
-								min="0"
-								step="any"
-								placeholder="0"
-								value={alkCurrent}
-								onChange={(e) => setAlkCurrent(e.target.value)}
-							/>
-						</div>
-						<div>
-							<label className="mb-1 block text-sm text-muted-foreground">
-								Desired ({alkUnit})
-							</label>
-							<Input
-								type="number"
-								min="0"
-								step="any"
-								placeholder="0"
-								value={alkDesired}
-								onChange={(e) => setAlkDesired(e.target.value)}
-							/>
-						</div>
-						<div>
-							<label className="mb-1 block text-sm text-muted-foreground">
-								Product
-							</label>
-							<select
-								value={alkProduct}
-								onChange={(e) => handleAlkProductChange(e.target.value)}
-								className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground"
-							>
-								{alkalinityProducts.map((p) => (
-									<option key={p.code} value={p.code}>
-										{p.name}
-									</option>
-								))}
-							</select>
-						</div>
-						<ResultDisplay
+				{activeTab === 'ca' && (
+					<div
+						id="dosing-panel-ca"
+						aria-labelledby="dosing-tab-ca"
+						role="tabpanel"
+					>
+						<ParameterPanel
+							unit="ppm"
+							current={caCurrent}
+							desired={caDesired}
+							onCurrentChange={setCaCurrent}
+							onDesiredChange={setCaDesired}
+							products={calciumProducts}
+							selectedProduct={caProduct}
+							onProductChange={handleCaProductChange}
+							result={caResult}
+							product={selectedCa}
+						/>
+					</div>
+				)}
+
+				{activeTab === 'alk' && (
+					<div
+						id="dosing-panel-alk"
+						aria-labelledby="dosing-tab-alk"
+						role="tabpanel"
+					>
+						<AlkalinityPanel
+							alkUnit={alkUnit}
+							onAlkUnitChange={setAlkUnit}
+							current={alkCurrent}
+							desired={alkDesired}
+							onCurrentChange={setAlkCurrent}
+							onDesiredChange={setAlkDesired}
+							selectedProduct={alkProduct}
+							onProductChange={handleAlkProductChange}
 							result={alkResult}
 							product={selectedAlk}
 						/>
 					</div>
-				</div>
+				)}
 
-				<ParameterCard
-					title="Magnesium"
-					unit="ppm"
-					current={mgCurrent}
-					desired={mgDesired}
-					onCurrentChange={setMgCurrent}
-					onDesiredChange={setMgDesired}
-					products={magnesiumProducts}
-					selectedProduct={mgProduct}
-					onProductChange={handleMgProductChange}
-					result={mgResult}
-					product={selectedMg}
-				/>
+				{activeTab === 'mg' && (
+					<div
+						id="dosing-panel-mg"
+						aria-labelledby="dosing-tab-mg"
+						role="tabpanel"
+					>
+						<ParameterPanel
+							unit="ppm"
+							current={mgCurrent}
+							desired={mgDesired}
+							onCurrentChange={setMgCurrent}
+							onDesiredChange={setMgDesired}
+							products={magnesiumProducts}
+							selectedProduct={mgProduct}
+							onProductChange={handleMgProductChange}
+							result={mgResult}
+							product={selectedMg}
+						/>
+					</div>
+				)}
 			</div>
 		</div>
 	)
 }
 
-function ParameterCard({
-	title,
+function AlkalinityPanel({
+	alkUnit,
+	onAlkUnitChange,
+	current,
+	desired,
+	onCurrentChange,
+	onDesiredChange,
+	selectedProduct,
+	onProductChange,
+	result,
+	product,
+}: {
+	alkUnit: AlkUnit
+	onAlkUnitChange: (v: AlkUnit) => void
+	current: string
+	desired: string
+	onCurrentChange: (v: string) => void
+	onDesiredChange: (v: string) => void
+	selectedProduct: string
+	onProductChange: (v: string) => void
+	result: CalculationResult | null
+	product: DosingProduct
+}) {
+	return (
+		<div className="space-y-3">
+			<div>
+				<label className="mb-1 block text-sm text-muted-foreground">
+					Unit
+				</label>
+				<select
+					value={alkUnit}
+					onChange={(e) => onAlkUnitChange(e.target.value as AlkUnit)}
+					className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground"
+				>
+					<option value="dKH">dKH</option>
+					<option value="meq/L">meq/L</option>
+					<option value="ppm">ppm CaCO3</option>
+				</select>
+			</div>
+			<ParameterPanel
+				unit={alkUnit}
+				current={current}
+				desired={desired}
+				onCurrentChange={onCurrentChange}
+				onDesiredChange={onDesiredChange}
+				products={alkalinityProducts}
+				selectedProduct={selectedProduct}
+				onProductChange={onProductChange}
+				result={result}
+				product={product}
+			/>
+		</div>
+	)
+}
+
+function ParameterPanel({
 	unit,
 	current,
 	desired,
@@ -310,7 +363,6 @@ function ParameterCard({
 	result,
 	product,
 }: {
-	title: string
 	unit: string
 	current: string
 	desired: string
@@ -323,11 +375,8 @@ function ParameterCard({
 	product: DosingProduct
 }) {
 	return (
-		<div className="rounded-lg border p-4">
-			<h2 className="mb-4 text-lg font-semibold text-foreground">
-				{title}
-			</h2>
-			<div className="space-y-3">
+		<div className="space-y-3">
+			<div className="grid gap-3 md:grid-cols-2">
 				<div>
 					<label className="mb-1 block text-sm text-muted-foreground">
 						Current ({unit})
@@ -354,24 +403,24 @@ function ParameterCard({
 						onChange={(e) => onDesiredChange(e.target.value)}
 					/>
 				</div>
-				<div>
-					<label className="mb-1 block text-sm text-muted-foreground">
-						Product
-					</label>
-					<select
-						value={selectedProduct}
-						onChange={(e) => onProductChange(e.target.value)}
-						className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground"
-					>
-						{products.map((p) => (
-							<option key={p.code} value={p.code}>
-								{p.name}
-							</option>
-						))}
-					</select>
-				</div>
-				<ResultDisplay result={result} product={product} />
 			</div>
+			<div>
+				<label className="mb-1 block text-sm text-muted-foreground">
+					Product
+				</label>
+				<select
+					value={selectedProduct}
+					onChange={(e) => onProductChange(e.target.value)}
+					className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground"
+				>
+					{products.map((p) => (
+						<option key={p.code} value={p.code}>
+							{p.name}
+						</option>
+					))}
+				</select>
+			</div>
+			<ResultDisplay result={result} product={product} />
 		</div>
 	)
 }
