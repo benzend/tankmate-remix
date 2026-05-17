@@ -78,7 +78,6 @@ test('Users can update their profile photo', async ({ page, login }) => {
 	await expect(profileImage).toHaveAttribute('src')
 	const afterSrc = await profileImage.getAttribute('src')
 
-	// eslint-disable-next-line playwright/prefer-web-first-assertions
 	expect(beforeSrc).not.toEqual(afterSrc)
 })
 
