@@ -33,10 +33,12 @@
 
 ## Setup Prerequisites
 
-- Node.js 20 (enforced in `engines`)
+- **Node.js 20** (enforced in `engines`, `.nvmrc` has `v20.11.1`). Use `nvm use 20` before installing deps. Node 24 causes `better-sqlite3` ABI mismatches and Remix `AbortSignal` test failures.
 - Copy `.env.example` → `.env` and fill values
+- **`OPENAI_API_KEY` is optional** — the app boots and runs without it. AI features (coral analysis, search, tank parsing) gracefully degrade with user-facing error messages.
 - **GitHub OAuth env vars must be prefixed with `MOCK_`** for tests/mocks to work (e.g., `GITHUB_CLIENT_ID=MOCK_GITHUB_CLIENT_ID`)
 - `npm run setup` handles: build → `prisma generate` → `prisma migrate deploy` → `prisma db seed` → `playwright install`
+- If switching Node versions, run `npm rebuild better-sqlite3` to avoid native module ABI errors
 
 ## Code Style
 
@@ -79,6 +81,11 @@
 - **Auth**: `remix-auth` with cookie sessions
 - **Testing**: Vitest + Playwright + Testing Library
 - **Mobile**: Expo SDK 54 + React Native + NativeWind (separate package in `mobile/`)
+
+## Server Build Gotchas
+
+- `other/build-server.ts` bundles the `server/` directory into `server-build/` via esbuild. It must use `bundle: true` with `external: [...all npm deps]` so that local imports (e.g. from `#app/`) are inlined into the output. Without this, the production Docker image crashes because `server-build/` references `../app/utils/...` paths that don't exist as `.js` files in the final container.
+- The `other/build-server.ts` also post-processes output to rewrite `.ts/.tsx` import extensions to `.js` for Node ESM compatibility.
 
 ## Monorepo Notes
 
