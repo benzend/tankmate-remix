@@ -2,11 +2,13 @@ import { json, type LoaderFunctionArgs } from '@remix-run/node'
 import OpenAI from 'openai'
 import { requireUserId } from '#app/utils/auth.server.js'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+function getOpenAI() {
+  const key = process.env.OPENAI_API_KEY
+  if (!key) return null
+  return new OpenAI({ apiKey: key })
+}
 
-const INLINE_SEPARATOR = ":::"
+const INLINE_SEPARATOR = ':::'
 
 export type SearchResult = {
   title: string,
@@ -22,6 +24,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (!query) {
     return json({ results: [] })
+  }
+
+  const openai = getOpenAI()
+  if (!openai) {
+    return json({
+      results: [{
+        title: 'AI Search Unavailable',
+        url: null,
+        content: 'OpenAI API key is not configured. AI-powered search is unavailable.',
+      }],
+    })
   }
 
   try {

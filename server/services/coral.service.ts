@@ -2,9 +2,11 @@ import OpenAI from 'openai'
 import { z } from 'zod'
 import { prisma } from '../../app/utils/db.server.ts'
 
-const client = new OpenAI({
-	apiKey: process.env['OPENAI_API_KEY'],
-})
+function getOpenAI() {
+	const key = process.env['OPENAI_API_KEY']
+	if (!key) return null
+	return new OpenAI({ apiKey: key })
+}
 
 const ChatResponseSchema = z.object({
 	friendlyName: z.string(),
@@ -45,6 +47,11 @@ export async function getCoralAnalysis(analysisId: string, userId: string) {
 }
 
 export async function analyzeCoralImage(userId: string, imageUrl: string, fishTankId?: string) {
+	const client = getOpenAI()
+	if (!client) {
+		throw new Error('OpenAI API key is not configured. AI-powered coral analysis is unavailable.')
+	}
+
 	const content: Array<OpenAI.ChatCompletionContentPart> = [
 		{
 			type: 'text',

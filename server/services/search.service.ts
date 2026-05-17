@@ -1,8 +1,10 @@
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-	apiKey: process.env.OPENAI_API_KEY,
-})
+function getOpenAI() {
+	const key = process.env.OPENAI_API_KEY
+	if (!key) return null
+	return new OpenAI({ apiKey: key })
+}
 
 const INLINE_SEPARATOR = ':::'
 
@@ -13,6 +15,15 @@ export type SearchResult = {
 }
 
 export async function searchReefTank(query: string): Promise<SearchResult[]> {
+	const openai = getOpenAI()
+	if (!openai) {
+		return [{
+			title: 'AI Search Unavailable',
+			url: null,
+			content: 'OpenAI API key is not configured. AI-powered search is unavailable.',
+		}]
+	}
+
 	const completion = await openai.chat.completions.create({
 		model: 'gpt-4o-mini',
 		messages: [

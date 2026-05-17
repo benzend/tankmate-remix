@@ -15,9 +15,11 @@ import { UploadedFileData } from 'uploadthing/types'
 
 export const meta: MetaFunction = () => [{ title: 'ReefChronicles | Coral Analysis' }]
 
-const client = new OpenAI({
-  apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
-})
+function getOpenAI() {
+  const key = process.env['OPENAI_API_KEY']
+  if (!key) return null
+  return new OpenAI({ apiKey: key })
+}
 
 const CoralAnalysisNewSchema = z.object({
   imageUrl: z.string(),
@@ -31,6 +33,20 @@ const ChatResponseSchema = z.object({
 })
 
 export async function action({ request }: ActionFunctionArgs) {
+  const client = getOpenAI()
+  if (!client) {
+    return json({
+      error: {
+        messages: [
+          {
+            title: 'AI Unavailable',
+            message: 'OpenAI API key is not configured. AI-powered coral analysis is unavailable.',
+          },
+        ],
+      },
+    }, { status: 503 })
+  }
+
   const userId = await requireUserId(request, { redirectTo: '/' })
 
   const formData = await request.formData()

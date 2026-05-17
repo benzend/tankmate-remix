@@ -11,11 +11,20 @@ import OpenAI from 'openai'
 import { type ChatCompletionContentPart } from 'openai/resources/index.mjs'
 import { prisma } from '#app/utils/db.server.js'
 
-const client = new OpenAI({
-	apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
-})
+function getOpenAI() {
+	const key = process.env['OPENAI_API_KEY']
+	if (!key) return null
+	return new OpenAI({ apiKey: key })
+}
 
 export async function action({ request }: ActionFunctionArgs) {
+	const client = getOpenAI()
+	if (!client) {
+		return json({
+			error: { messages: ['OpenAI API key is not configured. AI-powered tank parsing is unavailable.'] },
+		})
+	}
+
 	const body = await request.formData()
 
 	const imageUrl = body.get('image_url')

@@ -5,9 +5,11 @@ import { ChatCompletionContentPart } from "openai/resources/index.mjs"
 import { tryJsonParse } from "./misc"
 import OpenAI from "openai"
 
-const client = new OpenAI({
-	apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
-})
+function getOpenAI() {
+	const key = process.env['OPENAI_API_KEY']
+	if (!key) return null
+	return new OpenAI({ apiKey: key })
+}
 
 export async function createTankWithAI(request: Request) {
 	const userId = await requireUserId(request, { redirectTo: '/' })
@@ -28,6 +30,20 @@ export async function createTankWithAI(request: Request) {
 
     return redirect('/dashboard/tanks/' + tank.id)
   }
+
+	const client = getOpenAI()
+	if (!client) {
+		return json({
+			error: {
+				messages: [
+					{
+						title: 'AI Unavailable',
+						message: 'OpenAI API key is not configured. AI-powered tank creation is unavailable. Please use the skip option.',
+					},
+				],
+			},
+		})
+	}
 
 	const imageUrl = body.get('image_url')
 
