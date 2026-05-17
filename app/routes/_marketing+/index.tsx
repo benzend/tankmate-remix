@@ -1,7 +1,8 @@
 // app/routes/index.tsx
-import { Link, useActionData, Form } from "@remix-run/react";
 import { json, type ActionFunctionArgs } from "@remix-run/node";
+import { Link, useActionData, Form } from "@remix-run/react";
 import { z } from "zod";
+import { DosingCalculatorWidget } from "#app/components/dosing-calculator-widget.tsx";
 import { sendContactEmail } from "#app/utils/email.server.js";
 import { useInView } from "#app/utils/use-in-view.ts";
 
@@ -39,7 +40,8 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Index() {
   const actionData = useActionData<typeof action>();
   const featuresRef = useInView({ threshold: 0.2 });
-  const prototypeRef = useInView({ threshold: 0.3 });
+  const calculatorRef = useInView({ threshold: 0.2 });
+  const howItWorksRef = useInView({ threshold: 0.2 });
   const ctaRef = useInView({ threshold: 0.3 });
   const contactRef = useInView({ threshold: 0.2 });
 
@@ -85,20 +87,68 @@ export default function Index() {
           <div role="presentation"></div>
           <div className="relative px-4 md:w-1/2">
             <h1 className="font-serif leading-normal lg:leading-snug mb-6 text-4xl font-extrabold drop-shadow-lg lg:text-6xl animate-in fade-in slide-in-from-bottom-4 duration-1000">
-              Join the Future of Aquarium Care
+              The Easy Way to Dose & Track Your Reef Tank
             </h1>
             <p className="mx-auto mb-10 max-w-xl text-xl drop-shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
-              Modern software tools and a thriving community that makes aquarium
-              care effortless. Connect with fellow aquarists and keep your
-              underwater ecosystem thriving.
+              Stop guessing with your water chemistry. Get exact dosing calculations
+              for Calcium, Alkalinity, and Magnesium — and track your parameters
+              over time with beautiful charts.
             </p>
-            <Link
-              to="/signup"
-              className="inline-block transform rounded bg-indigo-500 px-10 py-2 font-bold text-white transition duration-300 hover:scale-105 hover:bg-indigo-400 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500 hover:animate-pulse"
-            >
-              Get Started for Free
-            </Link>
+            <div className="flex flex-wrap gap-4 justify-center md:justify-start animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+              <Link
+                to="/calculator"
+                className="inline-block transform rounded bg-indigo-500 px-8 py-3 font-bold text-white transition duration-300 hover:scale-105 hover:bg-indigo-400"
+              >
+                Try the Calculator
+              </Link>
+              <Link
+                to="/signup"
+                className="inline-block transform rounded border-2 border-white/30 px-8 py-3 font-bold text-white transition duration-300 hover:scale-105 hover:bg-white/10"
+              >
+                Sign Up Free
+              </Link>
+            </div>
           </div>
+        </div>
+      </section>
+
+      {/* Calculator Demo Section */}
+      <section
+        ref={calculatorRef.ref}
+        className="calculator-section bg-slate-950 py-20"
+      >
+        <div className="container mx-auto max-w-7xl px-8 text-center">
+          <h2
+            className={`font-serif mb-4 text-4xl font-bold text-white md:text-5xl transition-all duration-700 ${
+              calculatorRef.isInView
+                ? "animate-in fade-in slide-in-from-top-4"
+                : "opacity-0 translate-y-8"
+            }`}
+          >
+            Try It Now — No Account Needed
+          </h2>
+          <p
+            className={`mx-auto mb-12 max-w-2xl text-xl text-slate-400 transition-all duration-700 delay-200 ${
+              calculatorRef.isInView
+                ? "animate-in fade-in slide-in-from-top-4"
+                : "opacity-0 translate-y-8"
+            }`}
+          >
+            Enter your tank volume, current levels, and desired levels. We will
+            calculate the exact dose using real commercial products.
+          </p>
+          <div
+            className={`transition-all duration-700 delay-400 ${
+              calculatorRef.isInView
+                ? "animate-in fade-in slide-in-from-bottom-8"
+                : "opacity-0 translate-y-12"
+            }`}
+          >
+            <DosingCalculatorWidget />
+          </div>
+          <p className="mt-6 text-sm text-slate-500">
+            Supports Brightwell, Seachem, Red Sea, ESV, Tropic Marin, and more.
+          </p>
         </div>
       </section>
 
@@ -116,7 +166,7 @@ export default function Index() {
                 : "opacity-0 translate-y-8"
             }`}
           >
-            Why ReefChronicles?
+            Everything Your Reef Tank Needs
           </h2>
           <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
             <div
@@ -127,9 +177,9 @@ export default function Index() {
               }`}
             >
               <FeatureCard
-                title="Smart Tracking Tools"
-                description="Intuitive parameter logging, maintenance scheduling, and progress tracking to keep your aquarium healthy."
-                icon="📊"
+                title="Precision Dosing Calculator"
+                description="Calculate exact doses for Calcium, Alkalinity (dKH, meq/L, ppm), and Magnesium using coefficients from real commercial products like Brightwell, Seachem, and Red Sea."
+                icon="🧪"
                 imageUrl="/img/marketing/features-realtime-stats.webp"
               />
             </div>
@@ -141,9 +191,9 @@ export default function Index() {
               }`}
             >
               <FeatureCard
-                title="Real-time Stats"
-                description="Track water parameters, plant health, and sand quality in real time."
-                icon="📊"
+                title="Track Parameters Over Time"
+                description="Log salinity, calcium, alkalinity, magnesium, pH, nitrate, phosphate, and temperature. View trend charts with ideal range shading to keep your reef thriving."
+                icon="📈"
                 imageUrl="/img/marketing/features-realtime-stats.webp"
               />
             </div>
@@ -155,9 +205,9 @@ export default function Index() {
               }`}
             >
               <FeatureCard
-                title="Custom Notifications"
-                description="Receive alerts for maintenance and care based on your tank's conditions."
-                icon="🔔"
+                title="Smart Safety Warnings"
+                description="Built-in pH impact alerts and manufacturer dosing warnings help you avoid overdosing. Know exactly what to expect before you add anything to your tank."
+                icon="🛡️"
                 imageUrl="/img/marketing/features-custom-notifications.webp"
               />
             </div>
@@ -165,40 +215,44 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Prototype Section */}
+      {/* How It Works Section */}
       <section
-        ref={prototypeRef.ref}
-        className="prototype-section bg-slate-950 bg-gradient-to-l from-blue-900 py-24 text-gray-100"
+        ref={howItWorksRef.ref}
+        className="how-it-works-section bg-slate-950 py-24"
       >
-        <div className="container mx-auto px-4 text-center">
+        <div className="container mx-auto max-w-5xl px-4">
           <h2
-            className={`font-serif mb-4 text-4xl font-bold text-white md:text-5xl transition-all duration-700 ${
-              prototypeRef.isInView
-                ? "animate-in fade-in slide-in-from-left-4"
-                : "opacity-0 -translate-x-8"
+            className={`font-serif mb-16 text-center text-4xl font-bold text-white md:text-5xl transition-all duration-700 ${
+              howItWorksRef.isInView
+                ? "animate-in fade-in slide-in-from-top-4"
+                : "opacity-0 translate-y-8"
             }`}
           >
-            Connect with Fellow Aquarists
+            How It Works
           </h2>
-          <p
-            className={`mx-auto max-w-2xl text-xl mb-20 transition-all duration-700 delay-200 ${
-              prototypeRef.isInView
-                ? "animate-in fade-in slide-in-from-left-4"
-                : "opacity-0 -translate-x-8"
-            }`}
-          >
-            Share photos of your aquarium with our community and get feedback,
-            tips, and inspiration from fellow hobbyists around the world
-          </p>
-          <img
-            src="/img/marketing/prototype-example.png"
-            alt="ReefChronicles Prototype"
-            className={`mx-auto mb-8 w-full max-w-lg rounded-lg shadow-lg hover:scale-105 transition-all duration-1000 delay-400 ${
-              prototypeRef.isInView
-                ? "animate-in fade-in slide-in-from-right-8"
-                : "opacity-0 translate-x-12"
-            }`}
-          />
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            <StepCard
+              number="1"
+              title="Enter Your Tank Volume"
+              description="Tell us how many gallons (or liters) your reef tank holds."
+              delay={200}
+              isInView={howItWorksRef.isInView}
+            />
+            <StepCard
+              number="2"
+              title="Set Current & Target Levels"
+              description="Input your current Calcium, Alkalinity, and Magnesium readings and where you want them to be."
+              delay={400}
+              isInView={howItWorksRef.isInView}
+            />
+            <StepCard
+              number="3"
+              title="Get the Exact Dose"
+              description="Pick your product and instantly see the precise amount to dose, with unit conversions and safety warnings."
+              delay={600}
+              isInView={howItWorksRef.isInView}
+            />
+          </div>
         </div>
       </section>
 
@@ -209,33 +263,46 @@ export default function Index() {
       >
         <div className="container mx-auto text-center">
           <h2
-            className={`font-serif mx-auto mb-3 max-w-lg text-4xl font-bold text-white md:text-5xl leading-relaxed md:leading-relaxed transition-all duration-700 ${
+            className={`font-serif mx-auto mb-3 max-w-2xl text-4xl font-bold text-white md:text-5xl leading-relaxed md:leading-relaxed transition-all duration-700 ${
               ctaRef.isInView
                 ? "animate-in fade-in zoom-in-50"
                 : "opacity-0 scale-75"
             }`}
           >
-            Keep your tank healthy with ReefChronicles!
+            Stop Guessing. Start Dosing with Confidence.
           </h2>
           <p
-            className={`mx-auto mb-10 max-w-lg text-2xl transition-all duration-700 delay-200 ${
+            className={`mx-auto mb-10 max-w-xl text-xl transition-all duration-700 delay-200 ${
               ctaRef.isInView
                 ? "animate-in fade-in slide-in-from-bottom-4"
                 : "opacity-0 translate-y-8"
             }`}
           >
-            Join the aquarium enthusiasts who are using modern tools and community knowledge to transform their tank care.
+            Create a free account to save your calculations, log parameters over time,
+            and keep your reef tank in perfect balance.
           </p>
-          <Link
-            to="/signup"
-            className={`inline-block transform rounded bg-blue-950 px-10 py-2 font-bold text-white transition-all duration-700 delay-400 hover:scale-105 hover:bg-blue-900 hover:animate-bounce ${
-              ctaRef.isInView
-                ? "animate-in fade-in slide-in-from-bottom-4"
-                : "opacity-0 translate-y-8"
-            }`}
-          >
-            Start Tracking Now
-          </Link>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Link
+              to="/signup"
+              className={`inline-block transform rounded bg-blue-950 px-10 py-3 font-bold text-white transition-all duration-700 delay-400 hover:scale-105 hover:bg-blue-900 ${
+                ctaRef.isInView
+                  ? "animate-in fade-in slide-in-from-bottom-4"
+                  : "opacity-0 translate-y-8"
+              }`}
+            >
+              Create Free Account
+            </Link>
+            <Link
+              to="/calculator"
+              className={`inline-block transform rounded border-2 border-white/30 px-10 py-3 font-bold text-white transition-all duration-700 delay-500 hover:scale-105 hover:bg-white/10 ${
+                ctaRef.isInView
+                  ? "animate-in fade-in slide-in-from-bottom-4"
+                  : "opacity-0 translate-y-8"
+              }`}
+            >
+              Use Calculator
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -255,14 +322,14 @@ export default function Index() {
             Get in Touch
           </h2>
           <p
-            className={`mx-auto mb-10 max-w-lg text-2xl text-center transition-all duration-700 delay-200 ${
+            className={`mx-auto mb-10 max-w-lg text-xl text-center transition-all duration-700 delay-200 ${
               contactRef.isInView
                 ? "animate-in fade-in slide-in-from-top-4"
                 : "opacity-0 -translate-y-8"
             }`}
           >
-            Reach out with questions, requests, support- pretty much anything
-            that you can think of.
+            Have questions about dosing, tracking, or anything reef-related?
+            We are here to help.
           </p>
           <Form
             method="post"
@@ -357,6 +424,38 @@ function FeatureCard({
       <div className="mb-6 text-5xl animate-bounce">{icon}</div>
       <h3 className="mb-4 text-2xl font-bold">{title}</h3>
       <p>{description}</p>
+    </div>
+  );
+}
+
+// StepCard Component
+function StepCard({
+  number,
+  title,
+  description,
+  delay,
+  isInView,
+}: {
+  number: string;
+  title: string;
+  description: string;
+  delay: number;
+  isInView: boolean;
+}) {
+  return (
+    <div
+      className={`rounded-xl border border-slate-700 bg-slate-900/50 p-8 text-center transition-all duration-700 hover:border-indigo-500/50 hover:bg-slate-900 ${
+        isInView
+          ? "animate-in fade-in slide-in-from-bottom-8"
+          : "opacity-0 translate-y-12"
+      }`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-indigo-600 text-2xl font-bold text-white">
+        {number}
+      </div>
+      <h3 className="mb-3 text-xl font-bold text-white">{title}</h3>
+      <p className="text-slate-400">{description}</p>
     </div>
   );
 }
