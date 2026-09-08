@@ -224,7 +224,7 @@ export default function DashboardCoralAnalysesNewPage() {
             />
           )}
           <br />
-          <div className="fixed inset-x-5 bottom-5 md:static">
+          <div className="mobile-fixed-action">
             <Button type="submit" className="w-full md:w-20" disabled={!imgData}>
               Analyze
             </Button>
