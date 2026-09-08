@@ -35,12 +35,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function DashboardLayout() {
   return (
-    <main className="bg-background text-gray-100">
+    <main className="bg-background text-gray-100 max-md:flex max-md:h-dvh max-md:flex-col max-md:overflow-hidden">
       <Nav />
-      <div className="flex min-h-[calc(100vh-98px)] pt-28 md:pt-0">
+      <div className="flex min-h-[calc(100vh-98px)] flex-1 pt-28 md:pt-0 max-md:min-h-0 max-md:pb-[var(--mobile-action-dock)]">
         <SideNav />
-        <div className="w-full overflow-y-auto px-6 pt-4">
-          <div className="pb-24 md:pb-10">
+        <div className="h-full w-full overflow-y-auto px-6 pt-4">
+          <div className="pb-10">
             <Outlet />
           </div>
         </div>
@@ -284,7 +284,7 @@ const MobileBottomNav = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background pb-[env(safe-area-inset-bottom)] md:hidden">
       <div className="flex h-16 items-center justify-around">
         {tabs.map((tab) => {
           const isActive = location.pathname === tab.to;

@@ -160,7 +160,7 @@ export default function NewMaintenanceLog() {
 
             {redirectTo && <input type="hidden" name="redirectTo" value={redirectTo} />}
 
-            <div className="fixed md:static bottom-5 inset-x-5">
+            <div className="mobile-fixed-action">
               <Button type="submit" className="w-full md:w-20">
                 Log
               </Button>
