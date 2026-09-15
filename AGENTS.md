@@ -91,3 +91,8 @@
 
 - `mobile/` is a separate npm package. Run `cd mobile && npm install --legacy-peer-deps` to set it up.
 - Root tsconfig excludes `mobile/**`.
+
+## Cloud Agent Environment
+
+- The Cloud Agent dev environment is defined in `.cursor/environment.json`. Its `install` step runs `.cursor/install.sh` (idempotent: selects Node 20 via nvm, seeds `.env` from `.env.example`, `npm install`, `npm run build`, and `prisma generate`/`migrate deploy`/`db seed`). The `dev-server` terminal runs `npm run dev` and serves the web app + mobile API on http://localhost:8081.
+- Node 20 is required (see `.nvmrc`). The Cloud Agent shell prepends a bundled Node 22 (`/exec-daemon/node`) ahead of nvm in `PATH`, so a bare `node`/`npm` can resolve to v22 and trigger `better-sqlite3` ABI mismatches. Always run through the configured terminal, or first source nvm and select Node 20: `export NVM_DIR="$HOME/.nvm"; . "$NVM_DIR/nvm.sh"; nvm use` (optionally prepend `$NVM_DIR/versions/node/v20.11.1/bin` to `PATH`).
