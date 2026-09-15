@@ -51,6 +51,14 @@
 		--ring: 215 20.2% 65.1%;
 
 		--radius: 0.5rem;
+
+		/* Matches MobileBottomNav (h-16). Used so mobile actions sit above it. */
+		--mobile-bottom-nav-height: 4rem;
+		--mobile-bottom-nav-offset: calc(
+			var(--mobile-bottom-nav-height) + 1.5rem + env(safe-area-inset-bottom, 0px)
+		);
+		/* Nav + gap + action button (~2.5rem) + space above the action */
+		--mobile-action-dock: calc(var(--mobile-bottom-nav-offset) + 5.5rem);
 	}
 
 	.dark {
@@ -113,6 +121,33 @@
     src: url(/fonts/Gowun_Batang/GowunBatang-Regular.ttf) format('woff2');
   }
 
+}
+
+@media (max-width: 767px) {
+	html {
+		scroll-padding-bottom: var(--mobile-action-dock);
+	}
+}
+
+@layer utilities {
+	.mobile-fixed-action {
+		@apply fixed inset-x-5 z-40 md:static md:inset-auto;
+		bottom: var(--mobile-bottom-nav-offset);
+		padding-top: 2rem;
+		background: linear-gradient(
+			to bottom,
+			hsl(var(--background) / 0),
+			hsl(var(--background)) 45%
+		);
+	}
+
+	@media (min-width: 768px) {
+		.mobile-fixed-action {
+			padding-top: 0;
+			background: none;
+			bottom: auto;
+		}
+	}
 }
 
 /* Underwater Hero Animations */
