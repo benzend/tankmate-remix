@@ -1,0 +1,17 @@
+{
+  "name": "TankMate Remix (ReefChronicle)",
+  "install": "./.cursor/install.sh",
+  "terminals": [
+    {
+      "name": "dev-server",
+      "description": "Remix web app + mobile API (Express) with HMR. Serves http://localhost:8081 and /api/v1/*.",
+      "command": "export NVM_DIR=\"${NVM_DIR:-$HOME/.nvm}\"; [ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\"; nvm use >/dev/null 2>&1; npm run dev"
+    }
+  ],
+  "ports": [
+    {
+      "name": "web + api",
+      "port": 8081
+    }
+  ]
+}
